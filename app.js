@@ -21,6 +21,7 @@ if (cluster.isMaster) {
     // Create a MySQL connection pool
     // const connection = mysql.createConnection({
     //     host: 'localhost',
+    //     port: 3306,
     //     user: 'root',
     //     password: 'password',
     //     database: 'test'
