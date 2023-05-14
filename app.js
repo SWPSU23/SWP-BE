@@ -3,7 +3,7 @@ const os = require('os');
 const express = require('express');
 const cors = require('cors');
 const swagger = require('./swagger');
-const usersRouter = require('./routes/users');
+const usersRouter = require('.src/routes/users');
 const mysql = require('mysql2');
 require('dotenv').config();
 
