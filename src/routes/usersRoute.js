@@ -29,11 +29,13 @@ const router = express.Router();
  *                   name:
  *                     type: string
  */
-router.get('/users', (req, res) => {
-  res.json([
-    { id: 1, name: 'John Doe' },
-    { id: 2, name: 'Jane Smith' },
-  ]);
-});
+router
+  .route('/')
+  .get((req, res) => {
+    res.json([
+      { id: 1, name: 'John Doe' },
+      { id: 2, name: 'Jane Smith' },
+    ]);
+  })
 
-module.exports = router;
+export const userRoute = router;

@@ -3,8 +3,8 @@ const os = require('os');
 const express = require('express');
 const cors = require('cors');
 const swagger = require('../swagger');
-const usersRouter = require('./routes/users')
 const mysql = require('mysql2');
+import { apiRoute } from './routes/initRoute'
 require('dotenv').config();
 
 if (cluster.isMaster) {
@@ -28,7 +28,7 @@ if (cluster.isMaster) {
     // });
     // Define your routes and middleware
     swagger(app);
-    app.use('/api', usersRouter);
+    app.use('/api', apiRoute);
 
     // Start the Express server
     app.listen(port, () => {
