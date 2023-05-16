@@ -7,7 +7,8 @@
 
 const express = require('express');
 const router = express.Router();
-
+import { usersMiddleware } from '../middleware/usersMiddleware';
+import { usersController } from '../controller/usersController';
 /**
  * @swagger
  * /api/users:
@@ -31,11 +32,6 @@ const router = express.Router();
  */
 router
   .route('/')
-  .get((req, res) => {
-    res.json([
-      { id: 1, name: 'John Doe' },
-      { id: 2, name: 'Jane Smith' },
-    ]);
-  })
+  .get((req, res) => { usersMiddleware.checkRole(req, res), usersController.getListUser(req, res) })
 
 export const userRoute = router;
