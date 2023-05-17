@@ -1,4 +1,4 @@
-import { usersModel } from "../model/usersModel"
+const usersModel = require('../models/usersModel');
 
 const getListUser = (req, res) => {
     try {
@@ -9,4 +9,4 @@ const getListUser = (req, res) => {
     }
 }
 
-export const usersController = { getListUser };
+module.exports = { getListUser };

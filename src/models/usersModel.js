@@ -9,4 +9,4 @@ const getListUser = (res) => {
     }
 }
 
-export const usersModel = { getListUser };
+module.exports = getListUser;

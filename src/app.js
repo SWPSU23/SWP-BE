@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const swagger = require('../swagger');
 const mysql = require('mysql2');
-import { apiRoute } from './routes/initRoute'
+const apiRoute = require('./routes/initRoute');
 require('dotenv').config();
 
 if (cluster.isMaster) {

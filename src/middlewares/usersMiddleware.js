@@ -8,4 +8,4 @@ const checkRole = (req, res, next) => {
     }
 }
 
-export const usersMiddleware = { checkRole };
+module.exports = checkRole;

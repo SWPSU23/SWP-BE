@@ -7,8 +7,8 @@
 
 const express = require('express');
 const router = express.Router();
-import { usersMiddleware } from '../middleware/usersMiddleware';
-import { usersController } from '../controller/usersController';
+const usersMiddleware = require('../middlewares/usersMiddleware');
+const usersController = require('../controllers/userController');
 /**
  * @swagger
  * /api/users:
@@ -34,4 +34,4 @@ router
   .route('/')
   .get((req, res) => { usersMiddleware.checkRole(req, res), usersController.getListUser(req, res) })
 
-export const userRoute = router;
+module.exports = router;
