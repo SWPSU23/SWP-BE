@@ -4,16 +4,39 @@ const express = require('express');
 const cors = require('cors');
 const swagger = require('../swagger');
 const mysql = require('mysql2');
-const apiRoute = require('./routes/initRoute');
+const apiRoute = require('./routes/userRoute')
 require('dotenv').config();
+if (!process.env.ISDEV) {
+    if (cluster.isMaster) {
+        // Fork worker processes for each CPU core
+        for (let i = 0; i < os.cpus().length; i++) {
+            cluster.fork();
+        }
+    } else {
+        // Create an Express app
 
-if (cluster.isMaster) {
-    // Fork worker processes for each CPU core
-    for (let i = 0; i < os.cpus().length; i++) {
-        cluster.fork();
+        const app = express();
+        const port = process.env.ISDEV ? 8080 : process.env.PORT;
+        app.use(cors());
+        app.use(express.json());
+        // Create a MySQL connection pool
+        // const connection = mysql.createConnection({
+        //     host: 'localhost',
+        //     port: 3306,
+        //     user: 'root',
+        //     password: 'password',
+        //     database: 'test'
+        // });
+        // Define your routes and middleware
+        swagger(app);
+        app.use('/api', apiRoute);
+
+        // Start the Express server
+        app.listen(port, () => {
+            console.log(`worker ${cluster.worker.id} listening on port ${port}`);
+        });
     }
 } else {
-    // Create an Express app
     const app = express();
     const port = process.env.ISDEV ? 8080 : process.env.PORT;
     app.use(cors());
@@ -32,6 +55,6 @@ if (cluster.isMaster) {
 
     // Start the Express server
     app.listen(port, () => {
-        console.log(`worker ${cluster.worker.id} listening on port ${port}`);
+        console.log("Running on " + port)
     });
 }

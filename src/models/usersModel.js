@@ -1,3 +1,5 @@
+const connect = require('../utils/dbUtils');
+
 const getListUser = (res) => {
     try {
         return res.json([
@@ -9,4 +11,4 @@ const getListUser = (res) => {
     }
 }
 
-module.exports = getListUser;
+module.exports = getListUser;   
