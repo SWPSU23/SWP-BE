@@ -7,31 +7,29 @@
 
 const express = require('express');
 const router = express.Router();
+// eslint-disable-next-line no-unused-vars
 const usersMiddleware = require('../middlewares/usersMiddleware')
-const usersController = require('../controllers/usersController');
+const userController = require('../controllers/userController');
 /**
  * @swagger
- * /api/users:
- *   get:
- *     summary: Returns the list of all users
- *     tags: [Users]
- *     responses:
- *       200:
- *         description: The list of all users
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                   name:
- *                     type: string
- */
-router
-  .route('/users/getListUsers')
-  .get((req, res) => { usersMiddleware.getListUser(req, res), usersController.getListUser(req, res) })
-
+ * /api/user/getListUser:
+ *  get:
+ *   summary: Get list users
+ *  tags: [Users]
+ * responses:
+ * 200:
+ * description: Success
+ * 400:
+ * description: Bad request
+ * 401:
+ * description: Unauthorized
+ * 403:
+ * description: Forbidden
+ * 404:
+ * description: Not found
+ * 500:
+ * description: Internal server error
+ * 
+  */
+router.get('/getListUser', userController.getListUser);
 module.exports = router;

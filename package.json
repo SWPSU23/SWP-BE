@@ -4,8 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec babel-node src/app"
+    "start": "node src/app.js",
+    "devStart": "nodemon src/app.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -23,12 +25,15 @@
     "@babel/preset-env": "^7.21.5",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
+    "eslint": "^8.40.0",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
     "mysql2": "^3.3.0",
     "nodemailer": "^6.9.2",
     "nodemon": "^2.0.22",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^4.6.3"
+    "swagger-ui-express": "^4.6.3",
+    "winston": "^3.8.2"
   }
 }

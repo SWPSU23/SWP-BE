@@ -1,60 +1,43 @@
+const config = require('./configs');
 const cluster = require('cluster');
 const os = require('os');
 const express = require('express');
+// eslint-disable-next-line no-unused-vars
+const bodyParser = require('body-parser');
 const cors = require('cors');
-const swagger = require('../swagger');
-const mysql = require('mysql2');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 const apiRoute = require('./routes/userRoute')
-require('dotenv').config();
-if (!process.env.ISDEV) {
-    if (cluster.isMaster) {
-        // Fork worker processes for each CPU core
+const winston = require('winston');
+const time = require('./utilities/timeHelper');
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: `../logs/${time.getNow()}.log` }),
+    ],
+});
+if (cluster.isMaster) {
+    if (config.ISDEV) {
         for (let i = 0; i < os.cpus().length; i++) {
             cluster.fork();
         }
     } else {
-        // Create an Express app
-
-        const app = express();
-        const port = process.env.ISDEV ? 8080 : process.env.PORT;
-        app.use(cors());
-        app.use(express.json());
-        // Create a MySQL connection pool
-        // const connection = mysql.createConnection({
-        //     host: 'localhost',
-        //     port: 3306,
-        //     user: 'root',
-        //     password: 'password',
-        //     database: 'test'
-        // });
-        // Define your routes and middleware
-        swagger(app);
-        app.use('/api', apiRoute);
-
-        // Start the Express server
-        app.listen(port, () => {
-            console.log(`worker ${cluster.worker.id} listening on port ${port}`);
-        });
+        cluster.fork();
     }
 } else {
     const app = express();
-    const port = process.env.ISDEV ? 8080 : process.env.PORT;
+    const port = config.ISDEV ? 8080 : config.HOST_PORT;
     app.use(cors());
     app.use(express.json());
-    // Create a MySQL connection pool
-    // const connection = mysql.createConnection({
-    //     host: 'localhost',
-    //     port: 3306,
-    //     user: 'root',
-    //     password: 'password',
-    //     database: 'test'
-    // });
+    app.use(bodyParser.urlencoded({ extended: true }));
     // Define your routes and middleware
-    swagger(app);
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
     app.use('/api', apiRoute);
 
     // Start the Express server
     app.listen(port, () => {
-        console.log("Running on " + port)
+        logger.info(`${time.getNow()}: Worker ${process.pid} running on ${port}`);
     });
 }
