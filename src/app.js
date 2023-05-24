@@ -2,6 +2,7 @@ const config = require('./configs');
 const cluster = require('cluster');
 const os = require('os');
 const express = require('express');
+const session = require('express-session');
 // eslint-disable-next-line no-unused-vars
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -12,6 +13,7 @@ const winston = require('winston');
 const time = require('./utilities/timeHelper');
 // eslint-disable-next-line no-unused-vars
 const pool = require('./services/queryHelper');
+const { Session } = require('inspector');
 
 const logger = winston.createLogger({
     level: 'info',
@@ -31,20 +33,19 @@ if (cluster.isMaster) {
         cluster.fork();
     }
 } else {
-    // run server
-    // connect to db
-    // pool.connect()
-    //     .then(() => {
-    //         logger.info(`${time.getNow()}: Worker ${process.pid} connected to db`);
-    //     })
-    //     .catch((err) => {
-    //         logger.error(`${time.getNow()}: Worker ${process.pid} could not connect to db`);
-    //         logger.error(err);
-    //     });
-
     // create express app
     const app = express();
     const port = config.ISDEV ? 8080 : config.HOST_PORT;
+    app.use(session({
+        secret: config.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: true,
+        store: new Session({
+            host: config.redis.host,
+            port: config.redis.port,
+            password: config.redis.password,
+        }),
+    }));
     app.use(cors());
     app.use(express.json());
     app.use(bodyParser.urlencoded({ extended: true }));
