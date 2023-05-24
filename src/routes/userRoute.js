@@ -10,6 +10,8 @@ const router = express.Router();
 // eslint-disable-next-line no-unused-vars
 const usersMiddleware = require('../middlewares/usersMiddleware')
 const userController = require('../controllers/userController');
+router.get('/', userController.getListUser);
+module.exports = router;
 /**
  * @swagger
  * /api/user/getListUser:
@@ -31,5 +33,4 @@ const userController = require('../controllers/userController');
  * description: Internal server error
  * 
   */
-router.get('/getListUser', userController.getListUser);
-module.exports = router;
+
