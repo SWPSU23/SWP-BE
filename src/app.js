@@ -15,6 +15,7 @@ const winston = require('winston');
 const time = require('./utilities/timeHelper');
 // eslint-disable-next-line no-unused-vars
 const pool = require('./services/queryHelper');
+const tester = require('./utilities/tester');
 
 const redisClient = redis.createClient({
     url: config.redis.url,

@@ -5,10 +5,10 @@ let pool;
 const getPool = () => {
 	if (!pool) {
 		pool = mysql.createPool({
-			host: configs.MYSQL_HOST,
-			user: configs.MYSQL_USERNAME,
-			password: configs.MYSQL_PASSWORD,
-			database: configs.MYSQL_DATABASE,
+			host: configs.mySql.host,
+			user: configs.mySql.user,
+			password: configs.mySql.password,
+			database: configs.mySql.database,
 		});
 	}
 	return pool;

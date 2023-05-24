@@ -1,33 +1,29 @@
-const redis = require('redis');
+const mysql = require('mysql2');
 
-// Function to perform Redis operations
-function performRedisOperations() {
-    const redisClient = redis.createClient({
-        url: 'redis://tuankiet2s.onthewifi.com:6379',
-        database: 0,
-
-    });
-
-    // Perform Redis operations here
-    redisClient.connect();
-    redisClient.on('connect', () => {
-        console.log('Redis client connected');
-    });
-    redisClient.on('error', (err) => {
-
-        console.log('Something went wrong ' + err);
+// Create a MySQL connection
+const connection = mysql.createConnection({
+    host: 'tuankiet2s.onthewifi.com',
+    user: 'ministoredb',
+    password: 'WyPbzkDT752rtsw4',
+    database: 'ministoredb',
 });
-redisClient.set('my test key', 'my test value', redis.print);
-redisClient.get('my test key', (error, result) => {
+
+// Test the MySQL connection
+connection.connect((error) => {
     if (error) {
-        console.log(error);
-        throw error;
+        console.error('Error connecting to MySQL:', error);
+    } else {
+        console.log('MySQL connection successful');
     }
-    console.log('GET result ->' + result);
-});
-// Close the Redis client connection
-redisClient.quit();
-}
+    // Perform test query
+    connection.query('SELECT * FROM Product', (error, results) => {
+        if (error) {
+            console.error('Error performing test query:', error);
+        } else {
+            console.log(`Successfully retrieved ${results.length} rows from the database`);
+        }
+    });
 
-// Example usage
-performRedisOperations();
+    // Close the MySQL connection
+    connection.end();
+});
