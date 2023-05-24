@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: `http://${config.HOST_URL}:${config.HOST_PORT}`,
+        url: `http://${config.url}:${config.port}`,
         description: 'Ministore API server'
       }
     ]

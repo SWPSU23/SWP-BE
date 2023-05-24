@@ -17,12 +17,12 @@ const envVarsSchema = Joi.object()
         JWT_VERIFY_EMAIL_EXPIRATION_MINUTES: Joi.number()
             .default(10),
             // redis config
-        REDIS_HOST: Joi.string().required().description('Redis host name'),
-        REDIS_PORT: Joi.number().default(6379).description('Redis port'),
-        REDIS_PASSWORD: Joi.string().required().description('Redis password'),
+        REDIS_URL: Joi.string().required().description('Redis url'),
         // mysql config
         MYSQL_HOST: Joi.string().required().description('Database host name'),
         MYSQL_PORT: Joi.number().default(3306).description('Database port'),
+        // session config
+        SESSION_SECRET: Joi.string().required().description('Session secret key'),
 
     })
     .unknown();
@@ -33,10 +33,9 @@ if (error) {
     throw new Error(`Config validation error: ${error.message}`);
 }
 
-
-
 module.exports = {
     env: envVars.NODE_ENV,
+    isDev: envVars.NODE_ENV === 'development',
     url: envVars.HOST_URL,
     port: envVars.HOST_PORT,
     jwt: {
@@ -55,8 +54,9 @@ module.exports = {
         database: envVars.MYSQL_DATABASE,
     },
     redis: {
-        host: envVars.REDIS_HOST,
-        port: envVars.REDIS_PORT,
-        password: envVars.REDIS_PASSWORD,
+        url : envVars.REDIS_URL,
     },
+    session: {
+        secret: envVars.SESSION_SECRET
+    }
 }

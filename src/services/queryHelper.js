@@ -1,5 +1,5 @@
 const mysql = require('mysql2');
-const configs = require('../../configs');
+const configs = require('../configs');
 let pool;
 
 const getPool = () => {

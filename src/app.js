@@ -3,6 +3,8 @@ const cluster = require('cluster');
 const os = require('os');
 const express = require('express');
 const session = require('express-session');
+const redis = require('redis');
+const RedisStore = require('connect-redis').default
 // eslint-disable-next-line no-unused-vars
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -13,7 +15,11 @@ const winston = require('winston');
 const time = require('./utilities/timeHelper');
 // eslint-disable-next-line no-unused-vars
 const pool = require('./services/queryHelper');
-const { Session } = require('inspector');
+
+const redisClient = redis.createClient({
+    url: config.redis.url,
+});
+redisClient.connect();
 
 const logger = winston.createLogger({
     level: 'info',
@@ -35,16 +41,13 @@ if (cluster.isMaster) {
 } else {
     // create express app
     const app = express();
-    const port = config.ISDEV ? 8080 : config.HOST_PORT;
+    const port = config.port;
+    console.log("port: ", config.port);
     app.use(session({
-        secret: config.SESSION_SECRET,
+        secret: config.session.secret,
         resave: false,
         saveUninitialized: true,
-        store: new Session({
-            host: config.redis.host,
-            port: config.redis.port,
-            password: config.redis.password,
-        }),
+        store: new RedisStore({ client: redisClient }),
     }));
     app.use(cors());
     app.use(express.json());
