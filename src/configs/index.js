@@ -16,11 +16,14 @@ const envVarsSchema = Joi.object()
             .description('minutes after which reset password token expires'),
         JWT_VERIFY_EMAIL_EXPIRATION_MINUTES: Joi.number()
             .default(10),
-            // redis config
+        // redis config
         REDIS_URL: Joi.string().required().description('Redis url'),
         // mysql config
         MYSQL_HOST: Joi.string().required().description('Database host name'),
         MYSQL_PORT: Joi.number().default(3306).description('Database port'),
+        MYSQL_USERNAME: Joi.string().required().description('Database user name'),
+        MYSQL_PASSWORD: Joi.string().required().description('Database password'),
+        MYSQL_DATABASE: Joi.string().required().description('Database name'),
         // session config
         SESSION_SECRET: Joi.string().required().description('Session secret key'),
 
@@ -49,12 +52,12 @@ module.exports = {
     mySql: {
         host: envVars.MYSQL_HOST,
         port: envVars.MYSQL_PORT,
-        user: envVars.MYSQL_USER,
+        user: envVars.MYSQL_USERNAME,
         password: envVars.MYSQL_PASSWORD,
         database: envVars.MYSQL_DATABASE,
     },
     redis: {
-        url : envVars.REDIS_URL,
+        url: envVars.REDIS_URL,
     },
     session: {
         secret: envVars.SESSION_SECRET

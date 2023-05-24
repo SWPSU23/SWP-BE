@@ -37,7 +37,7 @@ const setData = (queryString, [...args]) => {
 	});
 };
 module.exports = {
-	pool: pool,
+	// pool: pool,
 	getPool: getPool,
 	getData: getData,
 	setData: setData,

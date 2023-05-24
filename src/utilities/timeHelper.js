@@ -10,7 +10,13 @@ const getNowTime = () => {
     return moment().format('HH:mm:ss');
 }
 const getNowTimeStamp = () => {
+    console.log(moment().unix());
     return moment().unix();
+}
+const getNowTimeSql = () => {
+    let now = new Date(getNowTimeStamp * 1000).toISOString().slice(0, 19).replace('T', ' ');
+    console.log(now);
+    return now;
 }
 const timeStampToDate = (timeStamp) => {
     return moment(timeStamp).format('YYYY-MM-DD');
@@ -23,6 +29,7 @@ module.exports = {
     getNowDate: getNowDate,
     getNowTime: getNowTime,
     getNowTimeStamp: getNowTimeStamp,
+    getNowTimeSql: getNowTimeSql,
     timeStampToDate: timeStampToDate,
     dateToTimeStamp: dateToTimeStamp,
 };

@@ -15,6 +15,7 @@ const winston = require('winston');
 const time = require('./utilities/timeHelper');
 // eslint-disable-next-line no-unused-vars
 const pool = require('./services/queryHelper');
+// eslint-disable-next-line no-unused-vars
 const tester = require('./utilities/tester');
 
 const redisClient = redis.createClient({
@@ -55,7 +56,7 @@ if (cluster.isMaster) {
     app.use(bodyParser.urlencoded({ extended: true }));
     // Define your routes and middleware
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-    app.use('/api/v1', apiRoute);
+    app.use('/v1', apiRoute);
 
     // Start the Express server
     app.listen(port, () => {
