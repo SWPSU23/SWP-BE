@@ -4,6 +4,8 @@ const productsController = require('../controllers/productsController')
 
 // create new product
 router.post('/', productsController.createProductDetail);
+// get deatil product
+router.get('/:id')
 
 /**
  * @swagger

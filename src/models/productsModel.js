@@ -16,7 +16,7 @@ const productSchema = Joi.object({
     expired_at: Joi.string().default(null),
 });
 
-const createProductDetails = async (product) => {
+const createProductDetails = (product) => {
     pool.getPool();
     const { err, value } = productSchema.validate(product);
     if (err) {
@@ -25,7 +25,7 @@ const createProductDetails = async (product) => {
     } else {
         const query = queries.createProductDetail;
         try {
-            const data = await pool.setData(query, [
+            const data = pool.setData(query, [
                 value.name,
                 value.description,
                 value.unit,

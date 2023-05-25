@@ -1,7 +1,6 @@
-const queryModal = {
+module.exports = {
     createProductDetail: 'INSERT INTO Product (name, description, unit, unit_price, stock, status, image, create_at, expired_at)'
-        + 'VALUES (?,?,?,?,?,?,?,?,?)'
+        + 'VALUES (?,?,?,?,?,?,?,?,?)',
+    getProductDetail: 'SELECT * FROM Product WHERE id = `?`',
 };
-
-module.exports = queryModal;
 
