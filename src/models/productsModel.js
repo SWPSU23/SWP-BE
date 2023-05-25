@@ -45,4 +45,19 @@ const createProductDetails = (product) => {
     }
 }
 
-module.exports = { createProductDetails };
+
+const getListProduct = async () => {
+    pool.getPool();
+    const query = queries.getListProduct;
+    try {
+        console.log("query", query);
+        const data = await pool.getListData(query);
+        console.log("data", data);
+        return data;
+    } catch (err) {
+        console.log("err", err);
+        throw new Error(err);
+    }
+}
+
+module.exports = { createProductDetails, getListProduct };

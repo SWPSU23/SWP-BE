@@ -10,14 +10,16 @@ const createProductDetail = (req, res) => {
     }
 };
 
-const getProductDetails = (req, res) => {
+const getListProduct = async (req, res) => {
     try {
-        const product = productsModel.getProductDetail(req.params.id);
-        console.log(product)
-        return product;
-    } catch (err) {
+        const product = await productsModel.getListProduct();
+        console.log("product" + product);
+        res.status(200).json(product);
+    }
+    catch (err) {
         return res.status(500).json({ message: err.message });
     }
 }
 
-module.exports = { createProductDetail };
+
+module.exports = { createProductDetail, getListProduct };
