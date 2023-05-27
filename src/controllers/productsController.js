@@ -15,32 +15,47 @@ const createProductDetail = (req, res) => {
 
 const getListProduct = (req, res) => {
     productsModel.getListProduct()
-        .then((product) => {
-            console.log("product" + product);
-            return res.status(200).json({
+        .then((result) => {
+            res.status(200).json({
                 status: 'success',
-                message: 'Product fetched successfully',
-                product: product
+                message: 'Get list product successfully',
+                data: result
             });
         })
         .catch((error) => {
-            return res.status(500).json({ message: error.message });
-        })
-}
-
-const getProductById = async (req, res) => {
-    try {
-        const product = await productsModel.getProductById(req.params.id);
-        console.log("product" + product);
-        res.status(200).json({
-            status: 'success',
-            message: 'Product fetched successfully',
-            product: product
+            res.status(500).json({ message: error.message });
         });
-    }
-    catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
+};
+
+
+const getProductByID = (req, res) => {
+    productsModel.getProductByID(req.params.id)
+        .then((result) => {
+            res.status(200).send({
+                status: 'success',
+                message: 'Get product successfully',
+                data: result
+            });
+        }).catch((err) => {
+            return res.status(500).json({ message: err.message });
+        });
+}
+const updateProductByID = (req, res) => {
+    productsModel.updateProductByID(req.params.id, req.body)
+        .then((result) => {
+            res.status(200).send({
+                status: 'success',
+                message: 'Update product successfully',
+                data: result
+            });
+        }).catch((err) => {
+            return res.status(500).json({ message: err.message });
+        });
 }
 
-module.exports = { createProductDetail, getListProduct, getProductById };
+module.exports = {
+    createProductDetail,
+    getListProduct,
+    getProductByID,
+    updateProductByID,
+};

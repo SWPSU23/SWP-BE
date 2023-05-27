@@ -47,34 +47,65 @@ const createProductDetails = (product) => {
 
 
 const getListProduct = () => {
-    // pool.getPool();
     const query = queries.getListProduct;
-    console.log("query", query);
-    pool
-        .query(query, (err, result) => {
-            if (err) {
-                console.log("err", err);
-                return result(err, null);
+    return new Promise((resolve, reject) => {
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error('Error executing the query: ', error);
+                reject(error);
             } else {
-                console.log("res", result);
-                return result;
+                console.log('Got the results from the database: ', results);
+                resolve(results);
             }
-        })
+        });
+    });
+};
 
-
-}
-
-const getProductById = async (product_id) => {
-    pool.getPool();
-    const query = queries.getProductDetail;
-    try {
-        const data = await pool.getData(query, [product_id]);
-        const result = data[0];
-        return result;
-    } catch (err) {
-        console.log("err", err);
+const getProductByID = (id) => {
+    const query = queries.getProductByID;
+    return new Promise((resolve, reject) => {
+        pool.query(query, [id], (error, results) => {
+            if (error) {
+                console.error('Error executing the query: ', error);
+                reject(error);
+            } else {
+                console.log('Got the results from the database: ', results);
+                resolve(results);
+            }
+        });
+    });
+};
+const updateProductByID = (id, product) => {
+    const query = queries.updateProductByID;
+    const { err, value } = productSchema.validate(product);
+    if (err) {
+        console.log(err);
         throw new Error(err);
+    } else {
+        try {
+            const data = pool.setData(query, [
+                value.name,
+                value.description,
+                value.unit,
+                value.unit_price,
+                value.stock,
+                value.status,
+                value.image,
+                value.expired_at,
+                id,
+            ]);
+            if (data) return true;
+            return false;
+        } catch (err) {
+            console.log("err", err);
+            throw new Error(err);
+        }
     }
 }
 
-module.exports = { createProductDetails, getListProduct, getProductById };
+module.exports = {
+    createProductDetails,
+    getListProduct,
+    getProductByID,
+    updateProductByID,
+};

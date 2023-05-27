@@ -25,17 +25,6 @@ const getData = (queryString, [...args]) => {
 	});
 };
 
-const getListData = (queryString) => {
-	return new Promise((resolve, reject) => {
-		pool.query(queryString, (err, result) => {
-			if (err) {
-				return reject(err.message);
-			}
-			return resolve(result);
-		});
-	});
-};
-
 const setData = (queryString, [...args]) => {
 	return new Promise((resolve, reject) => {
 		pool.query(queryString, args, (err, result) => {
@@ -52,5 +41,4 @@ module.exports = {
 	getPool: getPool,
 	getData: getData,
 	setData: setData,
-	getListData: getListData,
 };

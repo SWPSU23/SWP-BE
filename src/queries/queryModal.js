@@ -4,12 +4,12 @@ module.exports = {
         + 'VALUES (?,?,?,?,?,?,?,?,?)',
     getListProduct: 'SELECT * FROM Product',
 
-    updateProduct: 'UPDATE Product SET'
+    updateProductByID: 'UPDATE Product SET'
         + 'name =?, description =?, unit =?, unit_price =?, stock =?, status =?, image =?, expired_at =? WHERE id =?',
 
-    deleteProductById: 'DELETE FROM Product WHERE id =?',
+    deleteProductByID: 'DELETE FROM Product WHERE id =?',
 
-    getProductDetail: 'SELECT * FROM Product WHERE id = ?',
+    getProductByID: 'SELECT * FROM Product WHERE id = ?',
 
     createEmployeeDetail: 'INSERT INTO Employee'
         + '(name, age, email_address, password, phone, base_salary, role)'

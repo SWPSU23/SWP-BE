@@ -32,7 +32,7 @@ const logger = winston.createLogger({
     ],
 });
 // setup parallel
-if (cluster.isMaster) {
+if (!cluster.isMaster) {
     if (config.ISDEV) {
         for (let i = 0; i < os.cpus().length; i++) {
             cluster.fork();
