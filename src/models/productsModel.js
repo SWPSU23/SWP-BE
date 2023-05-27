@@ -1,4 +1,4 @@
-const pool = require('../services/queryHelper');
+const pool = require('../services/queryHelper').getPool();
 const queries = require('../queries/queryModal');
 // eslint-disable-next-line no-unused-vars
 const time = require('../utilities/timeHelper');
@@ -46,18 +46,22 @@ const createProductDetails = (product) => {
 }
 
 
-const getListProduct = async () => {
-    pool.getPool();
+const getListProduct = () => {
+    // pool.getPool();
     const query = queries.getListProduct;
-    try {
-        console.log("query", query);
-        const data = await pool.getListData(query);
-        console.log("data", data);
-        return data;
-    } catch (err) {
-        console.log("err", err);
-        throw new Error(err);
-    }
+    console.log("query", query);
+    pool
+        .query(query, (err, result) => {
+            if (err) {
+                console.log("err", err);
+                return result(err, null);
+            } else {
+                console.log("res", result);
+                return result;
+            }
+        })
+
+
 }
 
 const getProductById = async (product_id) => {
