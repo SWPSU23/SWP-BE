@@ -4,8 +4,7 @@ module.exports = {
         + 'VALUES (?,?,?,?,?,?,?,?,?)',
     getListProduct: 'SELECT * FROM Product',
 
-    updateProductByID: 'UPDATE Product SET'
-        + 'name =?, description =?, unit =?, unit_price =?, stock =?, status =?, image =?, expired_at =? WHERE id =?',
+    updateProductByID: 'UPDATE Product SET ?  WHERE id =?',
 
     deleteProductByID: 'DELETE FROM Product WHERE id =?',
 
