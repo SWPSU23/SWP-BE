@@ -1,16 +1,17 @@
 const productsModel = require('../models/productsModel');
 
 const createProductDetail = (req, res) => {
-    try {
-        const check = productsModel.createProductDetails(req.body);
-        console.log('status: ' + check)
-        res.status(200).send({
-            status: 'success',
-            message: 'Product details created successfully'
+    productsModel.createProductDetails(req.body)
+        .then((result) => {
+            res.status(200).json({
+                status: 'success',
+                message: 'Create Product Details successfully',
+                data: result
+            });
+        })
+        .catch((error) => {
+            res.status(500).json({ message: error.message });
         });
-    } catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
 };
 
 const getListProduct = (req, res) => {
@@ -53,9 +54,23 @@ const updateProductByID = (req, res) => {
         });
 }
 
+const deleteProductByID = (req, res) => {
+    productsModel.deleteProductByID(req.params.id)
+        .then((result) => {
+            res.status(200).send({
+                status: 'success',
+                message: 'Delete product successfully',
+                data: result
+            });
+        }).catch((err) => {
+            return res.status(500).json({ message: err.message });
+        });
+}
+
 module.exports = {
     createProductDetail,
     getListProduct,
     getProductByID,
     updateProductByID,
+    deleteProductByID
 };

@@ -14,7 +14,7 @@ const options = {
         description: "Ministore API server",
       },
     ],
-    
+
   },
   apis: ["../routes/*.js"],
 };

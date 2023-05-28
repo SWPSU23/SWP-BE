@@ -17,15 +17,15 @@ const productSchema = Joi.object({
 });
 
 const createProductDetails = (product) => {
-    pool.getPool();
+    const query = queries.createProductDetail;
     const { err, value } = productSchema.validate(product);
+    console.log(value)
     if (err) {
-        console.log(err);
-        throw new Error(err);
+        console.error('Error executing the query: ', err);
+        throw err;
     } else {
-        const query = queries.createProductDetail;
-        try {
-            const data = pool.setData(query, [
+        return new Promise((resolve, reject) => {
+            pool.query(query, [
                 value.name,
                 value.description,
                 value.unit,
@@ -35,13 +35,16 @@ const createProductDetails = (product) => {
                 value.image,
                 value.create_at,
                 value.expired_at,
-            ]);
-            if (data) return true;
-            return false;
-        } catch (err) {
-            console.log("err", err);
-            throw new Error(err);
-        }
+            ], (error, results) => {
+                if (error) {
+                    console.error('Error executing the query: ', error);
+                    reject(error);
+                } else {
+                    console.log('Got the results from the database: ', results);
+                    resolve(results);
+                }
+            });
+        });
     }
 }
 
@@ -75,32 +78,35 @@ const getProductByID = (id) => {
         });
     });
 };
-const updateProductByID = (id, product) => {
+const updateProductByID = (id, productUpdate) => {
     const query = queries.updateProductByID;
-    const { err, value } = productSchema.validate(product);
-    if (err) {
-        console.log(err);
-        throw new Error(err);
-    } else {
-        try {
-            const data = pool.setData(query, [
-                value.name,
-                value.description,
-                value.unit,
-                value.unit_price,
-                value.stock,
-                value.status,
-                value.image,
-                value.expired_at,
-                id,
-            ]);
-            if (data) return true;
-            return false;
-        } catch (err) {
-            console.log("err", err);
-            throw new Error(err);
-        }
-    }
+    return new Promise((resolve, reject) => {
+        pool.query(query, [productUpdate, id], (error, results) => {
+            if (error) {
+                console.error('Error executing the query: ', error);
+                reject(error);
+            } else {
+                console.log('Got the results from the database: ', results);
+                resolve(results);
+            }
+        });
+    });
+
+}
+
+const deleteProductByID = (id) => {
+    const query = queries.deleteProductByID;
+    return new Promise((resolve, reject) => {
+        pool.query(query, [id], (error, results) => {
+            if (error) {
+                console.error('Error executing the query: ', error);
+                reject(error);
+            } else {
+                console.log('Got the results from the database: ', results);
+                resolve(results);
+            }
+        });
+    });
 }
 
 module.exports = {
@@ -108,4 +114,5 @@ module.exports = {
     getListProduct,
     getProductByID,
     updateProductByID,
+    deleteProductByID
 };
