@@ -58,4 +58,36 @@ const getEmployeeDetail = (req, res) => {
     });
 };
 
-module.exports = { createEmployeeDetail, getListEmployee, getEmployeeDetail };
+const updateEmployeeDetail = (req, res) => {
+  employeesModel.updateEmployeeDetail(req.body, req.params.id)
+    .then((data) => {
+      res.send({
+        message: "Employee updated successfully",
+        data: data
+      });
+    })
+    .catch((error) => {
+      res.send({
+        message: "Error updating employee",
+        error: error
+      });
+    });
+}
+
+const deleteEmployeeDetail = (req, res) => {
+  employeesModel.deleteEmployeeDetail(req.params.id)
+    .then((data) => {
+      res.send({
+        message: "Employee deleted successfully",
+        data: data
+      });
+    })
+    .catch((error) => {
+      res.send({
+        message: "Error deleting employee",
+        error: error
+      });
+    });
+}
+
+module.exports = { createEmployeeDetail, getListEmployee, getEmployeeDetail, updateEmployeeDetail, deleteEmployeeDetail };
