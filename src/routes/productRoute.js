@@ -2,16 +2,20 @@ const express = require('express');
 const router = express.Router();
 const productsController = require('../controllers/productsController')
 
-// create new product
-router.post('/createProductDetail', productsController.createProductDetail);
-// get list product
-router.get('/getListProduct', productsController.getListProduct);
-// get product by id
-router.get('/getProductByID/:id', productsController.getProductByID);
-// update product by id
-router.put('/updateProductByID/:id', productsController.updateProductByID);
-// delete product by id
-router.delete('/deleteProductByID/:id', productsController.deleteProductByID);
+router.route('/')
+  // get list of products
+  .get(productsController.getListProduct)
+  // create a new product
+  .post(productsController.createProductDetail);
+
+router.route('/:id')
+  // get product details
+  .get(productsController.getProductByID)
+  // update product by ID
+  .put(productsController.updateProductByID)
+  // delete product by ID
+  .delete(productsController.deleteProductByID);
+
 
 /**
  * @swagger
@@ -22,7 +26,7 @@ router.delete('/deleteProductByID/:id', productsController.deleteProductByID);
 
 /**
  * @swagger
- * /api/product/createProductDetail:
+ * /v1/product:
  *  post:
  *   summary: Create new Product
  *  tags: [Products]
@@ -40,13 +44,30 @@ router.delete('/deleteProductByID/:id', productsController.deleteProductByID);
  * 500:
  * description: Internal server error
  * 
+ * *  get:
+ *   summary: get list of product
+ *  tags: [Products]
+ * responses:
+ * 200:
+ * description: Success
+ * 400:
+ * description: Bad request
+ * 401:
+ * description: Unauthorized
+ * 403:
+ * description: Forbidden
+ * 404:
+ * description: Not found
+ * 500:
+ * description: Internal server error
+ * 
   */
 
 /**
  * @swagger
- * /api/product/getListProduct:
+ * /v1/product/:id:
  *  get:
- *   summary: Get list of Product
+ *   summary: Get product details
  *  tags: [Products]
  * responses:
  * 200:
@@ -62,13 +83,8 @@ router.delete('/deleteProductByID/:id', productsController.deleteProductByID);
  * 500:
  * description: Internal server error
  * 
-  */
-
-/**
- * @swagger
- * /api/product/getProductByID/:id:
- *  get:
- *   summary: Get Product by ID
+ * put:
+ *   summary: update product by id
  *  tags: [Products]
  * responses:
  * 200:
@@ -84,35 +100,8 @@ router.delete('/deleteProductByID/:id', productsController.deleteProductByID);
  * 500:
  * description: Internal server error
  * 
-  */
-
-/**
- * @swagger
- * /api/product/updateProductByID/:id;
- *  put:
- *   summary: Update Product by ID
- *  tags: [Products]
- * responses:
- * 200:
- * description: Success
- * 400:
- * description: Bad request
- * 401:
- * description: Unauthorized
- * 403:
- * description: Forbidden
- * 404:
- * description: Not found
- * 500:
- * description: Internal server error
- * 
-  */
-
-/**
- * @swagger
- * /api/product/deleteProductByID/:id;
- *  put:
- *   summary: Delete Product by ID
+ *  delete:
+ *   summary: delete product by id
  *  tags: [Products]
  * responses:
  * 200:

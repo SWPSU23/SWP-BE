@@ -1,44 +1,61 @@
 const employeesModel = require("../models/employeesModel");
 
 const createEmployeeDetail = (req, res) => {
-  try {
-    const check = employeesModel.createEmployeeDetail(req.body);
-    if (check) {
-      res.status(200).json({
-        status: "success",
-        message: "Employee Detail created successfully",
+  employeesModel.createEmployeeDetail(req.body)
+    .then((data) => {
+      res.status(200).send(
+        {
+          message: "Successfully created employee",
+          data: data
+        }
+      );
+    })
+    .catch((error) => {
+      res.status(500).send({
+        message: "Error creating employee",
+        error: error.message
       });
-    } else {
-      throw new Error();
-    }
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+    });
 };
 
-const getListEmployee = async (req, res) => {
-  try {
-    const listProduct = await employeesModel.getListEmployee();
-    res.status(200).json({
-      status: "success",
-      message: "Employee List created successfully",
-      data: listProduct,
+const getListEmployee = (req, res) => {
+  employeesModel.getListEmployee()
+    .then((data) => {
+      res.status(200).send(
+        {
+          message: "Successfully get employee list",
+          data: data
+        }
+      );
+    })
+    .catch((error) => {
+      res.status(500).send(
+        {
+          message: "Error getting employee list",
+          error: error.message
+        }
+      )
     });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
 };
-const getEmployeeDetail = async (req, res) => {
-  try {
-    const listProduct = await employeesModel.getEmployeeDetail(req.params.id);
-    res.status(200).json({
-      status: "success",
-      message: "Employee List created successfully",
-      data: listProduct,
+
+const getEmployeeDetail = (req, res) => {
+  employeesModel.getEmployeeDetail(req.params.id)
+    .then((data) => {
+      res.status(200).send(
+        {
+          message: "Get employee detail successfully",
+          data: data
+        }
+      );
+    })
+    .catch((error) => {
+      res.status(500).send(
+        {
+          message: "Error getting employee detail",
+          error: error.message
+        }
+      );
     });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
 };
 
 module.exports = { createEmployeeDetail, getListEmployee, getEmployeeDetail };

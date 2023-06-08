@@ -1,28 +1,27 @@
 const pool = require('../services/queryHelper').getPool();
 const queries = require('../queries/queryModal');
-// eslint-disable-next-line no-unused-vars
 const time = require('../utilities/timeHelper');
 const Joi = require('joi');
 
 const productSchema = Joi.object({
-    name: Joi.string().required(),
+    name: Joi.string().min(5).max(20).required(),
     description: Joi.string().required(),
     unit: Joi.string().required(),
-    unit_price: Joi.number().required(),
-    stock: Joi.number().required(),
-    status: Joi.string().default(null),
-    image: Joi.string().default(null),
+    unit_price: Joi.number().required().min(100),
+    stock: Joi.number().integer().required().min(1),
+    status: Joi.boolean().default(true),
+    image: Joi.string().required(),
     create_at: Joi.string().default(time.getNow),
-    expired_at: Joi.string().default(null),
+    expired_at: Joi.string().required(),
 });
 
 const createProductDetails = (product) => {
     const query = queries.createProductDetail;
-    const { err, value } = productSchema.validate(product);
-    console.log(value)
-    if (err) {
-        console.error('Error executing the query: ', err);
-        throw err;
+    const { error, value } = productSchema.validate(product);
+
+    if (error) {
+        console.error('Error executing the query: ', error);
+        throw error;
     } else {
         return new Promise((resolve, reject) => {
             pool.query(query, [
