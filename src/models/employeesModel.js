@@ -66,4 +66,30 @@ const getEmployeeDetail = (employee_id) => {
     })
 }
 
-module.exports = { createEmployeeDetail, getListEmployee, getEmployeeDetail }
+const updateEmployeeDetail = (employee_data, employee_id) => {
+    const query = queries.updateEmployeeDetail;
+    return new Promise((resolve, reject) => {
+        pool.query(query, [employee_data, employee_id], (err, res) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(res);
+            }
+        })
+    })
+}
+
+const deleteEmployeeDetail = (employee_id) => {
+    const query = queries.deleteEmployeeDetail;
+    return new Promise((resolve, reject) => {
+        pool.query(query, [employee_id], (err, res) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(res);
+            }
+        })
+    })
+}
+
+module.exports = { createEmployeeDetail, getListEmployee, getEmployeeDetail, updateEmployeeDetail, deleteEmployeeDetail }

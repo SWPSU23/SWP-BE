@@ -19,5 +19,9 @@ module.exports = {
     getListEmployee: 'SELECT * FROM Employee',
 
     getEmployeeDetails: 'SELECT * FROM Employee WHERE id = ?',
+
+    updateEmployeeDetail: "UPDATE Employee SET ? WHERE id = ?",
+
+    deleteEmployeeDetail: "DELETE FROM Employee WHERE id = ?",
 };
 

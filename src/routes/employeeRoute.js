@@ -11,6 +11,11 @@ router.route('/')
 router.route('/:id')
   // get employee details
   .get(employeesController.getEmployeeDetail)
+  // update employee details
+  .put(employeesController.updateEmployeeDetail)
+  // delete employee details
+  .delete(employeesController.deleteEmployeeDetail)
+
 
 
 /**
@@ -78,8 +83,26 @@ router.route('/:id')
  * description: Not found
  * 500:
  * description: Internal server error
+ * 
  *  put:
  *    summary: update employe 
+ *  tags: [Employees]
+ * responses:
+ * 200:
+ * description: Success
+ * 400:
+ * description: Bad request
+ * 401:
+ * description: Unauthorized
+ * 403:
+ * description: Forbidden
+ * 404:
+ * description: Not found
+ * 500:
+ * description: Internal server error
+ * 
+ *  *  delete:
+ *    summary: delete emplyee detail by id
  *  tags: [Employees]
  * responses:
  * 200:
