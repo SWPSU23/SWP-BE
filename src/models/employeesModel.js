@@ -1,7 +1,6 @@
-const pool = require('../services/queryHelper').getPool();
-const queries = require('../queries/queryModal');
-const Joi = require('joi');
-
+const pool = require('../services/queryHelper').getPool()
+const queries = require('../queries/queryModal')
+const Joi = require('joi')
 
 const employeeSchema = Joi.object({
     name: Joi.string().min(3).required(),
@@ -10,86 +9,96 @@ const employeeSchema = Joi.object({
     password: Joi.string().min(5).required(),
     phone: Joi.number().min(9).required(),
     base_salary: Joi.number().min(1000).required(),
-    role: Joi.string().required()
-});
+    role: Joi.string().required(),
+})
 
 const createEmployeeDetail = (employee_detail) => {
-    const query = queries.createEmployeeDetail;
-    const { error, value } = employeeSchema.validate(employee_detail);
+    const query = queries.createEmployeeDetail
+    const { error, value } = employeeSchema.validate(employee_detail)
     if (error) {
-        console.error("Error validating employee", error);
-        throw error;
+        console.error('Error validating employee', error)
+        throw error
     } else {
         return new Promise((resolve, reject) => {
-            pool.query(query, [
-                value.name,
-                value.age,
-                value.email_address,
-                value.password,
-                value.phone,
-                value.base_salary,
-                value.role
-            ], (err, res) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(res);
+            pool.query(
+                query,
+                [
+                    value.name,
+                    value.age,
+                    value.email_address,
+                    value.password,
+                    value.phone,
+                    value.base_salary,
+                    value.role,
+                ],
+                (err, res) => {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve(res)
+                    }
                 }
-            })
+            )
         })
     }
 }
 
 const getListEmployee = () => {
-    const query = queries.getListEmployee;
+    const query = queries.getListEmployee
     return new Promise((resolve, reject) => {
         pool.query(query, (err, res) => {
             if (err) {
-                reject(err);
+                reject(err)
             } else {
-                resolve(res);
+                resolve(res)
             }
         })
     })
 }
 
 const getEmployeeDetail = (employee_id) => {
-    const query = queries.getEmployeeDetails;
+    const query = queries.getEmployeeDetails
     return new Promise((resolve, reject) => {
         pool.query(query, [employee_id], (error, res) => {
             if (error) {
-                reject(error);
+                reject(error)
             } else {
-                resolve(res[0]);
+                resolve(res[0])
             }
         })
     })
 }
 
 const updateEmployeeDetail = (employee_data, employee_id) => {
-    const query = queries.updateEmployeeDetail;
+    const query = queries.updateEmployeeDetail
     return new Promise((resolve, reject) => {
         pool.query(query, [employee_data, employee_id], (err, res) => {
             if (err) {
-                reject(err);
+                reject(err)
             } else {
-                resolve(res);
+                resolve(res)
             }
         })
     })
 }
 
 const deleteEmployeeDetail = (employee_id) => {
-    const query = queries.deleteEmployeeDetail;
+    const query = queries.deleteEmployeeDetail
     return new Promise((resolve, reject) => {
         pool.query(query, [employee_id], (err, res) => {
             if (err) {
-                reject(err);
+                reject(err)
             } else {
-                resolve(res);
+                resolve(res)
             }
         })
     })
 }
 
-module.exports = { createEmployeeDetail, getListEmployee, getEmployeeDetail, updateEmployeeDetail, deleteEmployeeDetail }
+module.exports = {
+    createEmployeeDetail,
+    getListEmployee,
+    getEmployeeDetail,
+    updateEmployeeDetail,
+    deleteEmployeeDetail,
+}

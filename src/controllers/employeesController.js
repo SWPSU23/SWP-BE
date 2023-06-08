@@ -1,93 +1,94 @@
-const employeesModel = require("../models/employeesModel");
+const employeesModel = require('../models/employeesModel')
 
 const createEmployeeDetail = (req, res) => {
-  employeesModel.createEmployeeDetail(req.body)
-    .then((data) => {
-      res.status(200).send(
-        {
-          message: "Successfully created employee",
-          data: data
-        }
-      );
-    })
-    .catch((error) => {
-      res.status(500).send({
-        message: "Error creating employee",
-        error: error.message
-      });
-    });
-};
+    employeesModel
+        .createEmployeeDetail(req.body)
+        .then((data) => {
+            res.status(200).send({
+                message: 'Successfully created employee',
+                data: data,
+            })
+        })
+        .catch((error) => {
+            res.status(500).send({
+                message: 'Error creating employee',
+                error: error.message,
+            })
+        })
+}
 
 const getListEmployee = (req, res) => {
-  employeesModel.getListEmployee()
-    .then((data) => {
-      res.status(200).send(
-        {
-          message: "Successfully get employee list",
-          data: data
-        }
-      );
-    })
-    .catch((error) => {
-      res.status(500).send(
-        {
-          message: "Error getting employee list",
-          error: error.message
-        }
-      )
-    });
-};
+    employeesModel
+        .getListEmployee()
+        .then((data) => {
+            res.status(200).send({
+                message: 'Successfully get employee list',
+                data: data,
+            })
+        })
+        .catch((error) => {
+            res.status(500).send({
+                message: 'Error getting employee list',
+                error: error.message,
+            })
+        })
+}
 
 const getEmployeeDetail = (req, res) => {
-  employeesModel.getEmployeeDetail(req.params.id)
-    .then((data) => {
-      res.status(200).send(
-        {
-          message: "Get employee detail successfully",
-          data: data
-        }
-      );
-    })
-    .catch((error) => {
-      res.status(500).send(
-        {
-          message: "Error getting employee detail",
-          error: error.message
-        }
-      );
-    });
-};
+    employeesModel
+        .getEmployeeDetail(req.params.id)
+        .then((data) => {
+            res.status(200).send({
+                message: 'Get employee detail successfully',
+                data: data,
+            })
+        })
+        .catch((error) => {
+            res.status(500).send({
+                message: 'Error getting employee detail',
+                error: error.message,
+            })
+        })
+}
 
 const updateEmployeeDetail = (req, res) => {
-  employeesModel.updateEmployeeDetail(req.body, req.params.id)
-    .then((data) => {
-      res.send({
-        message: "Employee updated successfully",
-        data: data
-      });
-    })
-    .catch((error) => {
-      res.send({
-        message: "Error updating employee",
-        error: error
-      });
-    });
+    employeesModel
+        .updateEmployeeDetail(req.body, req.params.id)
+        .then((data) => {
+            res.send({
+                message: 'Employee updated successfully',
+                data: data,
+            })
+        })
+        .catch((error) => {
+            res.send({
+                message: 'Error updating employee',
+                error: error,
+            })
+        })
 }
 
 const deleteEmployeeDetail = (req, res) => {
-  employeesModel.deleteEmployeeDetail(req.params.id)
-    .then((data) => {
-      res.send({
-        message: "Employee deleted successfully",
-        data: data
-      });
-    })
-    .catch((error) => {
-      res.send({
-        message: "Error deleting employee",
-        error: error
-      });
-    });
+    employeesModel
+        .deleteEmployeeDetail(req.params.id)
+        .then((data) => {
+            res.send({
+                message: 'Employee deleted successfully',
+                data: data,
+            })
+        })
+        .catch((error) => {
+            res.send({
+                message: 'Error deleting employee',
+                error: error,
+            })
+        })
 }
 
-module.exports = { createEmployeeDetail, getListEmployee, getEmployeeDetail, updateEmployeeDetail, deleteEmployeeDetail };
+module.exports = {
+    createEmployeeDetail,
+    getListEmployee,
+    getEmployeeDetail,
+    updateEmployeeDetail,
+    deleteEmployeeDetail,
+}

@@ -1,22 +1,22 @@
-const express = require('express');
-const router = express.Router();
-const employeesController = require('../controllers/employeesController');
+const express = require('express')
+const router = express.Router()
+const employeesController = require('../controllers/employeesController')
 
-router.route('/')
-  // get list of employees
-  .get(employeesController.getListEmployee)
-  // create a new employee
-  .post(employeesController.createEmployeeDetail)
+router
+    .route('/')
+    // get list of employees
+    .get(employeesController.getListEmployee)
+    // create a new employee
+    .post(employeesController.createEmployeeDetail)
 
-router.route('/:id')
-  // get employee details
-  .get(employeesController.getEmployeeDetail)
-  // update employee details
-  .put(employeesController.updateEmployeeDetail)
-  // delete employee details
-  .delete(employeesController.deleteEmployeeDetail)
-
-
+router
+    .route('/:id')
+    // get employee details
+    .get(employeesController.getEmployeeDetail)
+    // update employee details
+    .put(employeesController.updateEmployeeDetail)
+    // delete employee details
+    .delete(employeesController.deleteEmployeeDetail)
 
 /**
  * @swagger
@@ -44,7 +44,7 @@ router.route('/:id')
  * description: Not found
  * 500:
  * description: Internal server error
- * 
+ *
  *  post:
  *   summary: Create new Employee
  *  tags: [Employees]
@@ -61,8 +61,8 @@ router.route('/:id')
  * description: Not found
  * 500:
  * description: Internal server error
- * 
-  */
+ *
+ */
 
 /**
  * @swagger
@@ -83,9 +83,9 @@ router.route('/:id')
  * description: Not found
  * 500:
  * description: Internal server error
- * 
+ *
  *  put:
- *    summary: update employe 
+ *    summary: update employe
  *  tags: [Employees]
  * responses:
  * 200:
@@ -100,7 +100,7 @@ router.route('/:id')
  * description: Not found
  * 500:
  * description: Internal server error
- * 
+ *
  *  *  delete:
  *    summary: delete emplyee detail by id
  *  tags: [Employees]
@@ -117,5 +117,5 @@ router.route('/:id')
  * description: Not found
  * 500:
  * description: Internal server error
-  */
-module.exports = router;
+ */
+module.exports = router
