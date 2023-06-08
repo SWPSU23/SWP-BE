@@ -10,10 +10,14 @@ module.exports = {
 
     getProductByID: 'SELECT * FROM Product WHERE id = ?',
 
+    getProductValidate: "SELECT * FROM Product WHERE name = ? AND expired_at = ?",
+    // Employee
     createEmployeeDetail: 'INSERT INTO Employee'
         + '(name, age, email_address, password, phone, base_salary, role)'
         + 'VALUES (?, ?, ?, ?, ?, ?, ?)',
 
     getListEmployee: 'SELECT * FROM Employee',
+
+    getEmployeeDetails: 'SELECT * FROM Employee WHERE id = ?',
 };
 

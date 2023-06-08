@@ -3,7 +3,7 @@ const productsModel = require('../models/productsModel');
 const createProductDetail = (req, res) => {
     productsModel.createProductDetails(req.body)
         .then((result) => {
-            res.status(200).json({
+            res.status(200).send({
                 status: 'success',
                 message: 'Create Product Details successfully',
                 data: result
@@ -17,7 +17,7 @@ const createProductDetail = (req, res) => {
 const getListProduct = (req, res) => {
     productsModel.getListProduct()
         .then((result) => {
-            res.status(200).json({
+            res.status(200).send({
                 status: 'success',
                 message: 'Get list product successfully',
                 data: result

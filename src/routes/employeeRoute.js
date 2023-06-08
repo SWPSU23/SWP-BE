@@ -2,10 +2,17 @@ const express = require('express');
 const router = express.Router();
 const employeesController = require('../controllers/employeesController');
 
-// create a new employee
-router.post('/', employeesController.createEmployeeDetail);
-//get list of employees
-router.get('/', employeesController.getListEmployee);
+router.route('/')
+  // get list of employees
+  .get(employeesController.getListEmployee)
+  // create a new employee
+  .post(employeesController.createEmployeeDetail)
+
+router.route('/:id')
+  // get employee details
+  .get(employeesController.getEmployeeDetail)
+
+
 /**
  * @swagger
  * tags:
@@ -15,7 +22,24 @@ router.get('/', employeesController.getListEmployee);
 
 /**
  * @swagger
- * /api/employee:
+ * /v1/employee:
+ *  get:
+ *   summary: get list of employees
+ *  tags: [Employees]
+ * responses:
+ * 200:
+ * description: Success
+ * 400:
+ * description: Bad request
+ * 401:
+ * description: Unauthorized
+ * 403:
+ * description: Forbidden
+ * 404:
+ * description: Not found
+ * 500:
+ * description: Internal server error
+ * 
  *  post:
  *   summary: Create new Employee
  *  tags: [Employees]
@@ -37,9 +61,9 @@ router.get('/', employeesController.getListEmployee);
 
 /**
  * @swagger
- * /api/employee:
+ * /v1/employee/:id:
  *  get:
- *   summary: Get list Employee
+ *   summary: get employee's details
  *  tags: [Employees]
  * responses:
  * 200:
@@ -54,6 +78,21 @@ router.get('/', employeesController.getListEmployee);
  * description: Not found
  * 500:
  * description: Internal server error
- * 
+ *  put:
+ *    summary: update employe 
+ *  tags: [Employees]
+ * responses:
+ * 200:
+ * description: Success
+ * 400:
+ * description: Bad request
+ * 401:
+ * description: Unauthorized
+ * 403:
+ * description: Forbidden
+ * 404:
+ * description: Not found
+ * 500:
+ * description: Internal server error
   */
 module.exports = router;

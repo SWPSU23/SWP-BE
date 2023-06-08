@@ -20,8 +20,7 @@ connection.connect((error) => {
         if (error) {
             console.error('Error performing test query:', error);
         } else {
-            const data = results.map(result => result.id);
-            console.log(`Successfully retrieved ${data} rows from the database`);
+            console.log(`Successfully retrieved ${results.length} rows from the database`);
         }
     });
 
