@@ -10,7 +10,7 @@ router.route('/')
 
 router
   .route('/search')
-  .post(productsController.searchProductBy);
+  .get(productsController.searchProductBy);
 
 router
   .route('/:id')
