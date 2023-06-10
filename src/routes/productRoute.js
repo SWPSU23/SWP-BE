@@ -8,15 +8,18 @@ router.route('/')
   // create a new product
   .post(productsController.createProductDetail);
 
-router.route('/:id')
+router
+  .route('/search')
+  .post(productsController.searchProductBy);
+
+router
+  .route('/:id')
   // get product details
   .get(productsController.getProductByID)
   // update product by ID
   .put(productsController.updateProductByID)
   // delete product by ID
   .delete(productsController.deleteProductByID);
-
-
 /**
  * @swagger
  * tags:

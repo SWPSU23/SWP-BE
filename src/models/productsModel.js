@@ -1,5 +1,5 @@
 const pool = require('../services/queryHelper').getPool()
-const queries = require('../queries/queryModal')
+const queries = require('../queries/queryModal');
 const time = require('../utilities/timeHelper')
 const Joi = require('joi')
 
@@ -16,12 +16,12 @@ const productSchema = Joi.object({
 })
 
 const createProductDetails = (product) => {
-    const query = queries.createProductDetail
-    const { error, value } = productSchema.validate(product)
+    const query = queries.Product.createProductDetail;
+    const { error, value } = productSchema.validate(product);
 
     if (error) {
-        console.error('Error executing the query: ', error)
-        throw error
+        console.error('Error executing the query: ', error);
+        throw error;
     } else {
         return new Promise((resolve, reject) => {
             pool.query(
@@ -40,66 +40,66 @@ const createProductDetails = (product) => {
                 (error, results) => {
                     if (error) {
                         console.error('Error executing the query: ', error)
-                        reject(error)
+                        reject(error);
                     } else {
                         console.log(
                             'Got the results from the database: ',
                             results
-                        )
-                        resolve(results)
+                        );
+                        resolve(results);
                     }
                 }
             )
-        })
+        });
     }
 }
 
 const getListProduct = () => {
-    const query = queries.getListProduct
+    const query = queries.Product.getListProduct;
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
                 console.error('Error executing the query: ', error)
-                reject(error)
+                reject(error);
             } else {
                 console.log('Got the results from the database: ', results)
-                resolve(results)
+                resolve(results);
             }
         })
-    })
+    });
 }
 
 const getProductByID = (id) => {
-    const query = queries.getProductByID
+    const query = queries.Product.getProductByID;
     return new Promise((resolve, reject) => {
         pool.query(query, [id], (error, results) => {
             if (error) {
                 console.error('Error executing the query: ', error)
-                reject(error)
+                reject(error);
             } else {
                 console.log('Got the results from the database: ', results)
-                resolve(results)
+                resolve(results);
             }
         })
-    })
+    });
 }
 const updateProductByID = (id, productUpdate) => {
-    const query = queries.updateProductByID
+    const query = queries.Product.updateProductByID;
     return new Promise((resolve, reject) => {
         pool.query(query, [productUpdate, id], (error, results) => {
             if (error) {
                 console.error('Error executing the query: ', error)
-                reject(error)
+                reject(error);
             } else {
                 console.log('Got the results from the database: ', results)
-                resolve(results)
+                resolve(results);
             }
         })
-    })
+    });
 }
 
 const deleteProductByID = (id) => {
-    const query = queries.deleteProductByID
+    const query = queries.Product.deleteProductByID;
     return new Promise((resolve, reject) => {
         pool.query(query, [id], (error, results) => {
             if (error) {
@@ -110,7 +110,21 @@ const deleteProductByID = (id) => {
                 resolve(results)
             }
         })
-    })
+    });
+}
+
+const searchProductBy = (searchBy, keywords) => {
+    const query = queries.Product.searchProductBy(searchBy, keywords);
+    console.log("query", query)
+    return new Promise((resolve, reject) => {
+        pool.query(query, (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        })
+    });
 }
 
 module.exports = {
@@ -119,4 +133,5 @@ module.exports = {
     getProductByID,
     updateProductByID,
     deleteProductByID,
+    searchProductBy
 }
