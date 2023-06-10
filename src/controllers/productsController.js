@@ -74,10 +74,28 @@ const deleteProductByID = (req, res) => {
         })
 }
 
+const searchProductBy = (req, res) => {
+    productsModel
+        .searchProductBy(req.query.searchBy, req.query.keywords)
+        .then((data) => {
+            res.status(200).send({
+                message: "Search product successfully",
+                data: data
+            })
+        })
+        .catch((error) => {
+            res.status(500).send({
+                message: "Search product failed",
+                error: error
+            })
+        })
+}
+
 module.exports = {
     createProductDetail,
     getListProduct,
     getProductByID,
     updateProductByID,
     deleteProductByID,
+    searchProductBy
 }

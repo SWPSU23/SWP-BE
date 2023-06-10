@@ -1,5 +1,5 @@
 const pool = require('../services/queryHelper').getPool()
-const queries = require('../queries/queryModal')
+const queries = require('../queries/queryModal').Employee;
 const Joi = require('joi')
 
 const employeeSchema = Joi.object({
