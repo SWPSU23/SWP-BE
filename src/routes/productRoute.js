@@ -1,25 +1,24 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 const productsController = require('../controllers/productsController')
 
-router.route('/')
-  // get list of products
-  .get(productsController.getListProduct)
-  // create a new product
-  .post(productsController.createProductDetail);
+router
+    .route('/')
+    // get list of products
+    .get(productsController.getListProduct)
+    // create a new product
+    .post(productsController.createProductDetail)
 
 router
-  .route('/search')
-  .get(productsController.searchProductBy);
-
-router
-  .route('/:id')
-  // get product details
-  .get(productsController.getProductByID)
-  // update product by ID
-  .put(productsController.updateProductByID)
-  // delete product by ID
-  .delete(productsController.deleteProductByID);
+    .route('/:id')
+    // get product details
+    .get(productsController.getProductByID)
+    // update product by ID
+    .put(productsController.updateProductByID)
+    // delete product by ID
+    .delete(productsController.deleteProductByID)
+router.route('/search/by')
+    .post(productsController.searchProductBy);
 /**
  * @swagger
  * tags:
@@ -46,7 +45,7 @@ router
  * description: Not found
  * 500:
  * description: Internal server error
- * 
+ *
  * *  get:
  *   summary: get list of product
  *  tags: [Products]
@@ -63,8 +62,8 @@ router
  * description: Not found
  * 500:
  * description: Internal server error
- * 
-  */
+ *
+ */
 
 /**
  * @swagger
@@ -85,7 +84,7 @@ router
  * description: Not found
  * 500:
  * description: Internal server error
- * 
+ *
  * put:
  *   summary: update product by id
  *  tags: [Products]
@@ -102,7 +101,7 @@ router
  * description: Not found
  * 500:
  * description: Internal server error
- * 
+ *
  *  delete:
  *   summary: delete product by id
  *  tags: [Products]
@@ -119,7 +118,7 @@ router
  * description: Not found
  * 500:
  * description: Internal server error
- * 
-  */
+ *
+ */
 
-module.exports = router;
+module.exports = router

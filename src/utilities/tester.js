@@ -1,29 +1,18 @@
-const mysql = require('mysql2');
+// test redis
 
-// Create a MySQL connection
-const connection = mysql.createConnection({
-    host: 'tuankiet2s.onthewifi.com',
-    user: 'ministoredb',
-    password: 'WyPbzkDT752rtsw4',
-    database: 'ministoredb',
-});
+const redis = require('redis')
+const config = require('../configs')
 
-// Test the MySQL connection
-connection.connect((error) => {
-    if (error) {
-        console.error('Error connecting to MySQL:', error);
-    } else {
-        console.log('MySQL connection successful');
-    }
-    // Perform test query
-    connection.query('SELECT * FROM Product', (error, results) => {
-        if (error) {
-            console.error('Error performing test query:', error);
-        } else {
-            console.log(`Successfully retrieved ${results.length} rows from the database`);
-        }
-    });
-
-    // Close the MySQL connection
-    connection.end();
-});
+// Create a Redis client
+const client = redis.createClient({
+    url: `redis://${config.redis.host}:${config.redis.port}/${config.redis.fileDB}`,
+    password: config.redis.password,
+})
+client.connect()
+// test read and write
+const test = async () => {
+    await client.set('key', 'value');
+    const value = await client.get('key');
+    console.log(value);
+}
+test()

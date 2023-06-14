@@ -16,33 +16,33 @@ const time = require('./utilities/timeHelper')
 // eslint-disable-next-line no-unused-vars
 const pool = require('./services/queryHelper')
 // eslint-disable-next-line no-unused-vars
-const tester = require('./utilities/tester')
-
 const redisClient = redis.createClient({
+    url: `redis://${config.redis.host}:${config.redis.port}`,
     password: config.redis.password,
-    url: config.redis.url,
+    database: config.redis.sessionDatabase,
 })
 redisClient.connect()
-
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
     transports: [
         new winston.transports.Console(),
         new winston.transports.File({
-            filename: `../logs/${time.getNow()}.log`,
+            filename: `./logs/${time.getNow()}.log`,
         }),
     ],
 })
 // setup parallel
-if (!cluster.isMaster) {
-    if (config.isDev) {
-        for (let i = 0; i < os.cpus().length; i++) {
-            cluster.fork()
-        }
-    } else {
+if (cluster.isMaster) {
+    const isDev = config.isDev
+    const numWorkers = isDev ? 1 : os.cpus().length
+    logger.info('numWorkers: ', numWorkers)
+    for (let i = 0; i < numWorkers; i++) {
         cluster.fork()
     }
+    cluster.on('online', (worker) => {
+        logger.info(`Worker ${worker.process.pid} is online`)
+    })
 } else {
     // create express app
     const app = express()

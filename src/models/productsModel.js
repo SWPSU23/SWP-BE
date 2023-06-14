@@ -20,8 +20,8 @@ const createProductDetails = (product) => {
     const { error, value } = productSchema.validate(product);
 
     if (error) {
-        console.error('Error executing the query: ', error);
-        throw error;
+        console.error('Error parsing product: ', error)
+        throw error
     } else {
         return new Promise((resolve, reject) => {
             pool.query(
