@@ -1,24 +1,23 @@
-const config = require("../configs");
-const swaggerJSDoc = require("swagger-jsdoc");
+const config = require('../configs')
+const swaggerJSDoc = require('swagger-jsdoc')
 const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Ministore API",
-      version: "1.0.0",
-      description: "Ministore API with Swagger",
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Ministore API',
+            version: '1.0.0',
+            description: 'Ministore API with Swagger',
+        },
+        servers: [
+            {
+                url: `http://${config.url}:${config.port}/v1`,
+                description: 'Ministore API server',
+            },
+        ],
     },
-    servers: [
-      {
-        url: `http://${config.url}:${config.port}`,
-        description: "Ministore API server",
-      },
-    ],
+    apis: ["./src/routes/*.js"],
+}
 
-  },
-  apis: ["../routes/*.js"],
-};
+const swaggerSpec = swaggerJSDoc(options)
 
-const swaggerSpec = swaggerJSDoc(options);
-
-module.exports = swaggerSpec;
+module.exports = swaggerSpec

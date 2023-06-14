@@ -28,15 +28,16 @@ const logger = winston.createLogger({
     transports: [
         new winston.transports.Console(),
         new winston.transports.File({
-            filename: `./logs/${time.getNow()}.log`,
+            filename: `./logs/${time.getNowDate()}.log`,
         }),
     ],
 })
 // setup parallel
 if (cluster.isMaster) {
+    console.log(`${time.getNow()}`)
     const isDev = config.isDev
     const numWorkers = isDev ? 1 : os.cpus().length
-    logger.info('numWorkers: ', numWorkers)
+    logger.info(`Master cluster setting up ${numWorkers} workers...`)
     for (let i = 0; i < numWorkers; i++) {
         cluster.fork()
     }
@@ -60,7 +61,13 @@ if (cluster.isMaster) {
     app.use(express.json())
     app.use(bodyParser.urlencoded({ extended: true }))
     // Define your routes and middleware
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+    app.use(
+        '/v1/api-docs',
+        swaggerUi.serve,
+        swaggerUi.setup(swaggerSpec, {
+            explorer: true,
+        })
+    )
     app.use('/v1', apiRoute)
 
     // Start the Express server
