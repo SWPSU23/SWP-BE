@@ -1,7 +1,6 @@
 const pool = require('../services/queryHelper').getPool()
 const queries = require('../queries/queryModal').Employee;
 const Joi = require('joi')
-const { search } = require('../routes')
 
 const employeeSchema = Joi.object({
     name: Joi.string().min(3).required(),
@@ -58,7 +57,7 @@ const getListEmployee = () => {
 }
 
 const getEmployeeDetail = (employee_id) => {
-    const query = queries.products.searchProductBy(search)
+    const query = queries.products.searchProductBy(employee_id)
     return new Promise((resolve, reject) => {
         pool.query(query, [employee_id], (error, res) => {
             if (error) {
