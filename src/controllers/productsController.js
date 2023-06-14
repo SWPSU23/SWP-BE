@@ -73,36 +73,20 @@ const deleteProductByID = (req, res) => {
             return res.status(500).json({ message: err.message })
         })
 }
-const searchProductBy = (req, res) => {
-    console.log('by', req.body.searchBy)
-    productsModel
-        .searchProductBy(req.body.searchBy, req.body.keyWord)
-
-        .then((result) => {
-            res.status(200).send({
-                status: 'success',
-                message: 'Search product successfully',
-                data: result,
-            })
-        })
-        .catch((err) => {
-            return res.status(500).json({ message: err.message })
-        })
-}
 
 const searchProductBy = (req, res) => {
     productsModel
         .searchProductBy(req.query.searchBy, req.query.keywords)
         .then((data) => {
             res.status(200).send({
-                message: "Search product successfully",
-                data: data
+                message: 'Search product successfully',
+                data: data,
             })
         })
         .catch((error) => {
             res.status(500).send({
-                message: "Search product failed",
-                error: error
+                message: 'Search product failed',
+                error: error,
             })
         })
 }
