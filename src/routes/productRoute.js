@@ -121,6 +121,20 @@ router
  *         description: ID of the product
  *         required: true
  *         type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/definitions/Product"
+ *           example:
+ *             name: huynh chi bao
+ *             description: nuoc ngot hao han
+ *             unit: nuoc ngot
+ *             unit_price: 500
+ *             stock: 100
+ *             image: https://content.etilize.com/Original/1029886380.jpg
+ *             expired_at: 2029-05-30 21:17:57
  *     responses:
  *       200:
  *         description: Successful operation

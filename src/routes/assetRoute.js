@@ -41,21 +41,24 @@ router
 
 /**
  * @swagger
- * /asset/product/images:
- *  post:
+ * /asset/product/images/:
+ *   post:
  *     summary: Upload product image
- *     description: Upload product image from client
+ *     description: Only manager access to asset management
  *     tags: [Asset Management]
- *     cosumes:
- *     - multipart/form-data
- *     parameters:
- *     - in: formData
- *       name: file
- *       type: file
- *       format: binary
- *       required: true
+ *     requestBody:
+ *        required: true
+ *        content: 
+ *          multipart/form-data:
+ *           schema:
+ *            type: object
+ *            properties:
+ *              file:
+ *               type: string
+ *               format: binary
  *     responses:
  *       200:
  *         description: Successful operation
+ * 
  */
 module.exports = router
