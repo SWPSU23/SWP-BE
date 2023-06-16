@@ -4,21 +4,22 @@ const time = require('../utilities/timeHelper')
 const Joi = require('joi')
 
 const productSchema = Joi.object({
-    name: Joi.string().min(5).max(20).required(),
-    description: Joi.string().required(),
-    unit: Joi.string().required(),
+    name: Joi.string().min(5).max(32).required(),
+    description: Joi.string().required().min(5).max(102),
+    unit: Joi.string().required().min(1).max(32),
     unit_price: Joi.number().required().min(100),
     stock: Joi.number().integer().required().min(1),
     status: Joi.boolean().default(true),
-    image: Joi.string().required(),
+    image: Joi.string().required().min(1).max(102),
     create_at: Joi.string().default(time.getNow),
     expired_at: Joi.string().required(),
 })
 
 const createProductDetails = (product) => {
     const query = queries.Product.createProductDetail;
+    console.log(product)
     const { error, value } = productSchema.validate(product);
-
+    console.log("value", value)
     if (error) {
         console.error('Error parsing product: ', error)
         throw error
@@ -78,7 +79,7 @@ const getProductByID = (id) => {
                 reject(error);
             } else {
                 console.log('Got the results from the database: ', results)
-                resolve(results);
+                resolve(results[0]);
             }
         })
     });

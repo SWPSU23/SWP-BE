@@ -1,6 +1,7 @@
 const productsModel = require('../models/productsModel')
 
 const createProductDetail = (req, res) => {
+    console.log("body", req.body)
     productsModel
         .createProductDetails(req.body)
         .then((result) => {
