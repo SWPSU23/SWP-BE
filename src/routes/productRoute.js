@@ -51,7 +51,7 @@ router
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/definitions/Product"
+ *             $ref: "#/components/schemas/Product"
  *           example:
  *             name: huynh chi bao
  *             description: nuoc ngot hao han
@@ -63,37 +63,7 @@ router
  *     responses:
  *       200:
  *        description: Successful operation
- 
- * definitions:
- *           Product:
- *               type: object
- *               properties:
- *               name:
- *                   type: string
- *                   minLength: 5
- *                   maxLength: 32
- *               description:
- *                   type: string
- *                   minLength: 5
- *                   maxLength: 102
- *               unit:
- *                   type: string
- *                   minLength: 1
- *                   maxLength: 32
- *               unit_price:
- *                   type: number
- *                   minimum: 100
- *               stock:
- *                   type: integer
- *                   minimum: 1
- *               status:
- *                   type: boolean
- *                   default: true
- *               image:
- *                   type: string
- *               expired_at:
- *                   type: string
-*/
+ */
 
 /**
  * @swagger
@@ -152,4 +122,39 @@ router
  *       200:
  *         description: Successful operation
  */
+
+/*
+* components:
+*       schemas:
+*           Product:
+*               type: object
+*               properties:
+*               name:
+*                   type: string
+*                   minLength: 5
+*                   maxLength: 32
+*               description:
+*                   type: string
+*                   minLength: 5
+*                   maxLength: 102
+*               unit:
+*                   type: string
+*                   minLength: 1
+*                   maxLength: 32
+*               unit_price:
+*                   type: number
+*                   minimum: 100
+*               stock:
+*                   type: integer
+*                   minimum: 1
+*               status:
+*                   type: boolean
+*                   default: true
+*               image:
+*                   type: string
+*               expired_at:
+*                   type: string
+*               required: 
+*               -name
+*/
 module.exports = router

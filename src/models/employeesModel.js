@@ -1,5 +1,5 @@
 const pool = require('../services/queryHelper').getPool()
-const queries = require('../queries/queryModal').Employee;
+const queries = require('../queries/queryModal');
 const Joi = require('joi')
 
 const employeeSchema = Joi.object({
@@ -13,7 +13,7 @@ const employeeSchema = Joi.object({
 })
 
 const createEmployeeDetail = (employee_detail) => {
-    const query = queries.createEmployeeDetail
+    const query = queries.Employee.createEmployeeDetail
     const { error, value } = employeeSchema.validate(employee_detail)
     if (error) {
         console.error('Error validating employee', error)
@@ -44,7 +44,7 @@ const createEmployeeDetail = (employee_detail) => {
 }
 
 const getListEmployee = () => {
-    const query = queries.getListEmployee
+    const query = queries.Employee.getListEmployee
     return new Promise((resolve, reject) => {
         pool.query(query, (err, res) => {
             if (err) {
@@ -57,7 +57,7 @@ const getListEmployee = () => {
 }
 
 const getEmployeeDetail = (employee_id) => {
-    const query = queries.products.searchProductBy(employee_id)
+    const query = queries.Employee.getEmployeeDetails
     return new Promise((resolve, reject) => {
         pool.query(query, [employee_id], (error, res) => {
             if (error) {
@@ -70,7 +70,7 @@ const getEmployeeDetail = (employee_id) => {
 }
 
 const updateEmployeeDetail = (employee_data, employee_id) => {
-    const query = queries.updateEmployeeDetail
+    const query = queries.Employee.updateEmployeeDetail
     return new Promise((resolve, reject) => {
         pool.query(query, [employee_data, employee_id], (err, res) => {
             if (err) {
@@ -83,7 +83,7 @@ const updateEmployeeDetail = (employee_data, employee_id) => {
 }
 
 const deleteEmployeeDetail = (employee_id) => {
-    const query = queries.deleteEmployeeDetail
+    const query = queries.Employee.deleteEmployeeDetail
     return new Promise((resolve, reject) => {
         pool.query(query, [employee_id], (err, res) => {
             if (err) {
