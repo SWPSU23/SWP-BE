@@ -123,6 +123,30 @@ router
  *         description: Successful operation
  */
 
+/**
+ * @swagger
+ * /product/search:
+ *   get:
+ *     summary: Search product by keyword
+ *     description: Search product by keyword
+ *     tags: [Products]
+ *     parameters:
+ *      - name: searchBy
+ *        in: query
+ *        description: Field to search
+ *        required: true
+ *        type: string
+ *      - name: keywords
+ *        in: query
+ *        description: Keywords to search
+ *        required: true
+ *        type: string
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *  
+ */
+
 /*
 * components:
 *       schemas:

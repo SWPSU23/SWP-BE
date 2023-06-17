@@ -116,7 +116,6 @@ const deleteProductByID = (id) => {
 
 const searchProductBy = (searchBy, keywords) => {
     const query = queries.Product.searchProductBy(searchBy, keywords);
-    console.log("query", query)
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
