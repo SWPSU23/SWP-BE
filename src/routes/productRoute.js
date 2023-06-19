@@ -52,14 +52,6 @@ router
  *         application/json:
  *           schema:
  *             $ref: "#/components/schemas/Product"
- *           example:
- *             name: huynh chi bao
- *             description: nuoc ngot hao han
- *             unit: nuoc ngot
- *             unit_price: 500
- *             stock: 100
- *             image: https://content.etilize.com/Original/1029886380.jpg
- *             expired_at: 2029-05-30 21:17:57
  *     responses:
  *       200:
  *        description: Successful operation
@@ -96,15 +88,7 @@ router
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/definitions/Product"
- *           example:
- *             name: huynh chi bao
- *             description: nuoc ngot hao han
- *             unit: nuoc ngot
- *             unit_price: 500
- *             stock: 100
- *             image: https://content.etilize.com/Original/1029886380.jpg
- *             expired_at: 2029-05-30 21:17:57
+ *             $ref: "#/components/schemas/Product"
  *     responses:
  *       200:
  *         description: Successful operation
@@ -147,38 +131,44 @@ router
  *  
  */
 
-/*
-* components:
-*       schemas:
-*           Product:
-*               type: object
-*               properties:
-*               name:
-*                   type: string
-*                   minLength: 5
-*                   maxLength: 32
-*               description:
-*                   type: string
-*                   minLength: 5
-*                   maxLength: 102
-*               unit:
-*                   type: string
-*                   minLength: 1
-*                   maxLength: 32
-*               unit_price:
-*                   type: number
-*                   minimum: 100
-*               stock:
-*                   type: integer
-*                   minimum: 1
-*               status:
-*                   type: boolean
-*                   default: true
-*               image:
-*                   type: string
-*               expired_at:
-*                   type: string
-*               required: 
-*               -name
-*/
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Product:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           minLength: 5
+ *           maxLength: 32
+ *         description:
+ *           type: string
+ *           minLength: 5
+ *           maxLength: 102
+ *         unit:
+ *           type: string
+ *           minLength: 1
+ *           maxLength: 32
+ *         unit_price:
+ *           type: number
+ *           minimum: 100
+ *         stock:
+ *           type: integer
+ *           minimum: 1
+ *         image:
+ *           type: string
+ *           minLength: 1
+ *           maxLength: 102
+ *         expired_at:
+ *           type: string
+ *       required:
+ *         - name
+ *         - description
+ *         - unit
+ *         - unit_price
+ *         - stock
+ *         - image
+ *         - expired_at
+ */
 module.exports = router

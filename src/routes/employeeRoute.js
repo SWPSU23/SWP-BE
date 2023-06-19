@@ -144,31 +144,39 @@ module.exports = router
  *         description: Successful operation  
  */
 
-/*
-* components:
-*       schemas:
-*           Employee:
-*               type: object
-*               properties:
-*               name:
-*                   type: string
-*                   minLength: 3
-*               age:
-*                   type: number
-*                   minimum: 16
-*               email_address:
-*                   type: string
-*                   format: email
-*                   maxLength: 32
-*               password:
-*                   type: string
-*                   minLength: 5
-*               phone:
-*                   type: integer
-*                   minimum: 9
-*               base_salary:
-*                   type: number
-*                   minimum: 1000
-*               role:
-*                   type: string
-*/
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Employee:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           minLength: 3
+ *         age:
+ *           type: number
+ *           minimum: 16
+ *         email_address:
+ *           type: string
+ *           format: email
+ *         password:
+ *           type: string
+ *           minLength: 5
+ *         phone:
+ *           type: number
+ *           minimum: 9
+ *         base_salary:
+ *           type: number
+ *           minimum: 1000
+ *         role:
+ *           type: string
+ *       required:
+ *         - name
+ *         - age
+ *         - email_address
+ *         - password
+ *         - phone
+ *         - base_salary
+ *         - role
+ */

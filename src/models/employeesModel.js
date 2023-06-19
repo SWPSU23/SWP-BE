@@ -10,6 +10,7 @@ const employeeSchema = Joi.object({
     phone: Joi.number().min(9).required(),
     base_salary: Joi.number().min(1000).required(),
     role: Joi.string().required(),
+    status: Joi.string().default('working'),
 })
 
 const createEmployeeDetail = (employee_detail) => {
@@ -30,6 +31,7 @@ const createEmployeeDetail = (employee_detail) => {
                     value.phone,
                     value.base_salary,
                     value.role,
+                    value.status
                 ],
                 (err, res) => {
                     if (err) {
