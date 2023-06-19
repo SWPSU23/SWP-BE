@@ -7,7 +7,7 @@ module.exports = {
 
         updateProductByID: 'UPDATE Product SET ?  WHERE id =?',
 
-        deleteProductByID: 'DELETE FROM Product WHERE id =?',
+        deleteProductByID: "UPDATE Product SET status = 'out of stock' WHERE id =?",
 
         getProductByID: 'SELECT * FROM Product WHERE id = ?',
 
@@ -17,8 +17,8 @@ module.exports = {
     },
     Employee: {
         createEmployeeDetail: 'INSERT INTO Employee'
-            + '(name, age, email_address, password, phone, base_salary, role)'
-            + 'VALUES (?, ?, ?, ?, ?, ?, ?)',
+            + '(name, age, email_address, password, phone, base_salary, role, status)'
+            + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
 
         getListEmployee: 'SELECT * FROM Employee',
 
@@ -26,6 +26,20 @@ module.exports = {
 
         updateEmployeeDetail: "UPDATE Employee SET ? WHERE id = ?",
 
-        deleteEmployeeDetail: "DELETE FROM Employee WHERE id = ?",
+        deleteEmployeeDetail: "UPDATE Employee SET status = 'retired' WHERE id = ?",
+    },
+
+    Order: {
+        createOrder: 'INSERT INTO `Order`'
+            + '(employee_id, create_at)'
+            + ' VALUES (?, ?)',
+
+        getListOrder: 'SELECT * FROM `Order`'
+    },
+
+    OrderProduct: {
+        createListOrderProduct: 'INSERT INTO `OrderProduct` '
+            + '(order_id, product_id, quantity, price)'
+            + ' VALUES ?'
     }
 };
