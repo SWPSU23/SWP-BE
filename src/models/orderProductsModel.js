@@ -14,7 +14,7 @@ const createListOrderProduct = (data) => {
     const { error, value } = Joi.array().items(orderProductSchema).validate(data);
 
     if (error) {
-        console.log("Error validating order product", error);
+        global.logger.error(error);
         throw error;
     } else {
         const values = value.map((value) =>

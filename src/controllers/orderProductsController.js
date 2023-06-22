@@ -1,7 +1,6 @@
 const orderProductModel = require('../models/orderProductsModel');
 
 const createListOrderProduct = (req, res) => {
-    console.log("body", req.body);
     orderProductModel
         .createListOrderProduct(req.body)
         .then((result) => {

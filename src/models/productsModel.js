@@ -1,5 +1,5 @@
 const pool = require('../services/queryHelper').getPool()
-const queries = require('../queries/queryModal');
+const queries = require('../queries/queryModal')
 const time = require('../utilities/timeHelper')
 const Joi = require('joi')
 
@@ -16,10 +16,8 @@ const productSchema = Joi.object({
 })
 
 const createProductDetails = (product) => {
-    const query = queries.Product.createProductDetail;
-    console.log(product)
-    const { error, value } = productSchema.validate(product);
-    console.log("value", value)
+    const query = queries.Product.createProductDetail
+    const { error, value } = productSchema.validate(product)
     if (error) {
         console.error('Error parsing product: ', error)
         throw error
@@ -41,90 +39,90 @@ const createProductDetails = (product) => {
                 (error, results) => {
                     if (error) {
                         console.error('Error executing the query: ', error)
-                        reject(error);
+                        reject(error)
                     } else {
-                        console.log(
-                            'Got the results from the database: ',
-                            results
-                        );
-                        resolve(results);
+                        global.logger.info('Got the results from the database: ', results)
+                        resolve(results)
                     }
                 }
             )
-        });
+        })
     }
 }
 
 const getListProduct = () => {
-    const query = queries.Product.getListProduct;
+    const query = queries.Product.getListProduct
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
                 console.error('Error executing the query: ', error)
-                reject(error);
+                reject(error)
             } else {
-                console.log('Got the results from the database: ', results)
-                resolve(results);
+                global.logger.info('Got the results from the database: ', results)
+                resolve(results)
             }
         })
-    });
+    })
 }
 
 const getProductByID = (id) => {
-    const query = queries.Product.getProductByID;
-    return new Promise((resolve, reject) => {
-        pool.query(query, [id], (error, results) => {
-            if (error) {
-                console.error('Error executing the query: ', error)
-                reject(error);
-            } else {
-                console.log('Got the results from the database: ', results)
-                resolve(results[0]);
-            }
-        })
-    });
-}
-const updateProductByID = (id, productUpdate) => {
-    const query = queries.Product.updateProductByID;
-    return new Promise((resolve, reject) => {
-        pool.query(query, [productUpdate, id], (error, results) => {
-            if (error) {
-                console.error('Error executing the query: ', error)
-                reject(error);
-            } else {
-                console.log('Got the results from the database: ', results)
-                resolve(results);
-            }
-        })
-    });
-}
-
-const deleteProductByID = (id) => {
-    const query = queries.Product.deleteProductByID;
+    const query = queries.Product.getProductByID
     return new Promise((resolve, reject) => {
         pool.query(query, [id], (error, results) => {
             if (error) {
                 console.error('Error executing the query: ', error)
                 reject(error)
             } else {
-                console.log('Got the results from the database: ', results)
+                global.logger.info('Got the results from the database: ', results)
+                resolve(results[0])
+            }
+        })
+    })
+}
+const updateProductByID = (id, productUpdate) => {
+    const query = queries.Product.updateProductByID
+    return new Promise((resolve, reject) => {
+        pool.query(query, [productUpdate, id], (error, results) => {
+            if (error) {
+                console.error('Error executing the query: ', error)
+                reject(error)
+            } else {
+                global.logger.info('Got the results from the database: ', results)
                 resolve(results)
             }
         })
-    });
+    })
+}
+
+const deleteProductByID = (id) => {
+    const query = queries.Product.deleteProductByID
+    return new Promise((resolve, reject) => {
+        pool.query(query, [id], (error, results) => {
+            if (error) {
+                console.error('Error executing the query: ', error)
+                reject(error)
+            } else {
+                global.logger.info(
+                    'Got the results from the database: ',
+                    results
+                )
+                resolve(results)
+            }
+        })
+    })
 }
 
 const searchProductBy = (searchBy, keywords) => {
-    const query = queries.Product.searchProductBy(searchBy, keywords);
+    const query = queries.Product.searchProductBy(searchBy, keywords)
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
-                reject(error);
+                reject(error)
             } else {
-                resolve(results);
+                resolve(results)
             }
         })
-    });
+    })
 }
 
 module.exports = {
@@ -133,5 +131,5 @@ module.exports = {
     getProductByID,
     updateProductByID,
     deleteProductByID,
-    searchProductBy
+    searchProductBy,
 }

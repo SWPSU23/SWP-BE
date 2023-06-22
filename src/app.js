@@ -5,50 +5,34 @@ const express = require('express')
 const session = require('express-session')
 const redis = require('redis')
 const RedisStore = require('connect-redis').default
-// eslint-disable-next-line no-unused-vars
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const swaggerUi = require('swagger-ui-express')
 const swaggerSpec = require('./utilities/swagger')
 const apiRoute = require('./routes/index')
-const winston = require('winston')
-const time = require('./utilities/timeHelper')
-// eslint-disable-next-line no-unused-vars
-const pool = require('./services/queryHelper')
-// eslint-disable-next-line no-unused-vars
+require('./utilities/logger')
 const redisClient = redis.createClient({
     url: `redis://${config.redis.host}:${config.redis.port}`,
     password: config.redis.password,
     database: config.redis.sessionDatabase,
 })
 redisClient.connect()
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.json(),
-    transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({
-            filename: `./logs/${time.getNowDate()}.log`,
-        }),
-    ],
-})
+
 // setup parallel
 if (cluster.isMaster) {
-    console.log(`${time.getNow()}`)
     const isDev = config.isDev
     const numWorkers = isDev ? 1 : os.cpus().length
-    logger.info(`Master cluster setting up ${numWorkers} workers...`)
+    global.logger.info(`Master cluster setting up ${numWorkers} workers...`)
     for (let i = 0; i < numWorkers; i++) {
         cluster.fork()
     }
     cluster.on('online', (worker) => {
-        logger.info(`Worker ${worker.process.pid} is online`)
+        global.logger.info(`Worker ${worker.process.pid} is online`)
     })
 } else {
     // create express app
     const app = express()
     const port = config.port
-    console.log('port: ', config.port)
     app.use(
         session({
             secret: config.session.secret,
@@ -72,8 +56,8 @@ if (cluster.isMaster) {
 
     // Start the Express server
     app.listen(port, () => {
-        logger.info(
-            `${time.getNow()}: Worker ${process.pid} running on ${port}`
+        global.logger.info(
+            `Worker ${process.pid} running on port: ${port}`
         )
     })
 }

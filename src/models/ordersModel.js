@@ -23,11 +23,11 @@ const getListOrder = () => {
 
 const createOrder = (data) => {
     const query = queries.Order.createOrder;
-    console.log(query);
+    global.logger.info(data);
     const { error, value } = orderSchema.validate(data);
-    console.log(value);
+    global.logger.info(value);
     if (error) {
-        console.log("Error validating order", error);
+        global.logger.error(error);
         throw error;
     } else {
         return new Promise((resolve, reject) => {
@@ -42,10 +42,7 @@ const createOrder = (data) => {
                         console.error('Error executing the query: ', error)
                         reject(error);
                     } else {
-                        console.log(
-                            'Got the results from the database: ',
-                            results
-                        );
+                        global.logger.info('Got the results from the database: ', results);
                         resolve(results.insertId);
                     }
                 }

@@ -26,7 +26,7 @@ const uploadProductImage = (req, res) => {
             res.status(200).send(result)
         })
         .catch((err) => {
-            console.error(err)
+            global.Logger.error(err)
             res.status(500).json({
                 message: err.message,
             })
@@ -44,7 +44,7 @@ const getProductImage = (req, res) => {
             res.status(200).send(Buffer.from(result.data, 'base64'))
         })
         .catch((err) => {
-            console.error(err)
+            global.Logger.error(err)
             res.status(500).json({
                 message: err.message,
             })

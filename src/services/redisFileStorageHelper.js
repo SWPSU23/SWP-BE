@@ -32,6 +32,7 @@ const hashFile = (file, type) => {
         stream.on('data', (chunk) => hash.update(chunk))
         stream.on('end', () => {
             const id = `${type}:${hash.digest('hex')}`
+            global.logger.info(`File ID: ${id}`)
             resolve(id)
         })
     })
