@@ -35,7 +35,9 @@ router
  *       type: string
  *     responses:
  *       200:
- *         description: Successful operation
+ *         description: Success
+ *       400:
+ *         description: Bad request
  * 
  */
 
@@ -58,7 +60,9 @@ router
  *               format: binary
  *     responses:
  *       200:
- *         description: Successful operation
+ *         description: Success
+ *       400:
+ *         description: Bad request
  * 
  */
 module.exports = router

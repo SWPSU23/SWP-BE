@@ -31,15 +31,29 @@ module.exports = {
 
     Order: {
         createOrder: 'INSERT INTO `Order`'
-            + '(employee_id, create_at)'
-            + ' VALUES (?, ?)',
+            + '(employee_id, create_at, status)'
+            + ' VALUES (?, ?, ?)',
 
-        getListOrder: 'SELECT * FROM `Order`'
+        getListOrder: 'SELECT * FROM `Order`',
+
+        deleteOrder: 'UPDATE `Order` SET status = `failed` WHERE id = ?',
+
+        updateOrder: 'UPDATE `Order` SET ? WHERE id = ?',
+
+        searchOrderBy: (searchBy, keywords) => {
+            return `SELECT * FROM Product WHERE ${searchBy} LIKE '%${keywords}%' ORDER BY created_at ASC`;
+        }
     },
 
     OrderProduct: {
         createListOrderProduct: 'INSERT INTO `OrderProduct` '
             + '(order_id, product_id, quantity, price)'
-            + ' VALUES ?'
+            + ' VALUES ?',
+
+        getDetailListOrder: 'SELECT * FROM `OrderProduct` WHERE `order_id` = ?',
+
+        updateOrderProduct: 'UPDATE `OrderProduct` SET ? WHERE `product_id` = ? and `order_id` = ?',
+
+        deleteOrderProduct: 'DELETE FROM `OrderProduct` WHERE `product_id` = ? and `order_id` = ?',
     }
 };

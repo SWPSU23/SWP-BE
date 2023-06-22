@@ -5,7 +5,8 @@ const time = require('../utilities/timeHelper');
 
 const orderSchema = Joi.object({
     employee_id: Joi.number().integer().required(),
-    create_at: Joi.string().default(time.getNow)
+    create_at: Joi.string().default(time.getNow),
+    status: Joi.string().default('succeed')
 })
 
 const getListOrder = () => {
@@ -30,16 +31,18 @@ const createOrder = (data) => {
         global.logger.error(error);
         throw error;
     } else {
+        console.log("status", value);
         return new Promise((resolve, reject) => {
             pool.query(
                 query,
                 [
                     value.employee_id,
-                    value.create_at
+                    value.create_at,
+                    value.status
                 ],
                 (error, results) => {
                     if (error) {
-                        console.error('Error executing the query: ', error)
+                        console.error('Error executing the query: ', error);
                         reject(error);
                     } else {
                         global.logger.info('Got the results from the database: ', results);
@@ -51,7 +54,35 @@ const createOrder = (data) => {
     }
 }
 
+const deleteOrder = (id) => {
+    const query = queries.Order.deleteOrder;
+    return new Promise((resolve, reject) => {
+        pool.query(query, [id], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        })
+    })
+}
+
+const updateOrder = (id, data) => {
+    const query = queries.Order.updateOrder;
+    return new Promise((resolve, reject) => {
+        pool.query(query, [data, id], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        })
+    });
+}
+
 module.exports = {
     createOrder,
-    getListOrder
+    getListOrder,
+    deleteOrder,
+    updateOrder
 };

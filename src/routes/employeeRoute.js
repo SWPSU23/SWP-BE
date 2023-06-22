@@ -28,15 +28,16 @@ module.exports = router
 
 /**
  * @swagger
- * /employee:
- * 
+ * /employee: 
  *   get:
  *     summary: Get list of employees
  *     description: Only manager can access 
  *     tags: [Employees]
  *     responses:
  *       200:
- *         description: Successful operation
+ *         description: Success
+ *       400:
+ *         description: Bad request
  * 
  *   post:
  *     summary: Create a new employee
@@ -58,7 +59,9 @@ module.exports = router
  *             role: manager      
  *     responses:
  *       200:
- *         description: Successful operation
+ *         description: Success
+ *       400:
+ *         description: Bad request
  * 
  */
 
@@ -78,7 +81,9 @@ module.exports = router
  *         type: string
  *     responses:
  *       200:
- *         description: Successful operation
+ *         description: Success
+ *       400:
+ *         description: Bad request
  * 
  *   post:
  *     summary: Create a new employee
@@ -100,7 +105,9 @@ module.exports = router
  *             role: manager      
  *     responses:
  *       200:
- *         description: Successful operation
+ *         description: Success
+ *       400:
+ *         description: Bad request
  * 
  *   put:
  *     summary: Update a employee
@@ -127,7 +134,9 @@ module.exports = router
  *             role: manager      
  *     responses:
  *       200:
- *         description: Successful operation
+ *         description: Success
+ *       400:
+ *         description: Bad request
  * 
  *   delete:
  *     summary: Delete a employee
@@ -141,7 +150,9 @@ module.exports = router
  *         type: string
  *     responses:
  *       200:
- *         description: Successful operation  
+ *         description: Success
+ *       400:
+ *         description: Bad request
  */
 
 /**
