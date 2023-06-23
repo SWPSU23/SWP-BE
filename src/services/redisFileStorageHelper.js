@@ -25,8 +25,9 @@ const getFile = async (id, type) => {
 }
 const hashFile = (file, type) => {
     return new Promise((resolve, reject) => {
+        global.logger.info(`file: ${file}`)
         const hash = crypto.createHash('md5')
-        const stream = createReadStreamFromBuffer(file.buffer)
+        const stream = createReadStreamFromBuffer(file)
 
         stream.on('error', (err) => reject(err))
         stream.on('data', (chunk) => hash.update(chunk))

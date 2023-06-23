@@ -56,8 +56,6 @@ if (cluster.isMaster) {
 
     // Start the Express server
     app.listen(port, () => {
-        global.logger.info(
-            `Worker ${process.pid} running on port: ${port}`
-        )
+        global.logger.info(`Worker ${process.pid} running on port: ${port}`)
     })
 }
