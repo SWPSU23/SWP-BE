@@ -38,7 +38,9 @@ router
  *     tags: [Products]
  *     responses:
  *       200:
- *         description: Successful operation
+ *         description: Success
+ *       400:
+ *         description: Bad request
  * 
  *   post:
  *     summary: Create a new product
@@ -54,7 +56,9 @@ router
  *             $ref: "#/components/schemas/Product"
  *     responses:
  *       200:
- *        description: Successful operation
+ *         description: Success
+ *       400:
+ *         description: Bad request
  */
 
 /**
@@ -72,7 +76,10 @@ router
  *         type: string
  *     responses:
  *       200:
- *         description: Successful operation
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ *
  *   put:
  *     summary: Update product by ID
  *     description: Updates a product based on the provided ID
@@ -91,7 +98,10 @@ router
  *             $ref: "#/components/schemas/Product"
  *     responses:
  *       200:
- *         description: Successful operation
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ * 
  *   delete:
  *     summary: Delete product by ID
  *     description: Deletes a product based on the provided ID
@@ -104,7 +114,9 @@ router
  *         type: string
  *     responses:
  *       200:
- *         description: Successful operation
+ *         description: Success
+ *       400:
+ *         description: Bad request
  */
 
 /**
@@ -127,8 +139,9 @@ router
  *        type: string
  *     responses:
  *       200:
- *         description: Successful operation
- *  
+ *         description: Success
+ *       400:
+ *         description: Bad request
  */
 
 /**

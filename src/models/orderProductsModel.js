@@ -38,8 +38,50 @@ const createListOrderProduct = (data) => {
     }
 }
 
+const getListOrderProduct = (order_id) => {
+    const query = queries.OrderProduct.getDetailListOrder;
+    return new Promise((resolve, reject) => {
+        pool.query(query, [order_id], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        })
+    })
+}
+
+const deleteOrderProduct = (product_id, order_id) => {
+    const query = queries.OrderProduct.deleteOrderProduct;
+    return new Promise((resolve, reject) => {
+        pool.query(query, [product_id, order_id], (error, result) => {
+            if (error) {
+                reject(error)
+            } else {
+                resolve(result)
+            }
+        })
+    })
+}
+
+const updateOrderProduct = (data, product_id, order_id) => {
+    const query = queries.OrderProduct.updateOrderProduct;
+    return new Promise((resolve, reject) => {
+        pool.query(query, [data, product_id, order_id], (error, result) => {
+            if (error) {
+                reject(error)
+            } else {
+                resolve(result)
+            }
+        })
+    })
+}
+
 module.exports = {
-    createListOrderProduct
+    createListOrderProduct,
+    getListOrderProduct,
+    deleteOrderProduct,
+    updateOrderProduct
 }
 
 
