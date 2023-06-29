@@ -38,48 +38,52 @@ const createListOrderProduct = (data) => {
     }
 }
 
-const getListOrderProduct = (order_id) => {
-    const query = queries.OrderProduct.getDetailListOrder;
+const getListDetailOrder = (order_id) => {
+    const query = queries.OrderProduct.getListDetailOrder;
     return new Promise((resolve, reject) => {
-        pool.query(query, [order_id], (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results);
-            }
-        })
+        pool.query(
+            query, [order_id], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            })
     })
 }
 
-const deleteOrderProduct = (product_id, order_id) => {
+const deleteOrderProduct = (id) => {
     const query = queries.OrderProduct.deleteOrderProduct;
     return new Promise((resolve, reject) => {
-        pool.query(query, [product_id, order_id], (error, result) => {
-            if (error) {
-                reject(error)
-            } else {
-                resolve(result)
-            }
-        })
+        pool.query(
+            query, [id], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            })
     })
 }
 
-const updateOrderProduct = (data, product_id, order_id) => {
+const updateOrderProduct = (data, id) => {
     const query = queries.OrderProduct.updateOrderProduct;
     return new Promise((resolve, reject) => {
-        pool.query(query, [data, product_id, order_id], (error, result) => {
-            if (error) {
-                reject(error)
-            } else {
-                resolve(result)
-            }
-        })
+        pool.query(
+            query, [data, id], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            })
     })
 }
+
 
 module.exports = {
     createListOrderProduct,
-    getListOrderProduct,
+    getListDetailOrder,
     deleteOrderProduct,
     updateOrderProduct
 }

@@ -91,6 +91,32 @@ router
  *         description: Bad request  
  */
 
+
+/**
+ * @swagger
+ * /order/search:
+ *  get:
+ *     summary: Create a new order
+ *     description: Only crashier can access
+ *     tags: [Orders]
+ *     parameters:
+ *      - name: searchBy
+ *        in: query
+ *        description: Field to search
+ *        required: true
+ *        type: string
+ *      - name: keywords
+ *        in: query
+ *        description: Keywords to search
+ *        required: true
+ *        type: string        
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ */
+
 /**
  * @swagger
  * components:

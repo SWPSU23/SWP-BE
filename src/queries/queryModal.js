@@ -27,6 +27,10 @@ module.exports = {
         updateEmployeeDetail: "UPDATE Employee SET ? WHERE id = ?",
 
         deleteEmployeeDetail: "UPDATE Employee SET status = 'retired' WHERE id = ?",
+
+        searchEmployeeBy: (searchBy, keywords) => {
+            return `SELECT * FROM Employee WHERE ${searchBy} LIKE '%${keywords}%'`
+        }
     },
 
     Order: {
@@ -41,19 +45,23 @@ module.exports = {
         updateOrder: 'UPDATE `Order` SET ? WHERE id = ?',
 
         searchOrderBy: (searchBy, keywords) => {
-            return `SELECT * FROM Product WHERE ${searchBy} LIKE '%${keywords}%' ORDER BY created_at ASC`;
+            return `SELECT * FROM 'Order' WHERE ${searchBy} LIKE '%${keywords}%' ORDER BY created_at ASC`;
         }
     },
 
     OrderProduct: {
         createListOrderProduct: 'INSERT INTO `OrderProduct` '
             + '(order_id, product_id, quantity, price)'
-            + ' VALUES ?',
+            + ' VALUE ?',
 
-        getDetailListOrder: 'SELECT * FROM `OrderProduct` WHERE `order_id` = ?',
+        getListDetailOrder: 'SELECT * FROM `OrderProduct` WHERE `order_id` = ?',
 
-        updateOrderProduct: 'UPDATE `OrderProduct` SET ? WHERE `product_id` = ? and `order_id` = ?',
+        updateOrderProduct: 'UPDATE `OrderProduct` SET ? WHERE `id` = ?',
 
-        deleteOrderProduct: 'DELETE FROM `OrderProduct` WHERE `product_id` = ? and `order_id` = ?',
+        deleteOrderProduct: 'DELETE FROM `OrderProduct` WHERE `id` = ?',
+    },
+
+    Worksheet: {
+
     }
 };

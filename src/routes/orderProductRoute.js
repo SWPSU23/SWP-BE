@@ -4,19 +4,13 @@ const orderProductController = require('../controllers/orderProductsController')
 
 router
     .route('/')
-    .post(orderProductController.createListOrderProduct);
-
-router
-    .route('/delete')
-    .delete(orderProductController.deleteOrderProduct)
-
-router
-    .route('/update')
-    .put(orderProductController.updateOrderProduct)
+    .post(orderProductController.createListOrderProduct)
+    .get(orderProductController.getListDetailOrder)
 
 router
     .route('/:id')
-    .get(orderProductController.getListOrderProduct)
+    .delete(orderProductController.deleteOrderProduct)
+    .put(orderProductController.updateOrderProduct)
 
 /**
  * @swagger
@@ -45,56 +39,15 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
- */
-
-/**
- * @swagger
- * /orderProduct/update:
- *   put:
- *     summary: Update order products
- *     description: Only cashier can update
+ * 
+ *   get:
+ *     summary: Get list order products
+ *     description: Manage list order products
  *     tags: [OrderProduct]
  *     parameters:
- *     - name: product_id
- *       in: query
- *       required: true
- *       type: integer
- *       description: Id of Product
  *     - name: order_id
  *       in: query
  *       required: true
- *       type: integer
- *       description: Id of Order     
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object              
- *     responses:
- *       200:
- *         description: Success
- *       400:
- *         description: Bad request
- */
-
-/**
- * @swagger
- * /orderProduct/delete:
- *  delete:
- *     summary: Delete order products
- *     description: Only cashier can delete
- *     tags: [OrderProduct]
- *     parameters:
- *     - name: product_id
- *       in: query
- *       required: true
- *       type: integer
- *       description: Id of Product
- *     - name: order_id
- *       in: query
- *       required: true
- *       type: integer
  *       description: Id of Order
  *     responses:
  *       200:
@@ -106,21 +59,46 @@ router
 /**
  * @swagger
  * /orderProduct/{id}:
- *   get:
- *     summary: Get list order products
- *     description: Manage list order products
+ * 
+ *   delete:
+ *     summary: Delete order products
+ *     description: Only cashier can delete
  *     tags: [OrderProduct]
  *     parameters:
  *     - name: id
  *       in: path
  *       required: true
- *       description: Id of Order
+ *       type: integer
+ *       description: Id of OrderProduct
  *     responses:
  *       200:
  *         description: Success
  *       400:
- *         description: Bad request
+ *         description: Bad request 
  * 
+ *   put:
+ *     summary: Update order products
+ *     description: Only cashier can update
+ *     tags: [OrderProduct]
+ *     parameters:
+ *     - name: id
+ *       in: path
+ *       required: true
+ *       type: integer
+ *       description: Id of OrderProduct    
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             items:
+ *               $ref: '#/components/schemas/OrderProduct'              
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request 
  */
 
 /**

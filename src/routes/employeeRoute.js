@@ -10,6 +10,10 @@ router
     .post(employeesController.createEmployeeDetail)
 
 router
+    .route('/search')
+    .get(employeesController.searchEmployeeBy)
+
+router
     .route('/:id')
     // get employee details
     .get(employeesController.getEmployeeDetail)
@@ -17,7 +21,6 @@ router
     .put(employeesController.updateEmployeeDetail)
     // delete employee details
     .delete(employeesController.deleteEmployeeDetail)
-module.exports = router
 
 /**
  * @swagger
@@ -157,6 +160,32 @@ module.exports = router
 
 /**
  * @swagger
+ * /employee/search:
+ *   get:
+ *     summary: Search employee by 
+ *     description: Only manager can access 
+ *     tags: [Employees]
+ *     parameters:
+ *       - name: searchBy
+ *         in: query
+ *         description: Search by name, age, email_address, phone, base_salary, role
+ *         required: true
+ *         type: string
+ *       - name: keywords
+ *         in: query
+ *         description: Keywords to search
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ * 
+ */
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     Employee:
@@ -191,3 +220,5 @@ module.exports = router
  *         - base_salary
  *         - role
  */
+
+module.exports = router

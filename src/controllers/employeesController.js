@@ -85,10 +85,28 @@ const deleteEmployeeDetail = (req, res) => {
         })
 }
 
+const searchEmployeeBy = (req, res) => {
+    employeesModel
+        .searchEmployeeBy(req.query.searchBy, req.query.keywords)
+        .then((data) => {
+            res.status(200).send({
+                message: 'Search employee successfully',
+                data: data,
+            })
+        })
+        .catch((error) => {
+            res.status(500).send({
+                message: 'Error searching employee',
+                error: error,
+            })
+        })
+}
+
 module.exports = {
     createEmployeeDetail,
     getListEmployee,
     getEmployeeDetail,
     updateEmployeeDetail,
     deleteEmployeeDetail,
+    searchEmployeeBy
 }

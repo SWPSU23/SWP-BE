@@ -1,74 +1,72 @@
 const orderProductModel = require('../models/orderProductsModel');
 
 const createListOrderProduct = (req, res) => {
-    orderProductModel
-        .createListOrderProduct(req.body)
-        .then((result) => {
+    orderProductModel.createListOrderProduct(req.body)
+        .then((results) => {
             res.status(200).send({
-                message: 'List Order Products created successfully',
-                data: result
-            })
+                message: 'Create list order products successfully',
+                data: results
+            });
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'List Order Products created failed',
-                error: error.message
-            })
+                message: 'Create list order products failed',
+                error: error
+            });
         })
 }
 
-const getListOrderProduct = (req, res) => {
-    orderProductModel
-        .getListOrderProduct(req.params.id)
-        .then((result) => {
+const getListDetailOrder = (req, res) => {
+    orderProductModel.getListDetailOrder(req.query.order_id)
+        .then((results) => {
             res.status(200).send({
                 message: 'Get list order products successfully',
-                data: result
-            })
+                data: results
+            });
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'List Order Products created failed',
-                error: error.message
-            })
+                message: 'Get list order products failed',
+                error: error
+            });
         })
 }
 
 const deleteOrderProduct = (req, res) => {
-    orderProductModel.deleteOrderProduct(req.query.product_id, req.query.order_id)
+    orderProductModel.deleteOrderProduct(req.params.id)
         .then((results) => {
-            res.status(500).send({
-                message: 'Delete orderProduct success',
+            res.status(200).send({
+                message: 'Delete order product successfully',
                 data: results
-            })
+            });
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'Delete orderProduct failed',
-                error: error.message
-            })
+                message: 'Delete order product failed',
+                error: error
+            });
         })
 }
 
 const updateOrderProduct = (req, res) => {
-    orderProductModel.updateOrderProduct(req.data, req.query.product_id, req.query.order_id)
+    orderProductModel.updateOrderProduct(req.body, req.params.id)
         .then((results) => {
-            res.status(500).send({
-                message: 'Update orderProduct success',
+            res.status(200).send({
+                message: 'Update order product successfully',
                 data: results
-            })
+            });
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'Update orderProduct failed',
-                error: error.message
-            })
+                message: 'Update order product failed',
+                error: error
+            });
         })
 }
 
 module.exports = {
     createListOrderProduct,
-    getListOrderProduct,
+    getListDetailOrder,
     deleteOrderProduct,
     updateOrderProduct
 }

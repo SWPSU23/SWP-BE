@@ -97,10 +97,24 @@ const deleteEmployeeDetail = (employee_id) => {
     })
 }
 
+const searchEmployeeBy = (searchBy, keywords) => {
+    const query = queries.Employee.searchEmployeeBy(searchBy, keywords);
+    return new Promise((resolve, reject) => {
+        pool.query(query, (err, res) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(res)
+            }
+        })
+    })
+}
+
 module.exports = {
     createEmployeeDetail,
     getListEmployee,
     getEmployeeDetail,
     updateEmployeeDetail,
     deleteEmployeeDetail,
+    searchEmployeeBy
 }
