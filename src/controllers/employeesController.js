@@ -19,7 +19,7 @@ const createEmployeeDetail = (req, res) => {
 
 const getListEmployee = (req, res) => {
     employeesModel
-        .getListEmployee()
+        .getListEmployee(req.query.page_index)
         .then((data) => {
             res.status(200).send({
                 message: 'Successfully get employee list',

@@ -17,7 +17,7 @@ const createProductDetail = (req, res) => {
 
 const getListProduct = (req, res) => {
     productsModel
-        .getListProduct()
+        .getListProduct(req.query.page_index)
         .then((result) => {
             res.status(200).send({
                 status: 'success',

@@ -36,6 +36,12 @@ router
  *     summary: Get list of employees
  *     description: Only manager can access 
  *     tags: [Employees]
+ *     parameters:
+ *     - name: page_index
+ *       in: query
+ *       description: Page index
+ *       required: true
+ *       type: number
  *     responses:
  *       200:
  *         description: Success

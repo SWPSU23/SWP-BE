@@ -36,6 +36,12 @@ router
  *     summary: Get list of products
  *     description: Retrieves a list of products
  *     tags: [Products]
+ *     parameters:
+ *     - name: page_index
+ *       in: query
+ *       description: Page index
+ *       required: true
+ *       type: integer
  *     responses:
  *       200:
  *         description: Success

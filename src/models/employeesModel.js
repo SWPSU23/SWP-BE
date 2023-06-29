@@ -45,8 +45,8 @@ const createEmployeeDetail = (employee_detail) => {
     }
 }
 
-const getListEmployee = () => {
-    const query = queries.Employee.getListEmployee
+const getListEmployee = (page_index) => {
+    const query = queries.Employee.getListEmployee(page_index)
     return new Promise((resolve, reject) => {
         pool.query(query, (err, res) => {
             if (err) {

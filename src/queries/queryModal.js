@@ -3,7 +3,10 @@ module.exports = {
         createProductDetail: 'INSERT INTO Product'
             + '(name, description, unit, unit_price, stock, status, image, create_at, expired_at)'
             + 'VALUES (?,?,?,?,?,?,?,?,?)',
-        getListProduct: 'SELECT * FROM Product ORDER BY expired_at ASC',
+
+        getListProduct: (page_index) => {
+            return `SELECT * FROM Product LIMIT 10 OFFSET ${(page_index - 1) * 10}`
+        },
 
         updateProductByID: 'UPDATE Product SET ?  WHERE id =?',
 
@@ -20,7 +23,9 @@ module.exports = {
             + '(name, age, email_address, password, phone, base_salary, role, status)'
             + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
 
-        getListEmployee: 'SELECT * FROM Employee',
+        getListEmployee: (page_index) => {
+            return `SELECT * FROM Employee LIMIT 10 OFFSET ${(page_index - 1) * 10}`
+        },
 
         getEmployeeDetails: 'SELECT * FROM Employee WHERE id = ?',
 
@@ -62,6 +67,6 @@ module.exports = {
     },
 
     Worksheet: {
-
+        createWorksheet: 'INSERT INTO `Worksheet` '
     }
 };

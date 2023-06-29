@@ -50,8 +50,8 @@ const createProductDetails = (product) => {
     }
 }
 
-const getListProduct = () => {
-    const query = queries.Product.getListProduct
+const getListProduct = (page_index) => {
+    const query = queries.Product.getListProduct(page_index);
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
