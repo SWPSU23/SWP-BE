@@ -76,5 +76,53 @@ module.exports = {
         deleteSheet: 'DELETE FROM `Sheet` WHERE `id` = ?',
 
         getSheetDetail: 'SELECT * FROM `Sheet` WHERE `id` = ?'
+    },
+    Worksheet: {
+        createWorksheet: 'INSERT INTO `Worksheet` WHERE (employee_id, sheet_id, day, status) VALUES (?, ?, ?, ?)',
+
+        getListWorksheet: 'SELECT * FROM `Worksheet` WHERE day like %?%',
+
+        updateWorksheet: 'UPDATE `Worksheet` SET ? WHERE `id` = ?',
+
+        deleteWorksheet: 'DELETE FROM `Worksheet` WHERE `id` = ?',
+
+        getWorksheetDetail: 'SELECT * FROM `Worksheet` WHERE `id` = ?'
+    },
+
+    CheckInOut: {
+        createCheckInOut: 'INSERT INTO `CheckInOut` WHERE (employee_id, check_int_at, check_out_at, sheet_id) VALUES (?, ?, ?, ?)',
+
+        getListCheckInOut: 'SELECT * FROM `CheckInOut`',
+
+        updateCheckInOut: 'UPDATE `CheckInOut` SET ? WHERE `id` = ?',
+
+        deleteCheckInOut: 'DELETE FROM `CheckInOut` WHERE `id` = ?',
+
+        getCheckInOutDetail: 'SELECT * FROM `CheckInOut` WHERE `employee_id` = ?'
+    },
+
+    PayRoll: {
+        createPayRoll: 'INSERT INTO `PayRoll` WHERE ' +
+            '(employee_id, gross_pay, insurance, tax, net_pay, start_date, end_date, create_at, status)' +
+            'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+
+        getListPayRoll: 'SELECT * FROM `PayRoll`',
+
+        updatePayRoll: 'UPDATE `PayRoll` SET ? WHERE `id` = ?',
+
+        getPaySlip: 'SELECT * FROM `PayRoll` WHERE `employee_id` = ?'
+
+    },
+
+    LeaveManagement: {
+        createLeaveForm: 'INSERT INTO `LeaveManagement` WHERE '
+            + '(employee_id, number_of_leave_days_used, start_date_of_leave, end_date_of_leave, reason_leave, status)'
+            + 'VALUES (?, ?, ?, ?, ?, ?)',
+
+        getListLeaveForm: 'SELECT * FROM `LeaveManagement`',
+
+        updateLeaveForm: 'UPDATE `LeaveManagement` SET ? WHERE `id` = ?',
+
+        getDetailLeaveForm: 'SELECT * FROM `LeaveManagement` WHERE `employee_id` = ?'
     }
 };

@@ -1,19 +1,23 @@
 const orderProductModel = require('../models/orderProductsModel');
+const orderProductValidation = require('../validations/orderProductsValidation');
 
 const createListOrderProduct = (req, res) => {
-    orderProductModel.createListOrderProduct(req.body.order_id, req.body.products, req.body.total_price)
-        .then((results) => {
-            res.status(200).send({
-                message: 'Create list order products successfully',
-                data: results
-            });
-        })
-        .catch((error) => {
-            res.status(500).send({
-                message: 'Create list order products failed',
-                error: error.message
-            });
-        })
+    orderProductValidation
+        .checkQuantityProduct(req.body.products).then((validData) =>
+            orderProductModel.
+                createListOrderProduct(req.body.order_id, validData, req.body.total_price)
+                .then((results) => {
+                    res.status(200).send({
+                        message: 'Create list order products successfully',
+                        data: results
+                    });
+                })
+                .catch((error) => {
+                    res.status(500).send({
+                        message: 'Create list order products failed',
+                        error: error.message
+                    });
+                }))
 }
 
 const getListDetailOrder = (req, res) => {
