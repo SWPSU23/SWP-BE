@@ -84,9 +84,13 @@ module.exports = {
 
         updateWorksheet: 'UPDATE `Worksheet` SET ? WHERE `id` = ?',
 
-        deleteWorksheet: 'DELETE FROM `Worksheet` WHERE `id` = ?',
+        deleteWorksheet: 'UPDATE `Worksheet` SET status = `failed` WHERE `id` = ?',
 
-        getWorksheetDetail: 'SELECT * FROM `Worksheet` WHERE `id` = ?'
+        getWorksheetDetail: 'SELECT * FROM `Worksheet` WHERE `id` = ?',
+
+        searchWorksheetBy: (searchBy, keywords) => {
+            return `SELECT * FROM 'Worksheet' WHERE ${searchBy} LIKE '%${keywords}%'`;
+        }
     },
 
     CheckInOut: {
