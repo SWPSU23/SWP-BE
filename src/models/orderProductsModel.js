@@ -9,23 +9,46 @@ const orderProductSchema = Joi.object({
     price: Joi.number().required()
 })
 
-const createListOrderProduct = (data) => {
+const createListOrderProduct = (order_id, data_products, total_price) => {
     const query = queries.OrderProduct.createListOrderProduct;
+    // add order_id to data_products
+    const data = data_products.map((data) => ({
+        order_id: order_id,
+        product_id: data.product_id,
+        quantity: data.quantity,
+        price: data.price,
+    }));
+    // validate data
     const { error, value } = Joi.array().items(orderProductSchema).validate(data);
-
     if (error) {
         global.logger.error(error);
         throw error;
     } else {
+        // convert data to array
         const values = value.map((value) =>
             [
-                value.order_id,
+                order_id,
                 value.product_id,
                 value.quantity,
                 value.price
             ]
         )
+        // set total_price for order
+        const price = {
+            total_price: total_price
+        }
+
         return new Promise((resolve, reject) => {
+            // update total_price for order
+            pool.query(
+                queries.Order.updateOrder, [price, order_id], (error, results) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        global.logger.info(results);
+                    }
+                })
+            // insert list order product
             pool.query(
                 query, [values], (error, results) => {
                     if (error) {

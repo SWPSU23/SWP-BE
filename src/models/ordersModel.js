@@ -6,6 +6,7 @@ const time = require('../utilities/timeHelper');
 const orderSchema = Joi.object({
     employee_id: Joi.number().integer().required(),
     create_at: Joi.string().default(time.getNow),
+    total_price: Joi.number().default(null),
     status: Joi.string().default('succeed')
 })
 

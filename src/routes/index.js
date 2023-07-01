@@ -6,4 +6,5 @@ router.use('/product', require('./productRoute'));
 router.use('/employee', require('./employeeRoute'));
 router.use('/order', require('./orderRoute'));
 router.use('/orderProduct', require('./orderProductRoute'));
+router.use('/sheet', require('./sheetRoute'));
 module.exports = router

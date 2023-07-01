@@ -31,8 +31,6 @@ router
  *       content:
  *         application/json:
  *           schema:
- *             type: array
- *             items:
  *               $ref: '#/components/schemas/OrderProduct'
  *     responses:
  *       200:
@@ -111,19 +109,27 @@ router
  *         order_id:
  *           type: integer
  *           format: int64
- *         product_id:
- *           type: integer
+ *         products:
+ *           type: array
  *           format: int64
- *         quantity:
+ *           items:
+ *             type: object
+ *             properties:
+ *               product_id:
+ *                 type: integer
+ *                 format: int64
+ *               quantity:
+ *                 type: integer
+ *                 format: int32
+ *               price:
+ *                 type: number
+ *         total_price:
  *           type: integer
  *           format: int32
- *         price:
- *           type: number
  *       required:
  *         - order_id
- *         - product_id
- *         - quantity
- *         - price
+ *         - products
+ *         - total_price
  */
 
 module.exports = router;

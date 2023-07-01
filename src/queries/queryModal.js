@@ -66,7 +66,15 @@ module.exports = {
         deleteOrderProduct: 'DELETE FROM `OrderProduct` WHERE `id` = ?',
     },
 
-    Worksheet: {
-        createWorksheet: 'INSERT INTO `Worksheet` '
+    Sheet: {
+        createSheet: 'INSERT INTO `Sheet` WHERE (start_time, end_time, coficient) VALUES (?, ?, ?)',
+
+        getListSheet: 'SELECT * FROM `Sheet`',
+
+        updateSheet: 'UPDATE `Sheet` SET ? WHERE `id` = ?',
+
+        deleteSheet: 'DELETE FROM `Sheet` WHERE `id` = ?',
+
+        getSheetDetail: 'SELECT * FROM `Sheet` WHERE `id` = ?'
     }
 };
