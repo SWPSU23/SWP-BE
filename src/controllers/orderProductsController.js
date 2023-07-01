@@ -11,7 +11,7 @@ const createListOrderProduct = (req, res) => {
         .catch((error) => {
             res.status(500).send({
                 message: 'Create list order products failed',
-                error: error
+                error: error.message
             });
         })
 }
@@ -27,7 +27,7 @@ const getListDetailOrder = (req, res) => {
         .catch((error) => {
             res.status(500).send({
                 message: 'Get list order products failed',
-                error: error
+                error: error.message
             });
         })
 }
@@ -43,7 +43,7 @@ const deleteOrderProduct = (req, res) => {
         .catch((error) => {
             res.status(500).send({
                 message: 'Delete order product failed',
-                error: error
+                error: error.message
             });
         })
 }
@@ -59,7 +59,7 @@ const updateOrderProduct = (req, res) => {
         .catch((error) => {
             res.status(500).send({
                 message: 'Update order product failed',
-                error: error
+                error: error.message
             });
         })
 }

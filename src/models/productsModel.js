@@ -55,7 +55,7 @@ const getListProduct = (page_index) => {
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
-                console.error('Error executing the query: ', error)
+                global.logger.error('Error executing the query: ', error)
                 reject(error)
             } else {
                 global.logger.info('Got the results from the database: ', results)
