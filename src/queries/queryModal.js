@@ -67,7 +67,7 @@ module.exports = {
     },
 
     Sheet: {
-        createSheet: 'INSERT INTO `Sheet` WHERE (start_time, end_time, coficient) VALUES (?, ?, ?)',
+        createSheet: 'INSERT INTO `Sheet` (start_time, end_time, coefficient) VALUES (?, ?, ?)',
 
         getListSheet: 'SELECT * FROM `Sheet`',
 

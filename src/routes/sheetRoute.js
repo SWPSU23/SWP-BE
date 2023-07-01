@@ -23,8 +23,8 @@ router
  * @swagger
  * /sheet:
  *   post:
- *     summary: Create a new product
- *     description: Creates a new product
+ *     summary: Create a new sheet
+ *     description: Only admins can create other sheets.
  *     tags:
  *       - Sheets
  *     requestBody:
@@ -38,6 +38,55 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
+ * 
+ *   get:
+ *     summary: Get list sheet
+ *     description: Only admins can retrieve all sheets.
+ *     tags:
+ *       - Sheets
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request 
+ */
+
+/**
+ * @swagger
+ * /sheet/{id}:
+ *   put:
+ *     summary: Create a new sheet
+ *     description: Only admins can create other sheets.
+ *     tags:
+ *       - Sheets
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of sheet
+ *         required: true
+ *         type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/Sheet"
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ * 
+ *   delete:
+ *     summary: Get list sheet
+ *     description: Only admins can retrieve all sheets.
+ *     tags:
+ *       - Sheets
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request 
  */
 
 /**
@@ -53,13 +102,13 @@ router
  *         end_time:
  *           type: time
  *           description: End time of sheet
- *         coficient:
+ *         coefficient:
  *           type: number
- *           description: Coficient of sheet
+ *           description: coefficient of sheet
  *       required:
  *         - start_time
  *         - end_time
- *         - coficient
+ *         - coefficient
  */
 
 module.exports = router;

@@ -19,6 +19,11 @@ const getNowTimeSql = () => {
 const timeStampToDate = (timeStamp) => {
     return moment(timeStamp).format('YYYY-MM-DD');
 }
+
+const timeStampToHours = (timeStamp) => {
+    return moment(timeStamp).format('hh-mm-ss');
+}
+
 const dateToTimeStamp = (date) => {
     return moment(date).unix();
 }
@@ -30,4 +35,5 @@ module.exports = {
     getNowTimeSql: getNowTimeSql,
     timeStampToDate: timeStampToDate,
     dateToTimeStamp: dateToTimeStamp,
+    timeStampToHours: timeStampToHours
 };
