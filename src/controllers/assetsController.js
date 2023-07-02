@@ -12,21 +12,14 @@ const uploadProductImage = (req, res) => {
         res.status(400).send('File is not an image.')
         return
     }
-    // convert buffer to base64 string
-    const buffer = req.file.buffer.toString('base64')
-    // generate json object to save to redis
-    const file = {
-        contentType: req.file.mimetype,
-        data: buffer,
-    }
     // Save file to Redis
     redisHelper
-        .saveFile(JSON.stringify(file), fileTypes.product.image)
+        .saveFile(req.file.buffer, fileTypes.product.image)
         .then((result) => {
             res.status(200).send(result)
         })
         .catch((err) => {
-            global.Logger.error(err)
+            global.logger.error(err)
             res.status(500).json({
                 message: err.message,
             })
@@ -39,12 +32,12 @@ const getProductImage = (req, res) => {
         .getFile(id, fileTypes.product.image)
         .then((result) => {
             // write header mimetype
-            result = JSON.parse(result)
-            res.setHeader('Content-Type', result.contentType)
-            res.status(200).send(Buffer.from(result.data, 'base64'))
+            // result = JSON.parse(result)
+            res.setHeader('Content-Type', 'image/jpeg')
+            res.status(200).send(Buffer.from(result.data))
         })
         .catch((err) => {
-            global.Logger.error(err)
+            global.logger.error(err)
             res.status(500).json({
                 message: err.message,
             })

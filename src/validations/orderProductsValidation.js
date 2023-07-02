@@ -1,45 +1,56 @@
-const pool = require('../services/queryHelper').getPool();
+const pool = require('../services/queryHelper').getPool()
 const queries = require('../queries/queryModal')
 
 const checkQuantityProduct = (products) => {
     return new Promise((resolve, reject) => {
-        const pormise = products.map((product) =>
-            // get quantity of product in stock, handle from list order product is inserted
-            new Promise((resolve, reject) => {
-                pool.query(
-                    queries.Product.getProductByID, [product.product_id], (error, results) => {
-                        if (error) {
-                            reject(error);
-                        } else {
-                            const quantity = results[0].stock - product.quantity;
-                            // check quantity of product in stock
-                            if (quantity < 0) {
-                                reject(new Error("Quantity of product is not enough"));
+        const pormise = products.map(
+            (product) =>
+                // get quantity of product in stock, handle from list order product is inserted
+                new Promise((resolve, reject) => {
+                    pool.query(
+                        queries.Product.getProductByID,
+                        [product.product_id],
+                        (error, results) => {
+                            if (error) {
+                                reject(error)
                             } else {
-                                // update valid quantity of product
-                                const validData = {
-                                    product_id: product.product_id,
-                                    quantity: quantity,
-                                    price: product.price
+                                const quantity =
+                                    results[0].stock - product.quantity
+                                // check quantity of product in stock
+                                if (quantity < 0) {
+                                    reject(
+                                        new Error(
+                                            'Quantity of product is not enough'
+                                        )
+                                    )
+                                } else {
+                                    // update valid quantity of product
+                                    const validData = {
+                                        product_id: product.product_id,
+                                        quantity: quantity,
+                                        price: product.price,
+                                    }
+                                    resolve(validData)
+                                    global.logger.info(
+                                        'Quantity of product is enough'
+                                    )
                                 }
-                                resolve(validData)
-                                global.logger.info("Quantity of product is enough");
                             }
                         }
-                    })
-            })
+                    )
+                })
         )
         // handle multiple promise with Promise.all to get list quantity of product
-        Promise
-            .all(pormise)
+        Promise.all(pormise)
             .then((results) => {
                 // return list valid of product to insert list order product
-                resolve(results);
-            }).catch((error) => {
-                reject(error);
+                resolve(results)
+            })
+            .catch((error) => {
+                reject(error)
             })
     })
 }
 module.exports = {
-    checkQuantityProduct
+    checkQuantityProduct,
 }

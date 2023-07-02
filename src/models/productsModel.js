@@ -19,7 +19,7 @@ const createProductDetails = (product) => {
     const query = queries.Product.createProductDetail
     const { error, value } = productSchema.validate(product)
     if (error) {
-        global.logger.error('Error parsing product: ', error)
+        console.error('Error parsing product: ', error)
         throw error
     } else {
         return new Promise((resolve, reject) => {
@@ -50,15 +50,15 @@ const createProductDetails = (product) => {
     }
 }
 
-const getListProduct = (page_index) => {
-    const query = queries.Product.getListProduct(page_index);
+const getListProduct = () => {
+    const query = queries.Product.getListProduct
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
-                global.logger.error('Error executing the query: ', error)
+                console.error('Error executing the query: ', error)
                 reject(error)
             } else {
-                global.logger.info('Got the results from the database: ', results)
+                global.logger.info('Got the results from the database: ', results)  
                 resolve(results)
             }
         })
@@ -84,7 +84,7 @@ const updateProductByID = (id, productUpdate) => {
     return new Promise((resolve, reject) => {
         pool.query(query, [productUpdate, id], (error, results) => {
             if (error) {
-                global.logger.error('Error executing the query: ', error)
+                console.error('Error executing the query: ', error)
                 reject(error)
             } else {
                 global.logger.info('Got the results from the database: ', results)

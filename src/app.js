@@ -1,22 +1,29 @@
 const config = require('./configs')
+require('./utilities/logger')
 const cluster = require('cluster')
 const os = require('os')
 const express = require('express')
+
+const http = require('http')
+const socketIO = require('socket.io')
+
 const session = require('express-session')
 const redis = require('redis')
 const RedisStore = require('connect-redis').default
 const bodyParser = require('body-parser')
+// eslint-disable-next-line no-unused-vars
 const cors = require('cors')
 const swaggerUi = require('swagger-ui-express')
 const swaggerSpec = require('./utilities/swagger')
 const apiRoute = require('./routes/index')
-require('./utilities/logger')
 const redisClient = redis.createClient({
     url: `redis://${config.redis.host}:${config.redis.port}`,
     password: config.redis.password,
     database: config.redis.sessionDatabase,
 })
 redisClient.connect()
+require('./services/summaryService')
+// require('./utilities/tester')
 
 // setup parallel
 if (cluster.isMaster) {
@@ -33,6 +40,20 @@ if (cluster.isMaster) {
     // create express app
     const app = express()
     const port = config.port
+    // Create an HTTP server and attach Socket.IO
+    const server = http.createServer(app)
+    const io = socketIO(server, {
+        cors: {
+            origin: '*',
+        },
+    })
+    // register socket path /v1/socket
+    io.of('/v1/socket').on('connection', (socket) => {
+        global.logger.info('a user connected')
+        socket.on('disconnect', () => {
+            global.logger.info('user disconnected')
+        })
+    })
     app.use(
         session({
             secret: config.session.secret,
@@ -41,10 +62,15 @@ if (cluster.isMaster) {
             store: new RedisStore({ client: redisClient }),
         })
     )
-    app.use(cors())
+    app.use(cors(
+        {
+            origin: '*',
+            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+            allowedHeaders: ['Content-Type', 'Authorization'],
+        }
+    ))
     app.use(express.json())
     app.use(bodyParser.urlencoded({ extended: true }))
-    // Define your routes and middleware
     app.use(
         '/v1/api-docs',
         swaggerUi.serve,
@@ -54,8 +80,8 @@ if (cluster.isMaster) {
     )
     app.use('/v1', apiRoute)
 
-    // Start the Express server
-    app.listen(port, () => {
+    // Start the server using the 'server' instance
+    server.listen(port, () => {
         global.logger.info(`Worker ${process.pid} running on port: ${port}`)
     })
 }

@@ -11,21 +11,27 @@ const client = redis.createClient({
 client.connect()
 const saveFile = (file, type) => {
     // Hash file
-    return hashFile(file, type).then((id) => {
+    return hashFile(file, type).then(async (id) => {
+        // check if file exists
+        if (await client.hExists(id, 'data')) {
+            return id
+        }
         // Save file to Redis
-        client.set(id, file)
+        client.hSet(id, 'data', Buffer.from(file))
         return id
     })
 }
 
-
 const getFile = async (id, type) => {
-    let result = await client.get(`${type}:${id}`)
-    return result
+    return await client.hGetAll(
+        redis.commandOptions({
+            returnBuffers: true,
+        }),
+        `${type}:${id}`
+    )
 }
 const hashFile = (file, type) => {
     return new Promise((resolve, reject) => {
-        global.logger.info(`file: ${file}`)
         const hash = crypto.createHash('md5')
         const stream = createReadStreamFromBuffer(file)
 
