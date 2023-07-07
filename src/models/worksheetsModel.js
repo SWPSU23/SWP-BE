@@ -7,7 +7,7 @@ const worksheetSchema = joi.object({
     employee_id: joi.number().required(),
     sheet_id: joi.number().required(),
     day: joi.string().required(),
-    status: joi.string().default('failed')
+    status: joi.string().default('pending')
 })
 
 const createWorksheet = (data) => {
@@ -127,5 +127,4 @@ module.exports = {
     deleteWorksheet,
     searchWorksheetBy,
     getWorksheetDetail
-
 }

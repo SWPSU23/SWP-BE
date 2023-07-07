@@ -94,7 +94,8 @@ module.exports = {
     },
 
     CheckInOut: {
-        createCheckInOut: 'INSERT INTO `CheckInOut` WHERE (employee_id, check_int_at, check_out_at, sheet_id) VALUES (?, ?, ?, ?)',
+        createCheckInOut: 'INSERT INTO `CheckInOut` ' +
+            'WHERE (employee_id, check_int_at, check_out_at, sheet_id) VALUES (?, ?, ?, ?)',
 
         getListCheckInOut: 'SELECT * FROM `CheckInOut`',
 
@@ -102,7 +103,11 @@ module.exports = {
 
         deleteCheckInOut: 'DELETE FROM `CheckInOut` WHERE `id` = ?',
 
-        getCheckInOutDetail: 'SELECT * FROM `CheckInOut` WHERE `employee_id` = ?'
+        getCheckInOutDetail: 'SELECT * FROM `CheckInOut` WHERE `employee_id` = ?',
+
+        searchCheckInOutBy: (searchBy, keywords) => {
+            return `SELECT * FROM 'CheckInOut' WHERE ${searchBy} LIKE '%${keywords}%'`;
+        }
     },
 
     PayRoll: {
@@ -128,5 +133,15 @@ module.exports = {
         updateLeaveForm: 'UPDATE `LeaveManagement` SET ? WHERE `id` = ?',
 
         getDetailLeaveForm: 'SELECT * FROM `LeaveManagement` WHERE `employee_id` = ?'
+    },
+
+    Calendar: {
+        createCalendar: 'INSERT INTO `Calendar` (date, isSpecialDay) VALUES (?, ?)',
+
+        getDayCalendar: (start_day, end_day) => {
+            return `SELECT * FROM Calendar WHERE date BETWEEN '${start_day}' AND '${end_day}' `
+        },
+
+        updateCalendar: 'UPDATE `Calendar` SET ? WHERE `date` = ?'
     }
 };
