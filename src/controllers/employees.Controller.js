@@ -1,4 +1,4 @@
-const employeesModel = require('../models/employeesModel')
+const employeesModel = require('../models/employees.Model')
 
 const createEmployeeDetail = (req, res) => {
     employeesModel

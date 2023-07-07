@@ -1,4 +1,4 @@
-const worksheetModel = require('../models/worksheetsModel');
+const worksheetModel = require('../models/worksheets.Model');
 
 const createWorksheet = (req, res) => {
     worksheetModel.createWorksheet(req.body)

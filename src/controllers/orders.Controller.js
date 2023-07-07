@@ -1,4 +1,4 @@
-const ordersModel = require('../models/ordersModel');
+const ordersModel = require('../models/orders.Model');
 
 const getListOrder = (req, res) => {
     ordersModel.getListOrder()

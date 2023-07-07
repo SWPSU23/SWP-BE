@@ -1,12 +1,12 @@
 const express = require('express')
 const router = express.Router()
 //generate swagger docs
-router.use('/asset', require('./assetRoute'));
-router.use('/product', require('./productRoute'));
-router.use('/employee', require('./employeeRoute'));
-router.use('/order', require('./orderRoute'));
-router.use('/orderProduct', require('./orderProductRoute'));
-router.use('/sheet', require('./sheetRoute'));
-router.use('/worksheet', require('./worksheetRoute'));
+router.use('/asset', require('./asset.Route'));
+router.use('/product', require('./product.Route'));
+router.use('/employee', require('./employee.Route'));
+router.use('/order', require('./order.Route'));
+router.use('/orderProduct', require('./orderProduct.Route'));
+router.use('/sheet', require('./sheet.Route'));
+router.use('/worksheet', require('./worksheet.Route'));
 router.use('/calendar', require('./calendar.Route'));
 module.exports = router

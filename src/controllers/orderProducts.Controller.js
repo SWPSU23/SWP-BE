@@ -1,4 +1,4 @@
-const orderProductModel = require('../models/orderProductsModel');
+const orderProductModel = require('../models/orderProducts.Model');
 const orderProductValidation = require('../validations/orderProductsValidation');
 
 const createListOrderProduct = (req, res) => {

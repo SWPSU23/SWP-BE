@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const assetsController = require('../controllers/assetsController')
+const assetsController = require('../controllers/assets.Controller')
 const multer = require('multer')
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })

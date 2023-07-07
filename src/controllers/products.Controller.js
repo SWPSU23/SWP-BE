@@ -1,4 +1,4 @@
-const productsModel = require('../models/productsModel')
+const productsModel = require('../models/products.Model')
 
 const createProductDetail = (req, res) => {
     productsModel

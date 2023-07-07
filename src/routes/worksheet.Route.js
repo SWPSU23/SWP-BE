@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const worksheetController = require('../controllers/worksheetsController');
+const worksheetController = require('../controllers/worksheets.Controller');
 
 router
     .route('/')
