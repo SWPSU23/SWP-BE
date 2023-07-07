@@ -10,11 +10,13 @@ const orderSchema = Joi.object({
     status: Joi.string().default('succeed')
 })
 
-const getListOrder = () => {
-    const query = queries.Order.getListOrder;
+const getListOrder = (page_index) => {
+    const query = queries.Order.getListOrder(page_index);
+    global.logger.info(query);
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
+                global.logger.error(error.message);
                 reject(error);
             } else {
                 resolve(results);

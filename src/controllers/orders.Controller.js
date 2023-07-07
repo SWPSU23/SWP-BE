@@ -1,7 +1,7 @@
 const ordersModel = require('../models/orders.Model');
 
 const getListOrder = (req, res) => {
-    ordersModel.getListOrder()
+    ordersModel.getListOrder(req.query.page_index)
         .then((data) => {
             res.status(200).send({
                 message: 'Get list order successfully',

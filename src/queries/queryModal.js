@@ -5,7 +5,7 @@ module.exports = {
             + 'VALUES (?,?,?,?,?,?,?,?,?)',
 
         getListProduct: (page_index) => {
-            return `SELECT * FROM Product LIMIT 10 OFFSET ${(page_index - 1) * 10}`
+            return `SELECT * FROM Product LIMIT 10 OFFSET ${(page_index - 1) * 10} ORDER BY expired_at ASC`
         },
 
         updateProductByID: 'UPDATE Product SET ?  WHERE id =?',
@@ -43,7 +43,11 @@ module.exports = {
             + '(employee_id, create_at, status)'
             + ' VALUES (?, ?, ?)',
 
-        getListOrder: 'SELECT * FROM `Order`',
+        getListOrder: (page_index) => {
+            return `SELECT o.*, e.name FROM \`Order\` o JOIN Employee e ON o.employee_id = e.id ` +
+                `ORDER BY o.create_at ASC ` +
+                `LIMIT 10 OFFSET ${(page_index - 1) * 10}`;
+        },
 
         deleteOrder: 'UPDATE `Order` SET status = `failed` WHERE id = ?',
 

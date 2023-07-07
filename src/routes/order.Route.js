@@ -47,6 +47,12 @@ router
  *     summary: Get list order
  *     description: Only cashier is allowed
  *     tags : [Orders]
+ *     parameters:
+ *       - name: page_index
+ *         in: query
+ *         description: Page index
+ *         required: true
+ *         type: int
  *     responses:
  *       200:
  *         description: Success
