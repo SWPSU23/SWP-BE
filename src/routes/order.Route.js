@@ -12,9 +12,10 @@ router
     .get(ordersController.searchOrder)
 
 router
-    .route('/id')
+    .route('/:id')
     .delete(ordersController.deleteOrder)
     .put(ordersController.updateOrder)
+
 /**
  * @swagger
  * tags:
@@ -79,22 +80,30 @@ router
  *       400:
  *         description: Bad request
  *  
- *  put: 
+ *  put:
  *     summary: Update the order
- *     description: Only cashier is allowed
- *     tags : [Orders]
+ *     description: Only crashier can access
+ *     tags: [Orders]
  *     parameters:
- *     - name: id
- *       in: path
- *       description: Id of the order
- *       type: int
+ *       - name: id
+ *         in: path
+ *         description: Id of the order
+ *         required: true
+ *         type: int
  *     requestBody:
- *       description: 
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             href: #/components/schemas/Order
+ *           example:
+ *             product_quantity: 10
+ *             total_price: 100000
  *     responses:
  *       200:
  *         description: Success
  *       400:
- *         description: Bad request  
+ *         description: Bad request
  */
 
 
@@ -141,6 +150,12 @@ router
  *           type: string
  *           description: The status of the order
  *           default: succeed
+ *         total_price:
+ *           type: number
+ *           description: The total price of the order
+ *         product_quantity:
+ *           type: number
+ *           description: The total quantity of the order
  *       required:
  *         - employee_id
  */

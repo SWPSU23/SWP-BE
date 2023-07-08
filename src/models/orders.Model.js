@@ -6,7 +6,8 @@ const time = require('../utilities/timeHelper');
 const orderSchema = Joi.object({
     employee_id: Joi.number().integer().required(),
     create_at: Joi.string().default(time.getNow),
-    total_price: Joi.number().default(null),
+    product_quantity: Joi.number().integer().default(0),
+    total_price: Joi.number().default(0),
     status: Joi.string().default('succeed')
 })
 
@@ -27,19 +28,19 @@ const getListOrder = (page_index) => {
 
 const createOrder = (data) => {
     const query = queries.Order.createOrder;
-    global.logger.info(data);
     const { error, value } = orderSchema.validate(data);
-    global.logger.info(value);
     if (error) {
         global.logger.error(error);
-        throw error;
+        new Promise.reject(error);
     } else {
-        console.log("status", value);
+        global.logger.info(value);
         return new Promise((resolve, reject) => {
             pool.query(
                 query,
                 [
                     value.employee_id,
+                    value.product_quantity,
+                    value.total_price,
                     value.create_at,
                     value.status
                 ],
@@ -75,6 +76,7 @@ const updateOrder = (id, data) => {
     return new Promise((resolve, reject) => {
         pool.query(query, [data, id], (error, results) => {
             if (error) {
+                global.logger.error(error.message);
                 reject(error);
             } else {
                 resolve(results);

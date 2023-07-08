@@ -40,11 +40,12 @@ module.exports = {
 
     Order: {
         createOrder: 'INSERT INTO `Order`'
-            + '(employee_id, create_at, status)'
-            + ' VALUES (?, ?, ?)',
+            + '(employee_id, product_quantity, total_price, create_at, status)'
+            + ' VALUES (?, ?, ?, ?, ?)',
 
         getListOrder: (page_index) => {
-            return `SELECT o.*, e.name FROM \`Order\` o JOIN Employee e ON o.employee_id = e.id ` +
+            return `SELECT o.*, e.name AS Cashier_name` +
+                ` FROM \`Order\` o JOIN Employee e ON o.employee_id = e.id ` +
                 `ORDER BY o.create_at ASC ` +
                 `LIMIT 10 OFFSET ${(page_index - 1) * 10}`;
         },
@@ -60,10 +61,12 @@ module.exports = {
 
     OrderProduct: {
         createListOrderProduct: 'INSERT INTO `OrderProduct` '
-            + '(order_id, product_id, quantity, price)'
+            + '(order_id, product_id, unit_price, quantity, total)'
             + ' VALUE ?',
 
-        getListDetailOrder: 'SELECT * FROM `OrderProduct` WHERE `order_id` = ?',
+        getListDetailOrder: 'SELECT op.*,p.name AS Product_name, p.unit AS Unit, p.unit_price AS Unit_price FROM `OrderProduct` op '
+            + ' JOIN Product p ON op.product_id = p.id'
+            + ' WHERE `order_id` = ?',
 
         updateOrderProduct: 'UPDATE `OrderProduct` SET ? WHERE `id` = ?',
 
@@ -81,6 +84,7 @@ module.exports = {
 
         getSheetDetail: 'SELECT * FROM `Sheet` WHERE `id` = ?'
     },
+
     Worksheet: {
         createWorksheet: 'INSERT INTO `Worksheet` WHERE (employee_id, sheet_id, day, status) VALUES (?, ?, ?, ?)',
 

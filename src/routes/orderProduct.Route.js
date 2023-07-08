@@ -123,13 +123,18 @@ router
  *                 format: int32
  *               price:
  *                 type: number
- *         total_price:
- *           type: integer
- *           format: int32
+ *         order:
+ *           type: object
+ *           properties:
+ *             product_quantity:
+ *               type: integer
+ *               format: int64
+ *             total_price:
+ *               type: number
  *       required:
  *         - order_id
  *         - products
- *         - total_price
+ *         - order
  */
 
 module.exports = router;

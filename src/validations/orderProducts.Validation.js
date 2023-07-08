@@ -28,7 +28,8 @@ const checkQuantityProduct = (products) => {
                                     const validData = {
                                         product_id: product.product_id,
                                         quantity: quantity,
-                                        price: product.price,
+                                        unit_price: product.unit_price,
+                                        total: product.total
                                     }
                                     resolve(validData)
                                     global.logger.info(
