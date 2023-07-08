@@ -44,7 +44,7 @@ module.exports = {
             + ' VALUES (?, ?, ?, ?, ?)',
 
         getListOrder: (page_index) => {
-            return `SELECT o.*, e.name AS Cashier_name` +
+            return `SELECT o.*, e.name AS cashier_name` +
                 ` FROM \`Order\` o JOIN Employee e ON o.employee_id = e.id ` +
                 `ORDER BY o.create_at ASC ` +
                 `LIMIT 10 OFFSET ${(page_index - 1) * 10}`;
