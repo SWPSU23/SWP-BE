@@ -123,6 +123,8 @@ router
  *                 format: int32
  *               price:
  *                 type: number
+ *               total:
+ *                 type: number
  *         order:
  *           type: object
  *           properties:
