@@ -12,29 +12,23 @@ const checkQuantityProduct = (products) => {
                         [product.product_id],
                         (error, results) => {
                             if (error) {
-                                reject(error)
+                                reject(error);
                             } else {
-                                const quantity =
-                                    results[0].stock - product.quantity
+                                const checkQuantityProduct = results[0].stock - product.quantity;
                                 // check quantity of product in stock
-                                if (quantity < 0) {
-                                    reject(
-                                        new Error(
-                                            'Quantity of product is not enough'
-                                        )
-                                    )
+                                if (checkQuantityProduct < 0) {
+                                    reject(new Error('Quantity of product is not enough'));
                                 } else {
                                     // update valid quantity of product
                                     const validData = {
                                         product_id: product.product_id,
-                                        quantity: quantity,
+                                        quantity: product.quantity,
                                         unit_price: product.unit_price,
-                                        total: product.total
-                                    }
-                                    resolve(validData)
-                                    global.logger.info(
-                                        'Quantity of product is enough'
-                                    )
+                                        total: product.total,
+                                        newQuantity: checkQuantityProduct,
+                                    };
+                                    resolve(validData);
+                                    global.logger.info('Quantity of product is enough');
                                 }
                             }
                         }
@@ -45,10 +39,10 @@ const checkQuantityProduct = (products) => {
         Promise.all(pormise)
             .then((results) => {
                 // return list valid of product to insert list order product
-                resolve(results)
+                resolve(results);
             })
             .catch((error) => {
-                reject(error)
+                reject(error);
             })
     })
 }

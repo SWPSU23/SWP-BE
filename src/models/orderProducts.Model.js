@@ -20,6 +20,11 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
         unit_price: data.unit_price,
         total: data.total
     }));
+    // add product_id, stock to update stock for product
+    const listProductUpdate = validData.map((data) => ({
+        product_id: data.product_id,
+        stock: data.newQuantity
+    }))
     // validate data
     const { error, value } = Joi.array().items(orderProductSchema).validate(listProduct);
     if (error) {
@@ -37,7 +42,6 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
                 value.total
             ]
         );
-
         // query to update
         return new Promise((resolve, reject) => {
             // insert list order product
@@ -49,11 +53,11 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
                 }
             })
             // update stock for product
-            validData.map((data) => {
+            listProductUpdate.map((data) => {
                 pool.query(
-                    queries.Product.updateProductByID, [{
-                        stock: data.quantity
-                    }, data.product_id], (error, results) => {
+                    queries.Product.updateProductByID,
+                    [{ stock: data.stock }, data.product_id],
+                    (error, results) => {
                         if (error) {
                             reject(error.message);
                         } else {
@@ -62,14 +66,16 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
                     })
             })
             // update total_price, product_quantity for order
-            pool.query(queries.Order.updateOrder, [orderUpdate, order_id], (error, results) => {
-                if (error) {
-                    reject(error.message);
-                } else {
-                    global.logger.info("Update total_price for order", results);
-                    resolve("Create list order products successfully");
-                }
-            })
+            pool.query(queries.Order.updateOrder,
+                [orderUpdate, order_id],
+                (error, results) => {
+                    if (error) {
+                        reject(error.message);
+                    } else {
+                        global.logger.info("Update total_price for order", results);
+                        resolve("Create list order products successfully");
+                    }
+                })
         })
     }
 }
@@ -91,6 +97,7 @@ const getListDetailOrder = (order_id) => {
 const deleteOrderProduct = (id) => {
     const query = queries.OrderProduct.deleteOrderProduct;
     return new Promise((resolve, reject) => {
+        // delete order detail
         pool.query(
             query, [id], (error, results) => {
                 if (error) {
