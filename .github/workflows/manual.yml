@@ -20,7 +20,7 @@ jobs:
         run: npm ci
 
       - name: Copy directory
-        run: cp -r ./dist /www/wwwroot/api.ministore.tech
+        run: cp -r . /www/wwwroot/api.ministore.tech
 
       - name: Restart server
         run: |
