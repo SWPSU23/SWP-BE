@@ -94,30 +94,6 @@ router
  *       400:
  *         description: Bad request
  * 
- *   post:
- *     summary: Create a new employee
- *     description: Only manager can access 
- *     tags: [Employees]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: "#/components/schemas/Employee"
- *           example:
- *             name: huynh chi bao
- *             age: 17
- *             email_address: bb@gmail.com
- *             password: hcb123
- *             phone: 1234567890
- *             base_salary: 1000
- *             role: manager      
- *     responses:
- *       200:
- *         description: Success
- *       400:
- *         description: Bad request
- * 
  *   put:
  *     summary: Update a employee
  *     description: Only manager can access 
