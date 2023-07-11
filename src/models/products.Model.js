@@ -50,16 +50,27 @@ const createProductDetails = (product) => {
     }
 }
 
-const getListProduct = () => {
-    const query = queries.Product.getListProduct
+const getListProduct = (page_index) => {
+    const query = queries.Product.getListProduct(page_index)
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
                 console.error('Error executing the query: ', error)
                 reject(error)
             } else {
-                global.logger.info('Got the results from the database: ', results)  
-                resolve(results)
+                const data = results.map((item) => ({
+                    id: item.id,
+                    name: item.name,
+                    description: item.description,
+                    unit: item.unit,
+                    unit_price: item.unit_price,
+                    stock: item.stock,
+                    status: item.status,
+                    image: item.image,
+                    create_at: time.timeStampToDate(item.create_at),
+                    expired_at: time.timeStampToDate(item.expired_at),
+                }))
+                resolve(data)
             }
         })
     })

@@ -5,7 +5,7 @@ module.exports = {
             + 'VALUES (?,?,?,?,?,?,?,?,?)',
 
         getListProduct: (page_index) => {
-            return `SELECT * FROM Product LIMIT 10 OFFSET ${(page_index - 1) * 10} ORDER BY expired_at ASC`
+            return `SELECT * FROM Product ORDER BY expired_at ASC LIMIT 10 OFFSET ${(page_index - 1) * 10}`
         },
 
         updateProductByID: 'UPDATE Product SET ?  WHERE id =?',

@@ -20,13 +20,15 @@ const getListProduct = (req, res) => {
         .getListProduct(req.query.page_index)
         .then((result) => {
             res.status(200).send({
-                status: 'success',
-                message: 'Get list product successfully',
+                status: true,
                 data: result,
             })
         })
         .catch((error) => {
-            res.status(500).json({ message: error.message })
+            res.status(500).json({
+                status: false,
+                message: error.message,
+            })
         })
 }
 
@@ -35,13 +37,15 @@ const getProductByID = (req, res) => {
         .getProductByID(req.params.id)
         .then((result) => {
             res.status(200).send({
-                status: 'success',
-                message: 'Get product successfully',
-                data: result,
+                status: true,
+                data: result
             })
         })
         .catch((err) => {
-            return res.status(500).json({ message: err.message })
+            return res.status(500).json({
+                status: false,
+                message: err.message
+            })
         })
 }
 const updateProductByID = (req, res) => {
@@ -49,13 +53,15 @@ const updateProductByID = (req, res) => {
         .updateProductByID(req.params.id, req.body)
         .then((result) => {
             res.status(200).send({
-                status: 'success',
-                message: 'Update product successfully',
-                data: result,
+                status: true,
+                data: result
             })
         })
         .catch((err) => {
-            return res.status(500).json({ message: err.message })
+            return res.status(500).json({
+                status: false,
+                message: err.message
+            })
         })
 }
 
@@ -64,13 +70,15 @@ const deleteProductByID = (req, res) => {
         .deleteProductByID(req.params.id)
         .then((result) => {
             res.status(200).send({
-                status: 'success',
-                message: 'Delete product successfully',
+                status: true,
                 data: result,
             })
         })
         .catch((err) => {
-            return res.status(500).json({ message: err.message })
+            return res.status(500).json({
+                status: false,
+                message: err.message
+            })
         })
 }
 
@@ -79,14 +87,14 @@ const searchProductBy = (req, res) => {
         .searchProductBy(req.query.searchBy, req.query.keywords)
         .then((data) => {
             res.status(200).send({
-                message: 'Search product successfully',
+                status: true,
                 data: data,
             })
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'Search product failed',
-                error: error,
+                status: false,
+                message: error.message,
             })
         })
 }
