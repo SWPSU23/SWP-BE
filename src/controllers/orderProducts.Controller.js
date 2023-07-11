@@ -61,7 +61,7 @@ const deleteOrderProduct = (req, res) => {
 }
 
 const updateOrderProduct = (req, res) => {
-    orderProductModel.updateOrderProduct(req.body, req.params.id)
+    orderProductModel.updateOrderProduct(req.body)
         .then((results) => {
             res.status(200).send({
                 message: 'Update order product successfully',

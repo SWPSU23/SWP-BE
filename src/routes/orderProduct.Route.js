@@ -6,11 +6,11 @@ router
     .route('/')
     .post(orderProductController.createListOrderProduct)
     .get(orderProductController.getListDetailOrder)
+    .put(orderProductController.updateOrderProduct)
 
 router
     .route('/:id')
     .delete(orderProductController.deleteOrderProduct)
-    .put(orderProductController.updateOrderProduct)
 
 /**
  * @swagger
@@ -52,6 +52,22 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
+ * 
+ *   put:
+ *     summary: Update order products
+ *     description: Only cashier can update
+ *     tags: [OrderProduct]   
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+*            schema:
+ *             $ref: '#/components/schemas/UpdateOrderProductsRequest'
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request  
  */
 
 /**
@@ -68,30 +84,6 @@ router
  *       required: true
  *       type: integer
  *       description: Id of OrderProduct
- *     responses:
- *       200:
- *         description: Success
- *       400:
- *         description: Bad request 
- * 
- *   put:
- *     summary: Update order products
- *     description: Only cashier can update
- *     tags: [OrderProduct]
- *     parameters:
- *     - name: id
- *       in: path
- *       required: true
- *       type: integer
- *       description: Id of OrderProduct    
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             items:
- *               $ref: '#/components/schemas/OrderProduct'              
  *     responses:
  *       200:
  *         description: Success
@@ -137,6 +129,32 @@ router
  *         - order_id
  *         - products
  *         - order
+ * 
+ *     UpdateOrderProductsRequest:
+ *       type: object
+ *       properties:
+ *         order:
+ *           type: object
+ *           properties:
+ *             order_id:
+ *               type: string
+ *             employee_id:
+ *               type: string
+ *             total_price:
+ *               type: number
+ *         orderProduct:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *               quantity:
+ *                 type: integer
+ *               unit_price:
+ *                 type: number
+ *               total:
+ *                 type: number
  */
 
 module.exports = router;

@@ -82,15 +82,33 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
 
 const getListDetailOrder = (order_id) => {
     const query = queries.OrderProduct.getListDetailOrder;
+
     return new Promise((resolve, reject) => {
-        pool.query(
-            query, [order_id], (error, results) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(results);
+        pool.query(query, [order_id], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                const data = {
+                    order: {},
+                    orderProduct: []
                 }
-            })
+                data.orderProduct = results.map((result) => ({
+                    id: result.id,
+                    name: result.name,
+                    unit: result.unit,
+                    unit_price: result.unit_price,
+                    quanitity: result.quantity,
+                    total: result.total
+                }))
+                data.order = {
+                    order_id: results[0].order_id,
+                    employee_id: results[0].employee_id,
+                    employee_name: results[0].employee_name,
+                    total_price: results[0].total_price,
+                }
+                resolve(data);
+            }
+        })
     })
 }
 
@@ -109,17 +127,27 @@ const deleteOrderProduct = (id) => {
     })
 }
 
-const updateOrderProduct = (data, id) => {
-    const query = queries.OrderProduct.updateOrderProduct;
+const updateOrderProduct = (data) => {
     return new Promise((resolve, reject) => {
-        pool.query(
-            query, [data, id], (error, results) => {
+
+        data.orderProduct.map((orderDetail) => {
+            pool.query(queries.OrderProduct.updateOrderProduct, [orderDetail, orderDetail.id], (error, results) => {
                 if (error) {
                     reject(error);
                 } else {
-                    resolve(results);
+                    global.logger.info("Update order detail successfully", results);
                 }
             })
+        })
+
+        pool.query(queries.Order.updateOrder, [data.order, data.order.order_id], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                global.logger.info("Update order successfully", results);
+                resolve("Update order successfully");
+            }
+        })
     })
 }
 
