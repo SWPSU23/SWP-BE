@@ -30,6 +30,10 @@ const dateToTimeStamp = (date) => {
     return moment(date).unix()
 }
 
+const getDayOfWeek = (date) => {
+    return moment(date).isoWeekday()
+}
+
 module.exports = {
     getNow: getNow,
     getNowDate: getNowDate,
@@ -39,4 +43,5 @@ module.exports = {
     timeStampToDate: timeStampToDate,
     dateToTimeStamp: dateToTimeStamp,
     timeStampToHours: timeStampToHours,
+    getDayOfWeek: getDayOfWeek
 }

@@ -52,6 +52,7 @@ const getDayCalendar = (start_day, end_day) => {
                 const data = result.map((item) => {
                     return {
                         date: time.timeStampToDate(item.date),
+                        day_of_week: time.getDayOfWeek(item.date),
                         isSpecialDay: item.isSpecialDay
                     }
                 })

@@ -97,7 +97,7 @@ const getListDetailOrder = (order_id) => {
                     name: result.name,
                     unit: result.unit,
                     unit_price: result.unit_price,
-                    quanitity: result.quantity,
+                    quantity: result.quantity,
                     total: result.total
                 }))
                 data.order = {
