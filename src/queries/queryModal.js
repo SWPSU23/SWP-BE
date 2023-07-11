@@ -158,6 +158,8 @@ module.exports = {
             return `SELECT * FROM Calendar WHERE date BETWEEN '${start_day}' AND '${end_day}' `
         },
 
-        updateCalendar: 'UPDATE `Calendar` SET ? WHERE `date` = ?'
+        updateCalendar: 'UPDATE `Calendar` SET ? WHERE `date` = ?',
+
+        getCalendar: 'SELECT * FROM `Calendar`'
     }
 };

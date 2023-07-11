@@ -2,12 +2,15 @@ const express = require('express')
 const router = express.Router()
 const calendarController = require('../controllers/calendar.Controller')
 router.route('/')
-    .post(calendarController.createCalendar)
     .get(calendarController.getDayCalendar)
 
 router
     .route('/:date')
     .put(calendarController.updateCalendar)
+
+router
+    .route('/day-of-week')
+    .get(calendarController.getListDayOfWeek)
 
 
 
@@ -21,14 +24,6 @@ router
 /**
  * @swagger
  * /calendar:
- *   post:
- *     summary: Create calendar
- *     tags: [Calendar]
- *     responses:
- *       200:
- *         description: The calendar was created successfully
- *       400:
- *         description: Bad request
  *   
  *   get:
  *     summary: Get day calendar
@@ -38,10 +33,12 @@ router
  *         name: start_day
  *         type: string
  *         required: true
+ *         example: 2023-07-20
  *       - in: query
  *         name: end_day
  *         type: string
  *         required: true
+ *         example: 2023-07-30
  *     responses:
  *       200:
  *         description: The calendar was get successfully
@@ -72,6 +69,19 @@ router
  *       400:
  *         description: Bad request
  *   
+ */
+
+/**
+ * @swagger
+ * /calendar/day-of-week:
+ *   get:
+ *     summary: Get list day of week
+ *     tags: [Calendar]
+ *     responses:
+ *       200:
+ *         description: The list day of week was get successfully
+ *       400:
+ *         description: Bad request
  */
 
 /**
