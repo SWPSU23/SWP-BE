@@ -1,4 +1,4 @@
-const sheetsModel = require('../models/sheetsModel');
+const sheetsModel = require('../models/sheets.Model');
 
 const createSheet = (req, res) => {
     sheetsModel.createSheet(req.body)

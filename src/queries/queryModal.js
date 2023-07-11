@@ -50,6 +50,10 @@ module.exports = {
                 `LIMIT 10 OFFSET ${(page_index - 1) * 10}`;
         },
 
+        getDetailOrder: 'SELECT o.id,e.id, e.name, o.total_price  FROM `Order` o '
+            + ' JOIN Employee e ON o.employee_id = e.id'
+            + ' WHERE `id` = ?',
+
         deleteOrder: 'UPDATE `Order` SET status = `failed` WHERE id = ?',
 
         updateOrder: 'UPDATE `Order` SET ? WHERE id = ?',
@@ -64,8 +68,12 @@ module.exports = {
             + '(order_id, product_id, quantity, unit_price, total)'
             + ' VALUE ?',
 
-        getListDetailOrder: 'SELECT op.id,p.name, p.unit , op.unit_price, op.quantity, op.total FROM `OrderProduct` op '
+        getListDetailOrder: 'SELECT op.id, p.name, p.unit, op.unit_price, op.quantity, op.total'
+            + ', o.id AS order_id, e.id AS employee_id, e.name AS employee_name, o.total_price'
+            + ' FROM `OrderProduct` op '
             + ' JOIN Product p ON op.product_id = p.id'
+            + ' JOIN `Order` o ON op.order_id = o.id'
+            + ' JOIN Employee e ON o.employee_id = e.id'
             + ' WHERE `order_id` = ?',
 
         updateOrderProduct: 'UPDATE `OrderProduct` SET ? WHERE `id` = ?',
