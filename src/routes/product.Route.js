@@ -175,6 +175,11 @@ router
  *         stock:
  *           type: integer
  *           minimum: 1
+ *         retail_price:
+ *           type: number
+ *           minimum: 100
+ *         category:
+ *           type: string
  *         image:
  *           type: string
  *           minLength: 1

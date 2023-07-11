@@ -6,7 +6,6 @@ const createProductDetail = (req, res) => {
         .then((result) => {
             res.status(200).send({
                 status: 'success',
-                message: 'Create Product Details successfully',
                 data: result,
             })
         })

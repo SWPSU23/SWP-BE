@@ -1,11 +1,14 @@
 module.exports = {
     Product: {
         createProductDetail: 'INSERT INTO Product'
-            + '(name, description, unit, unit_price, stock, status, image, create_at, expired_at)'
-            + 'VALUES (?,?,?,?,?,?,?,?,?)',
+            + '(name, description, unit, cost_price, stock, retail_price, category, status, image, create_at, expired_at)'
+            + 'VALUES (?,?,?,?,?,?,?,?,?,?,?)',
 
         getListProduct: (page_index) => {
-            return `SELECT * FROM Product ORDER BY expired_at ASC LIMIT 10 OFFSET ${(page_index - 1) * 10}`
+            return `SELECT *, (SELECT COUNT(*) FROM Product) AS page`
+                + ` FROM Product`
+                + ` ORDER BY expired_at ASC`
+                + ` LIMIT 10 OFFSET ${(page_index - 1) * 10}`
         },
 
         updateProductByID: 'UPDATE Product SET ?  WHERE id =?',
@@ -18,6 +21,17 @@ module.exports = {
             return `SELECT * FROM Product WHERE ${searchBy} LIKE '%${keywords}%' ORDER BY expired_at ASC`
         }
     },
+
+    Category: {
+        createCategory: 'INSERT INTO Category (name) VALUES (?)',
+
+        getListCategory: 'SELECT * FROM Category',
+
+        updateCategory: 'UPDATE Category SET ? WHERE name = ?',
+
+        deleteCategory: 'DELETE FROM Category WHERE name = ?',
+    },
+
     Employee: {
         createEmployeeDetail: 'INSERT INTO Employee'
             + '(name, age, email_address, password, phone, base_salary, role, status)'

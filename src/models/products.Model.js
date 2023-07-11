@@ -7,10 +7,12 @@ const productSchema = Joi.object({
     name: Joi.string().min(5).max(32).required(),
     description: Joi.string().required().min(5).max(102),
     unit: Joi.string().required().min(1).max(32),
-    unit_price: Joi.number().required().min(100),
+    cost_price: Joi.number().required().min(100),
     stock: Joi.number().integer().required().min(1),
+    retail_price: Joi.number().required().min(100),
+    category: Joi.string().required(),
     status: Joi.string().default('available'),
-    image: Joi.string().required().min(1).max(102),
+    image: Joi.string().min(100).required(),
     create_at: Joi.string().default(time.getNow),
     expired_at: Joi.string().required(),
 })
@@ -29,7 +31,7 @@ const createProductDetails = (product) => {
                     value.name,
                     value.description,
                     value.unit,
-                    value.unit_price,
+                    value.cost_price,
                     value.stock,
                     value.status,
                     value.image,
@@ -58,18 +60,29 @@ const getListProduct = (page_index) => {
                 console.error('Error executing the query: ', error)
                 reject(error)
             } else {
-                const data = results.map((item) => ({
-                    id: item.id,
-                    name: item.name,
-                    description: item.description,
-                    unit: item.unit,
-                    unit_price: item.unit_price,
-                    stock: item.stock,
-                    status: item.status,
-                    image: item.image,
-                    create_at: time.timeStampToDate(item.create_at),
-                    expired_at: time.timeStampToDate(item.expired_at),
-                }))
+                const data = {
+                    info: {},
+                    product: [],
+                }
+                data.info = {
+                    page: Math.ceil(results[0].page / 10)
+                }
+                results.map((item) => {
+                    data.product.push({
+                        id: item.id,
+                        name: item.name,
+                        description: item.description,
+                        unit: item.unit,
+                        cost_price: item.cost_price,
+                        stock: item.stock,
+                        retail_price: item.retail_price,
+                        category: item.category,
+                        status: item.status,
+                        image: item.image,
+                        create_at: item.create_at,
+                        expired_at: item.expired_at,
+                    })
+                })
                 resolve(data)
             }
         })
