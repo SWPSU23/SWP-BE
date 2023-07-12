@@ -1,30 +1,22 @@
-const redis = require('redis')
 const crypto = require('crypto')
-const config = require('../configs')
 const { Readable } = require('stream')
-
-// Create a Redis client
-const client = redis.createClient({
-    url: `redis://${config.redis.host}:${config.redis.port}/${config.redis.fileDB}`,
-    password: config.redis.password,
-})
-client.connect()
 const saveFile = (file, type) => {
     // Hash file
     return hashFile(file, type).then(async (id) => {
         // check if file exists
-        if (await client.hExists(id, 'data')) {
+        if (await global.redisClient.hExists(id, 'data')) {
             return id
         }
         // Save file to Redis
-        client.hSet(id, 'data', Buffer.from(file))
+        global.redisClient.hSet(id, 'data', Buffer.from(file))
         return id
     })
 }
 
 const getFile = async (id, type) => {
-    return await client.hGetAll(
-        redis.commandOptions({
+    global.logger.info(`File ID: ${id}`)
+    return await global.redisClient.hGetAll(
+        global.redis.commandOptions({
             returnBuffers: true,
         }),
         `${type}:${id}`
@@ -39,7 +31,6 @@ const hashFile = (file, type) => {
         stream.on('data', (chunk) => hash.update(chunk))
         stream.on('end', () => {
             const id = `${type}:${hash.digest('hex')}`
-            global.logger.info(`File ID: ${id}`)
             resolve(id)
         })
     })

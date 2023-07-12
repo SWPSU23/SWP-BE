@@ -2,11 +2,8 @@ require('./utilities/logger')
 const cluster = require('cluster')
 const os = require('os')
 const express = require('express')
-
-const http = require('http')
-const socketIO = require('socket.io')
-
 const session = require('express-session')
+const { createServer } = require('http')
 const RedisStore = require('connect-redis').default
 const bodyParser = require('body-parser')
 // eslint-disable-next-line no-unused-vars
@@ -19,6 +16,9 @@ const apiRoute = require('./routes/index')
 // setup parallel
 if (cluster.isMaster) {
     const isDev = global.config.isDev
+    global.logger.info(
+        `server is running on ${isDev ? 'Development' : 'Production'} mode`
+    )
     const numWorkers = isDev ? 1 : os.cpus().length
     global.logger.info(`Master cluster setting up ${numWorkers} workers...`)
     for (let i = 0; i < numWorkers; i++) {
@@ -27,24 +27,20 @@ if (cluster.isMaster) {
     cluster.on('online', (worker) => {
         global.logger.info(`Worker ${worker.process.pid} is online`)
     })
+    cluster.on('exit', (worker, code, signal) => {
+        global.logger.info(
+            `Worker ${worker.process.pid} died with code: ${code}, and signal: ${signal}`
+        )
+        // 'Starting a new worker'
+        cluster.fork()
+    })
 } else {
+    // debug break point
+    global.logger.info(`Worker ${process.pid} started`)
     // create express app
     const app = express()
     const port = global.config.port
-    // Create an HTTP server and attach Socket.IO
-    const server = http.createServer(app)
-    const io = socketIO(server, {
-        cors: {
-            origin: '*',
-        },
-    })
-    // register socket path /v1/socket
-    io.of('/v1/socket').on('connection', (socket) => {
-        global.logger.info('a user connected')
-        socket.on('disconnect', () => {
-            global.logger.info('user disconnected')
-        })
-    })
+    const server = createServer(app)
     app.use(
         session({
             secret: global.config.session.secret,
@@ -53,13 +49,13 @@ if (cluster.isMaster) {
             store: new RedisStore({ client: global.redisClient }),
         })
     )
-    app.use(cors(
-        {
+    app.use(
+        cors({
             origin: '*',
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             allowedHeaders: ['Content-Type', 'Authorization'],
-        }
-    ))
+        })
+    )
     app.use(express.json())
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(
@@ -75,4 +71,5 @@ if (cluster.isMaster) {
     server.listen(port, () => {
         global.logger.info(`Worker ${process.pid} running on port: ${port}`)
     })
+    global.server = server
 }

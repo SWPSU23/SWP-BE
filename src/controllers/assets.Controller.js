@@ -27,9 +27,8 @@ const uploadProductImage = (req, res) => {
 }
 
 const getProductImage = (req, res) => {
-    const id = req.params.id
     redisHelper
-        .getFile(id, fileTypes.product.image)
+        .getFile(req.params.id, fileTypes.product.image)
         .then((result) => {
             // write header mimetype
             // result = JSON.parse(result)
@@ -37,7 +36,7 @@ const getProductImage = (req, res) => {
             res.status(200).send(Buffer.from(result.data))
         })
         .catch((err) => {
-            global.logger.error(err)
+            global.logger.error("err:", err)
             res.status(500).json({
                 message: err.message,
             })
