@@ -2,10 +2,10 @@
   "name": "swp-be",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production nodemon src/app.js",
-    "devStart": "cross-env NODE_ENV=development nodemon --trace-warnings src/app.js",
+    "start": "cross-env NODE_ENV=production nodemon src/index.js",
+    "devStart": "cross-env NODE_ENV=development nodemon --trace-warnings src/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
