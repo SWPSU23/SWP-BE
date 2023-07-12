@@ -65,7 +65,7 @@ const getListProduct = (page_index) => {
                     product: [],
                 }
                 data.info = {
-                    page: Math.ceil(results[0].page / 10)
+                    total_page: Math.ceil(results[0].page / 10)
                 }
                 results.map((item) => {
                     data.product.push({

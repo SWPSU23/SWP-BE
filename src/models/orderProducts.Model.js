@@ -73,9 +73,10 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
                         reject(error.message);
                     } else {
                         global.logger.info("Update total_price for order", results);
-                        resolve("Create list order products successfully");
                     }
                 })
+
+            resolve("Create list order product success");
         })
     }
 }
@@ -100,63 +101,23 @@ const getListDetailOrder = (order_id) => {
                     quantity: result.quantity,
                     total: result.total
                 }))
+                global.logger.info("Order product detail", data.orderProduct)
                 data.order = {
                     order_id: results[0].order_id,
                     employee_id: results[0].employee_id,
                     employee_name: results[0].employee_name,
                     total_price: results[0].total_price,
                 }
+                global.logger.info("Order detail", data.order)
                 resolve(data);
             }
         })
     })
 }
 
-const deleteOrderProduct = (id) => {
-    const query = queries.OrderProduct.deleteOrderProduct;
-    return new Promise((resolve, reject) => {
-        // delete order detail
-        pool.query(
-            query, [id], (error, results) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(results);
-                }
-            })
-    })
-}
-
-const updateOrderProduct = (data) => {
-    return new Promise((resolve, reject) => {
-
-        data.orderProduct.map((orderDetail) => {
-            pool.query(queries.OrderProduct.updateOrderProduct, [orderDetail, orderDetail.id], (error, results) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    global.logger.info("Update order detail successfully", results);
-                }
-            })
-        })
-
-        pool.query(queries.Order.updateOrder, [data.order, data.order.order_id], (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                global.logger.info("Update order successfully", results);
-                resolve("Update order successfully");
-            }
-        })
-    })
-}
-
-
 module.exports = {
     createListOrderProduct,
-    getListDetailOrder,
-    deleteOrderProduct,
-    updateOrderProduct
+    getListDetailOrder
 }
 
 

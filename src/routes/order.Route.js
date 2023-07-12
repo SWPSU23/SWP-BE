@@ -14,7 +14,6 @@ router
 router
     .route('/:id')
     .delete(ordersController.deleteOrder)
-    .put(ordersController.updateOrder)
 
 /**
  * @swagger
@@ -74,31 +73,6 @@ router
  *        description: Id of the order
  *        required: true
  *        type: int
- *     responses:
- *       200:
- *         description: Success
- *       400:
- *         description: Bad request
- *  
- *  put:
- *     summary: Update the order
- *     description: Only crashier can access
- *     tags: [Orders]
- *     parameters:
- *       - name: id
- *         in: path
- *         description: Id of the order
- *         required: true
- *         type: int
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             href: #/components/schemas/Order
- *           example:
- *             product_quantity: 10
- *             total_price: 100000
  *     responses:
  *       200:
  *         description: Success

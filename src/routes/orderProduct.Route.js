@@ -6,11 +6,6 @@ router
     .route('/')
     .post(orderProductController.createListOrderProduct)
     .get(orderProductController.getListDetailOrder)
-    .put(orderProductController.updateOrderProduct)
-
-router
-    .route('/:id')
-    .delete(orderProductController.deleteOrderProduct)
 
 /**
  * @swagger
@@ -52,43 +47,6 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
- * 
- *   put:
- *     summary: Update order products
- *     description: Only cashier can update
- *     tags: [OrderProduct]   
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
-*            schema:
- *             $ref: '#/components/schemas/UpdateOrderProductsRequest'
- *     responses:
- *       200:
- *         description: Success
- *       400:
- *         description: Bad request  
- */
-
-/**
- * @swagger
- * /orderProduct/{id}:
- * 
- *   delete:
- *     summary: Delete order products
- *     description: Only cashier can delete
- *     tags: [OrderProduct]
- *     parameters:
- *     - name: id
- *       in: path
- *       required: true
- *       type: integer
- *       description: Id of OrderProduct
- *     responses:
- *       200:
- *         description: Success
- *       400:
- *         description: Bad request 
  */
 
 /**
@@ -113,7 +71,7 @@ router
  *               quantity:
  *                 type: integer
  *                 format: int32
- *               price:
+ *               unit_price:
  *                 type: number
  *               total:
  *                 type: number

@@ -4,14 +4,14 @@ const getListOrder = (req, res) => {
     ordersModel.getListOrder(req.query.page_index)
         .then((data) => {
             res.status(200).send({
-                message: 'Get list order successfully',
+                success: true,
                 data: data
             })
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'Error while getting list order',
-                error: error.message
+                success: false,
+                message: error.message
             })
         })
 }
@@ -20,62 +20,47 @@ const createOrder = (req, res) => {
     ordersModel.createOrder(req.body)
         .then((data) => {
             res.status(200).send({
-                message: 'Order created successfully',
+                success: true,
                 order_id: data
             })
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'Error creating order',
-                error: error.message
+                success: false,
+                message: error.message
             })
         })
 }
 
-const deleteOrder = (res, req) => {
+const deleteOrder = (req, res) => {
+    console.log(req.params.id)
     ordersModel.deleteOrder(req.params.id)
         .then((results) => {
             res.status(200).send({
-                message: 'Delete order successfully',
+                success: true,
                 data: results
             });
         })
         .catch((errors) => {
             res.status(500).send({
-                message: 'Error deleting order',
-                errors: errors.message
+                success: false,
+                message: errors.message
             });
-        })
-}
-
-const updateOrder = (req, res) => {
-    ordersModel.updateOrder(req.params.id, req.body)
-        .then((results) => {
-            res.status(200).send({
-                message: 'Update Order successfully',
-                data: results
-            })
-        })
-        .catch((errors) => {
-            res.status(500).send({
-                message: 'Update Order failed',
-                errors: errors.message
-            })
         })
 }
 
 const searchOrder = (req, res) => {
-    ordersModel.searchOrder(req.query.searchBy, req.query.keywords)
+    ordersModel.searchOrderBy(req.query.searchBy, req.query.keywords)
         .then((results) => {
             res.status(200).send({
-                message: 'Search order succed',
+                success: true,
                 data: results
             })
         })
         .catch((errors) => {
             res.status(500).send({
-                message: 'Search order failed',
-                errors: errors.message
+                success: false,
+                message: errors.message
             })
         })
 }
@@ -84,6 +69,5 @@ module.exports = {
     createOrder,
     getListOrder,
     deleteOrder,
-    updateOrder,
     searchOrder
 }

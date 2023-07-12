@@ -60,21 +60,51 @@ const createOrder = (data) => {
 
 const deleteOrder = (id) => {
     const query = queries.Order.deleteOrder;
+    console.log("query: ", query)
+    console.log("id: ", id)
     return new Promise((resolve, reject) => {
         pool.query(query, [id], (err, results) => {
             if (err) {
+                global.logger.error(err);
                 reject(err);
             } else {
-                resolve(results);
+                global.logger.info(results);
             }
         })
+
+        // update stock of product when delete order 
+        pool.query(queries.OrderProduct.updateStockProduct, [id], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                global.logger.info(results);
+                // loop through the results to update stock of product
+                results.map((result) => {
+                    const newStock = {
+                        stock: result.stock + result.quantity
+                    }
+                    // update stock of product
+                    pool.query(queries.Product.updateProductByID, [newStock, result.product_id], (err, results) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            global.logger.info(results);
+                        }
+                    })
+                })
+                resolve()
+
+            }
+        })
+
     })
 }
 
-const updateOrder = (id, data) => {
-    const query = queries.Order.updateOrder;
+const searchOrderBy = (searchBy, keywords) => {
+    const query = queries.Order.searchOrderBy(searchBy, keywords);
+    global.logger.info(query);
     return new Promise((resolve, reject) => {
-        pool.query(query, [data, id], (error, results) => {
+        pool.query(query, (error, results) => {
             if (error) {
                 global.logger.error(error.message);
                 reject(error);
@@ -82,12 +112,12 @@ const updateOrder = (id, data) => {
                 resolve(results);
             }
         })
-    });
+    })
 }
 
 module.exports = {
     createOrder,
     getListOrder,
     deleteOrder,
-    updateOrder
+    searchOrderBy
 };
