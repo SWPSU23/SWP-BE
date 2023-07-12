@@ -1,4 +1,3 @@
-const config = require('./configs')
 require('./utilities/logger')
 const cluster = require('cluster')
 const os = require('os')
@@ -8,7 +7,6 @@ const http = require('http')
 const socketIO = require('socket.io')
 
 const session = require('express-session')
-const redis = require('redis')
 const RedisStore = require('connect-redis').default
 const bodyParser = require('body-parser')
 // eslint-disable-next-line no-unused-vars
@@ -16,18 +14,11 @@ const cors = require('cors')
 const swaggerUi = require('swagger-ui-express')
 const swaggerSpec = require('./utilities/swagger')
 const apiRoute = require('./routes/index')
-const redisClient = redis.createClient({
-    url: `redis://${config.redis.host}:${config.redis.port}`,
-    password: config.redis.password,
-    database: config.redis.sessionDatabase,
-})
-redisClient.connect()
-require('./services/summaryService')
 // require('./utilities/tester')
 
 // setup parallel
 if (cluster.isMaster) {
-    const isDev = config.isDev
+    const isDev = global.config.isDev
     const numWorkers = isDev ? 1 : os.cpus().length
     global.logger.info(`Master cluster setting up ${numWorkers} workers...`)
     for (let i = 0; i < numWorkers; i++) {
@@ -39,7 +30,7 @@ if (cluster.isMaster) {
 } else {
     // create express app
     const app = express()
-    const port = config.port
+    const port = global.config.port
     // Create an HTTP server and attach Socket.IO
     const server = http.createServer(app)
     const io = socketIO(server, {
@@ -56,10 +47,10 @@ if (cluster.isMaster) {
     })
     app.use(
         session({
-            secret: config.session.secret,
+            secret: global.config.session.secret,
             resave: false,
             saveUninitialized: true,
-            store: new RedisStore({ client: redisClient }),
+            store: new RedisStore({ client: global.redisClient }),
         })
     )
     app.use(cors(
