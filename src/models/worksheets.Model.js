@@ -166,8 +166,22 @@ const getWorksheetDetail = (id) => {
                 global.logger.error("Error get worksheet detail: " + error);
                 reject(error);
             } else {
-                global.logger.info("Get worksheet detail successfully");
-                resolve(results);
+                const data = [];
+                // convert time stamp to date
+                results.forEach(element => {
+                    data.push({
+                        id: element.id,
+                        employee_id: element.employee_id,
+                        sheet_id: element.sheet_id,
+                        date: time.timeStampToDate(element.date),
+                        coefficient: element.coefficient,
+                        check_in_at: time.timeStampToHours(element.check_in_at),
+                        check_out_at: time.timeStampToHours(element.check_out_at),
+                        status: element.status
+                    })
+                })
+                global.logger.info("Get worksheet detail successfully", data);
+                resolve(data);
             }
         })
     })

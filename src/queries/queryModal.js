@@ -131,7 +131,9 @@ module.exports = {
 
         deleteWorksheet: 'UPDATE `Worksheet` SET status = `failed` WHERE `id` = ?',
 
-        getWorksheetDetail: 'SELECT * FROM `Worksheet` WHERE `id` = ?',
+        getWorksheetDetail: 'SELECT ws.*, c.check_in_at, c.check_out_at '
+            + ' FROM `Worksheet` ws JOIN `CheckInOut` c ON ws.id = c.worksheet_id'
+            + ' WHERE `id` = ?',
 
         getCoefficient: 'SELECT s.coefficient, c.isSpecialDay '
             + ' FROM `Worksheet` ws '
