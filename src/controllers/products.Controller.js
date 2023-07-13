@@ -97,6 +97,22 @@ const searchProductBy = (req, res) => {
             })
         })
 }
+const searchProductBy = (req, res) => {
+    console.log('by', req.body.searchBy)
+    productsModel
+        .searchProductBy(req.body.searchBy, req.body.keyWord)
+
+        .then((result) => {
+            res.status(200).send({
+                status: 'success',
+                message: 'Search product successfully',
+                data: result,
+            })
+        })
+        .catch((err) => {
+            return res.status(500).json({ message: err.message })
+        })
+}
 
 module.exports = {
     createProductDetail,

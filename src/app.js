@@ -46,7 +46,11 @@ if (cluster.isMaster) {
             secret: global.config.session.secret,
             resave: false,
             saveUninitialized: true,
-            store: new RedisStore({ client: global.redisClient }),
+            store: new RedisStore({
+                client: global.redisClient,
+                // ttl 1 month
+                ttl: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+            }),
         })
     )
     app.use(

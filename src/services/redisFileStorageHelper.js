@@ -1,22 +1,28 @@
 const crypto = require('crypto')
 const { Readable } = require('stream')
+const redis = require('redis')
+const redisClient = redis.createClient({
+    url: `redis://${global.config.redis.host}:${global.config.redis.port}`,
+    password: global.config.redis.password,
+    database: global.config.redis.fileDatabase,
+})
 const saveFile = (file, type) => {
     // Hash file
     return hashFile(file, type).then(async (id) => {
         // check if file exists
-        if (await global.redisClient.hExists(id, 'data')) {
+        if (await redisClient.hExists(id, 'data')) {
             return id
         }
         // Save file to Redis
-        global.redisClient.hSet(id, 'data', Buffer.from(file))
+        redisClient.hSet(id, 'data', Buffer.from(file))
         return id
     })
 }
 
 const getFile = async (id, type) => {
     global.logger.info(`File ID: ${id}`)
-    return await global.redisClient.hGetAll(
-        global.redis.commandOptions({
+    return await redisClient.hGetAll(
+        redis.commandOptions({
             returnBuffers: true,
         }),
         `${type}:${id}`

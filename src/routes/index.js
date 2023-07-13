@@ -11,5 +11,6 @@ router.use('/worksheet', require('./worksheet.Route'));
 router.use('/calendar', require('./calendar.Route'));
 router.use('/category', require('./category.Route'));
 router.use('/checkInOut', require('./checkInOut.Route'));
+router.use('/auth', require('./auth.Route'));
 
 module.exports = router

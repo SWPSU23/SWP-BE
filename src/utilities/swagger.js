@@ -1,4 +1,3 @@
-const config = require('../configs')
 const swaggerJSDoc = require('swagger-jsdoc')
 const options = {
     definition: {
@@ -10,7 +9,7 @@ const options = {
         },
         servers: [
             {
-                url: `http://${config.url}:${config.port}/v1`,
+                url: `http://${global.config.url}:${global.config.port}/v1`,
                 description: 'Ministore API server',
             },
         ],

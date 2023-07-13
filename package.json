@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node src/index.js",
-    "devStart": "cross-env NODE_ENV=development nodemon src/index.js",
+    "start": "cross-env NODE_ENV=production nodemon src/app.js",
+    "devStart": "cross-env NODE_ENV=development nodemon src/app.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/SWPSU23/SWP-BE#readme",
   "dependencies": {
-    "busboy": "^1.6.0",
     "connect-redis": "^7.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
