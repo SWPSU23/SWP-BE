@@ -4,8 +4,9 @@ const redis = require('redis')
 const redisClient = redis.createClient({
     url: `redis://${global.config.redis.host}:${global.config.redis.port}`,
     password: global.config.redis.password,
-    database: global.config.redis.fileDatabase,
+    database: global.config.redis.fileDB,
 })
+redisClient.connect()
 const saveFile = (file, type) => {
     // Hash file
     return hashFile(file, type).then(async (id) => {
