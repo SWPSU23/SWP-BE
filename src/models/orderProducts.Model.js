@@ -32,7 +32,6 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
         throw error;
     } else {
         // convert data to array
-        global.logger.info("value", value)
         const values = value.map((value) =>
             [
                 order_id,
@@ -49,7 +48,7 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
                 if (error) {
                     reject(error.message);
                 } else {
-                    global.logger.info(results.message);
+                    global.logger.info('Create list order product success', results);
                 }
             })
             // update stock for product
@@ -61,7 +60,7 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
                         if (error) {
                             reject(error.message);
                         } else {
-                            global.logger.info(results.message);
+                            global.logger.info('Update stock for product', results);
                         }
                     })
             })
@@ -93,6 +92,7 @@ const getListDetailOrder = (order_id) => {
                     order: {},
                     orderProduct: []
                 }
+                // Order product detail
                 data.orderProduct = results.map((result) => ({
                     id: result.id,
                     name: result.name,
@@ -102,6 +102,7 @@ const getListDetailOrder = (order_id) => {
                     total: result.total
                 }))
                 global.logger.info("Order product detail", data.orderProduct)
+                // Order detail
                 data.order = {
                     order_id: results[0].order_id,
                     employee_id: results[0].employee_id,

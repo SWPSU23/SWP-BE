@@ -6,28 +6,82 @@ const time = require('../utilities/timeHelper');
 const worksheetSchema = joi.object({
     employee_id: joi.number().required(),
     sheet_id: joi.number().required(),
-    day: joi.string().required(),
+    date: joi.string().required(),
+    coefficient: joi.number().default(0),
     status: joi.string().default('pending')
 })
 
 const createWorksheet = (data) => {
     const query = queries.Worksheet.createWorksheet;
-    const { error, value } = worksheetSchema.validate(data);
+    const role = data.role;
+    const { error, value } = worksheetSchema.validate(data.worksheet);
     if (error) {
         throw new error("Invalid data");
     } else {
         return new Promise((resolve, reject) => {
+            // insert data to worksheet table
             pool.query(query,
-                [value.employee_id, value.sheet_id, value.day, value.status],
+                [
+                    value.employee_id,
+                    value.sheet_id,
+                    value.date,
+                    value.status
+                ],
                 (error, results) => {
                     if (error) {
                         global.logger.error("Error create worksheet: " + error);
                         reject(error);
                     } else {
-                        global.logger.info("Create worksheet successfully");
-                        resolve(results);
+                        global.logger.info("Create worksheet without coefficient successfully");
+                        global.logger.info("Worksheet id ", results.insertId + "Sheet_id ", value.sheet_id + "Role", role)
+                        const worksheetId = results.insertId;
+                        // get coefficient from sheet table\
+                        pool.query(queries.Worksheet.getCoefficient,
+                            [value.sheet_id,
+                                worksheetId,
+                                role],
+                            (error, results) => {
+                                if (error) {
+                                    global.logger.error(error);
+                                    reject(error);
+                                } else {
+                                    // check if day is special day set coefficient = 3
+                                    let coefficient = {};
+                                    if (results[0].isSpecialDay === 'yes') {
+                                        coefficient = {
+                                            coefficient: 3
+                                        };
+                                    } else {
+                                        coefficient = {
+                                            coefficient: results[0].coefficient
+                                        };
+                                    }
+                                    // update coefficient to worksheet table
+                                    pool.query(queries.Worksheet.updateWorksheet, [coefficient, worksheetId], (error, results) => {
+                                        if (error) {
+                                            global.logger.error("Error update coefficient: " + error);
+                                            reject(error);
+                                        } else {
+                                            global.logger.info("Update coefficient successfully", results);
+                                        }
+                                    })
+                                    // create check in out record
+                                    pool.query(queries.CheckInOut.createCheckInOut,
+                                        [value.employee_id,
+                                            worksheetId]
+                                        , (error, results) => {
+                                            if (error) {
+                                                global.logger.error("Error create check in out: " + error);
+                                                reject(error);
+                                            } else {
+                                                global.logger.info("Create check in out successfully", results);
+                                            }
+                                        })
+                                }
+                            })
                     }
                 })
+            resolve({ message: "Create worksheet successfully" });
         })
     }
 }

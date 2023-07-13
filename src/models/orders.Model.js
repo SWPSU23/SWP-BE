@@ -17,10 +17,31 @@ const getListOrder = (page_index) => {
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
-                global.logger.error(error.message);
+                global.logger.error(error);
                 reject(error);
             } else {
-                resolve(results);
+                const data = {
+                    info: {},
+                    order: []
+                }
+                results.map((order) => {
+                    data.order.push({
+                        id: order.id,
+                        employee_id: order.employee_id,
+                        cashier_name: order.cashier_name,
+                        create_at: time.timeStampToDay(order.create_at),
+                        total_price: order.total_price,
+                        product_quantity: order.product_quantity,
+                        status: order.status
+                    })
+                })
+                global.logger.info("Order detail", data.order)
+                // add info page
+                data.info = {
+                    total_page: Math.ceil(results[0].page / 10)
+                }
+                global.logger.info("page", data.info.page)
+                resolve(data)
             }
         })
     })

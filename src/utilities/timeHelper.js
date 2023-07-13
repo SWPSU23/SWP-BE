@@ -1,4 +1,5 @@
 const moment = require('moment')
+
 const getNow = () => {
     return moment().format('YYYY-MM-DD HH:mm:ss')
 }
@@ -24,6 +25,10 @@ const timeStampToDate = (timeStamp) => {
 
 const timeStampToHours = (timeStamp) => {
     return moment(timeStamp).format('hh-mm-ss')
+}
+
+const timeStampToDay = (timeStamp) => {
+    return moment(timeStamp).format('YYYY-MM-DD hh-mm-ss')
 }
 
 const dateToTimeStamp = (date) => {
@@ -58,5 +63,6 @@ module.exports = {
     timeStampToDate: timeStampToDate,
     dateToTimeStamp: dateToTimeStamp,
     timeStampToHours: timeStampToHours,
-    getDayOfWeek: getDayOfWeek
+    getDayOfWeek: getDayOfWeek,
+    timeStampToDay: timeStampToDay
 }

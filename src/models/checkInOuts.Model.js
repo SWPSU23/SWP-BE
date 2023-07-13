@@ -1,93 +1,59 @@
 const queries = require('../queries/queryModal');
-const joi = require('joi');
 const pool = require('../services/queryHelper').getPool();
 const time = require('../utilities/timeHelper');
 
-const schemaCheckInOut = joi.object({
-    employee_id: joi.number().required(),
-    check_in_at: joi.string().default(time.getNow()),
-    check_out_at: joi.string().default(null),
-    sheet_id: joi.number().required()
-})
 
-const createCheckInOut = (data) => {
-    const query = queries.CheckInOut.createCheckInOut;
-    const { error, value } = schemaCheckInOut.validate(data);
-    if (error) {
-        throw error;
-    } else {
-        return new Promise((resolve, reject) => {
-            pool.query(query,
-                [value.employee_id, value.check_in_at, value.check_out_at, value.sheet_id],
-                (err, results) => {
-                    if (err) {
-                        global.logger.error("Failed to query from db", err);
-                        reject(err);
-                    } else {
-                        resolve(results);
-                    }
-                })
-        })
+const updateCheckIn = (worksheet_id) => {
+    // get current time
+    const checkIn = {
+        check_in_at: time.getNow()
     }
-}
-
-const getListCheckInOut = () => {
-    const query = queries.CheckInOut.getListCheckInOut;
+    // update check in time
     return new Promise((resolve, reject) => {
-        pool.query(query, (err, results) => {
-            if (err) {
-                global.logger.error("Failed to query from db", err);
-                reject(err);
-            } else {
-                resolve(results);
-            }
-        })
+        pool.query(queries.CheckInOut.updateCheckInOut,
+            [checkIn, worksheet_id],
+            (error, results) => {
+                if (error) {
+                    global.logger.error(error);
+                    reject(error);
+                } else {
+                    global.logger.info("Update check in successfully");
+                    resolve(results);
+                }
+            })
     })
 }
 
-const updateCheckInOut = (data, id) => {
-    const query = queries.CheckInOut.updateCheckInOut;
-    const { error, value } = schemaCheckInOut.validate(data);
-    if (error) {
-        throw error;
-    } else {
-        return new Promise((resolve, reject) => {
-            pool.query(query,
-                [value.employee_id, value.check_in_at, value.check_out_at, value.sheet_id, id],
-                (err, results) => {
-                    if (err) {
-                        global.logger.error("Failed to query from db", err);
-                        reject(err);
-                    } else {
-                        resolve(results);
-                    }
-                })
-        })
+const updateCheckOut = (worksheet_id) => {
+    // get current time 
+    const checkOut = {
+        check_out_at: time.getNow()
     }
+    // update check out time
+    return new Promise((resolve, reject) => {
+        pool.query(queries.CheckInOut.updateCheckInOut,
+            [checkOut, worksheet_id],
+            (error, results) => {
+                if (error) {
+                    global.logger.error(error);
+                    reject(error);
+                } else {
+                    global.logger.info("Update check out successfully");
+                    resolve(results);
+                }
+            })
+    })
 }
 
-const deleteCheckInOut = (id) => {
+const deleteCheckInOut = (worksheet_id) => {
     const query = queries.CheckInOut.deleteCheckInOut;
     return new Promise((resolve, reject) => {
-        pool.query(query, [id], (err, results) => {
-            if (err) {
-                global.logger.error("Failed to query from db", err);
-                reject(err);
+        pool.query(query, [worksheet_id], (error, results) => {
+            if (error) {
+                global.logger.error("Error delete check in out: " + error);
+                reject(error);
             } else {
-                resolve(results);
-            }
-        })
-    })
-}
-
-const getCheckInOutDetail = (id) => {
-    const query = queries.CheckInOut.getCheckInOutDetail;
-    return new Promise((resolve, reject) => {
-        pool.query(query, [id], (err, results) => {
-            if (err) {
-                global.logger.error("Failed to query from db", err);
-                reject(err);
-            } else {
+                global.logger.info("Delete check in out successfully");
                 resolve(results);
             }
         })
@@ -97,9 +63,7 @@ const getCheckInOutDetail = (id) => {
 
 
 module.exports = {
-    createCheckInOut,
-    getListCheckInOut,
-    updateCheckInOut,
-    deleteCheckInOut,
-    getCheckInOutDetail
+    updateCheckIn,
+    updateCheckOut,
+    deleteCheckInOut
 }

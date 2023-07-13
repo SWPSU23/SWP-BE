@@ -7,7 +7,7 @@ module.exports = {
         getListProduct: (page_index) => {
             return `SELECT *, (SELECT COUNT(*) FROM Product) AS page`
                 + ` FROM Product`
-                + ` ORDER BY expired_at ASC`
+                + ` ORDER BY status ASC,expired_at ASC`
                 + ` LIMIT 10 OFFSET ${(page_index - 1) * 10}`
         },
 
@@ -38,7 +38,9 @@ module.exports = {
             + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
 
         getListEmployee: (page_index) => {
-            return `SELECT * FROM Employee LIMIT 10 OFFSET ${(page_index - 1) * 10}`
+            return `SELECT *, (SELECT COUNT(*) FROM Employee) AS page`
+                + ` FROM Employee ORDER BY status ASC`
+                + ` LIMIT 10 OFFSET ${(page_index - 1) * 10}`
         },
 
         getEmployeeDetails: 'SELECT * FROM Employee WHERE id = ?',
@@ -58,9 +60,9 @@ module.exports = {
             + ' VALUES (?, ?, ?, ?, ?)',
 
         getListOrder: (page_index) => {
-            return `SELECT o.*, e.name AS cashier_name` +
+            return `SELECT o.*, e.name AS cashier_name, (SELECT COUNT(*) FROM \`Order\`) AS page` +
                 ` FROM \`Order\` o JOIN Employee e ON o.employee_id = e.id ` +
-                `ORDER BY o.create_at ASC ` +
+                `ORDER BY o.status ASC, o.create_at ASC ` +
                 `LIMIT 10 OFFSET ${(page_index - 1) * 10}`;
         },
 
@@ -111,7 +113,7 @@ module.exports = {
     },
 
     Worksheet: {
-        createWorksheet: 'INSERT INTO `Worksheet` WHERE (employee_id, sheet_id, day, status) VALUES (?, ?, ?, ?)',
+        createWorksheet: 'INSERT INTO `Worksheet` (employee_id, sheet_id, date, status) VALUES (?, ?, ?, ?)',
 
         getListWorksheet: 'SELECT * FROM `Worksheet` WHERE day like %?%',
 
@@ -121,6 +123,12 @@ module.exports = {
 
         getWorksheetDetail: 'SELECT * FROM `Worksheet` WHERE `id` = ?',
 
+        getCoefficient: 'SELECT s.coefficient, c.isSpecialDay '
+            + ' FROM `Worksheet` ws '
+            + ' JOIN `Sheet` s on ws.sheet_id = s.id'
+            + ' Join Calendar c on ws.date = c.date'
+            + ' WHERE ws.sheet_id = ? AND ws.id = ? AND s.role = ? ',
+
         searchWorksheetBy: (searchBy, keywords) => {
             return `SELECT * FROM 'Worksheet' WHERE ${searchBy} LIKE '%${keywords}%'`;
         }
@@ -128,11 +136,11 @@ module.exports = {
 
     CheckInOut: {
         createCheckInOut: 'INSERT INTO `CheckInOut` ' +
-            'WHERE (employee_id, check_int_at, check_out_at, sheet_id) VALUES (?, ?, ?, ?)',
+            '(employee_id, worksheet_id) VALUES (?, ?)',
 
         getListCheckInOut: 'SELECT * FROM `CheckInOut`',
 
-        updateCheckInOut: 'UPDATE `CheckInOut` SET ? WHERE `id` = ?',
+        updateCheckInOut: 'UPDATE `CheckInOut` SET ? WHERE `worksheet_id` = ?',
 
         deleteCheckInOut: 'DELETE FROM `CheckInOut` WHERE `id` = ?',
 
@@ -144,9 +152,9 @@ module.exports = {
     },
 
     PayRoll: {
-        createPayRoll: 'INSERT INTO `PayRoll` WHERE ' +
-            '(employee_id, gross_pay, insurance, tax, net_pay, start_date, end_date, create_at, status)' +
-            'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        createPayRoll: 'INSERT INTO `PayRoll`' +
+            ' (employee_id, gross_pay, insurance, tax, net_pay, start_date, end_date, create_at, status)' +
+            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 
         getListPayRoll: 'SELECT * FROM `PayRoll`',
 
@@ -157,7 +165,7 @@ module.exports = {
     },
 
     LeaveManagement: {
-        createLeaveForm: 'INSERT INTO `LeaveManagement` WHERE '
+        createLeaveForm: 'INSERT INTO `LeaveManagement`'
             + '(employee_id, number_of_leave_days_used, start_date_of_leave, end_date_of_leave, reason_leave, status)'
             + 'VALUES (?, ?, ?, ?, ?, ?)',
 
@@ -177,6 +185,7 @@ module.exports = {
 
         updateCalendar: 'UPDATE `Calendar` SET ? WHERE `date` = ?',
 
-        getCalendar: 'SELECT * FROM `Calendar`'
+        getCalendar: 'SELECT * FROM `Calendar`',
+
     }
 };

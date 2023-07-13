@@ -1,113 +1,58 @@
-const checkInOutModel = require('../models/checkInOutsModel');
+const checkInOutModel = require('../models/checkInOuts.Model');
 
-const createCheckInOut = (req, res) => {
-    checkInOutModel
-        .createCheckInOut(req.body)
-        .then((results) => {
-            res.status(200).send({
-                message: "Success to create check in out",
+const updateCheckIn = (req, res) => {
+    global.logger.info("Update check in", req.params.worksheet_id);
+    checkInOutModel.updateCheckIn(req.params.worksheet_id)
+        .then(results => {
+            res.status(200).json({
+                sucess: true,
                 data: results
             })
         })
-        .catch((error) => {
-            res.status(500).send({
-                message: "Failed to create check in out",
-                data: error.message
+        .catch(error => {
+            res.status(500).json({
+                sucess: false,
+                message: "Error update check in: " + error
             })
         })
 }
 
-const getListCheckInOut = (req, res) => {
-    checkInOutModel
-        .getListCheckInOut()
-        .then((results) => {
-            res.status(200).send({
-                message: "Success to get list check in out",
+const updateCheckOut = (req, res) => {
+    checkInOutModel.updateCheckOut(req.params.worksheet_id)
+        .then(results => {
+            res.status(200).json({
+                sucess: true,
                 data: results
             })
         })
-        .catch((error) => {
-            res.status(500).send({
-                message: "Failed to get list check in out",
-                data: error.message
+        .catch(error => {
+            res.status(500).json({
+                sucess: false,
+                message: "Error update check out: " + error
             })
         })
 }
 
-const updateCheckInOut = (req, res) => {
-    checkInOutModel
-        .updateCheckInOut(req.body, req.params.id)
-        .then((results) => {
-            res.status(200).send({
-                message: "Success to update check in out",
+const deleteCheckInOut = (res, req) => {
+    checkInOutModel.deleteCheckInOut(req.body.worksheet_id)
+        .then(results => {
+            res.status(200).json({
+                sucess: true,
                 data: results
             })
         })
-        .catch((error) => {
-            res.status(500).send({
-                message: "Failed to update check in out",
-                data: error.message
+        .catch(error => {
+            res.status(500).json({
+                sucess: false,
+                message: "Error delete check in out: " + error
             })
         })
 }
 
-const deleteCheckInOut = (req, res) => {
-    checkInOutModel
-        .deleteCheckInOut(req.params.id)
-        .then((results) => {
-            res.status(200).send({
-                message: "Success to delete check in out",
-                data: results
-            })
-        })
-        .catch((error) => {
-            res.status(500).send({
-                message: "Failed to delete check in out",
-                data: error.message
-            })
-        })
-}
-
-const getCheckInOutDetail = (req, res) => {
-    checkInOutModel
-        .getCheckInOutDetail(req.params.id)
-        .then((results) => {
-            res.status(200).send({
-                message: "Success to get detail check in out",
-                data: results
-            })
-        })
-        .catch((error) => {
-            res.status(500).send({
-                message: "Failed to get detail check in out",
-                data: error.message
-            })
-        })
-}
-
-const searchCheckInOutBy = (req, res) => {
-    checkInOutModel
-        .searchCheckInOutBy(req.query.searchBy, req.query.keywords)
-        .then((results) => {
-            res.status(200).send({
-                message: "Success to search check in out",
-                data: results
-            })
-        })
-        .catch((error) => {
-            res.status(500).send({
-                message: "Failed to search check in out",
-                data: error.message
-            })
-        })
-}
 
 
 module.exports = {
-    createCheckInOut,
-    getListCheckInOut,
-    updateCheckInOut,
-    deleteCheckInOut,
-    getCheckInOutDetail,
-    searchCheckInOutBy
+    updateCheckIn,
+    updateCheckOut,
+    deleteCheckInOut
 }

@@ -48,11 +48,33 @@ const createEmployeeDetail = (employee_detail) => {
 const getListEmployee = (page_index) => {
     const query = queries.Employee.getListEmployee(page_index)
     return new Promise((resolve, reject) => {
-        pool.query(query, (err, res) => {
+        pool.query(query, (err, results) => {
             if (err) {
                 reject(err)
             } else {
-                resolve(res)
+                const data = {
+                    info: {},
+                    employee: []
+                }
+                // detail employee
+                results.forEach((employee) => {
+                    data.employee.push({
+                        id: employee.id,
+                        name: employee.name,
+                        age: employee.age,
+                        email_address: employee.email_address,
+                        phone: employee.phone,
+                        base_salary: employee.base_salary,
+                        password: employee.password,
+                        role: employee.role,
+                        status: employee.status
+                    })
+                })
+                // add info page
+                data.info = {
+                    total_page: Math.ceil(results[0].page / 10)
+                }
+                resolve(data);
             }
         })
     })
