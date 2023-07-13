@@ -29,17 +29,27 @@ const updateCheckIn = (req, res) => {
 }
 
 const updateCheckOut = (req, res) => {
-    checkInOutModel.updateCheckOut(req.params.worksheet_id)
-        .then(results => {
-            res.status(200).json({
-                sucess: true,
-                data: results
-            })
+    checkInOutValidation
+        .updateCheckOut(req.params.worksheet_id)
+        .then((check_out_at) => {
+            checkInOutModel.updateCheckOut(req.params.worksheet_id, check_out_at)
+                .then(results => {
+                    res.status(200).json({
+                        sucess: true,
+                        data: results
+                    })
+                })
+                .catch(error => {
+                    res.status(500).json({
+                        sucess: false,
+                        message: error.message
+                    })
+                })
         })
         .catch(error => {
             res.status(500).json({
                 sucess: false,
-                message: "Error update check out: " + error
+                message: error.message
             })
         })
 }
