@@ -13,7 +13,7 @@ module.exports = {
 
         updateProductByID: 'UPDATE Product SET ?  WHERE id =?',
 
-        deleteProductByID: "UPDATE Product SET status = 'out of stock' WHERE id =?",
+        deleteProductByID: "UPDATE Product SET status = 'unavailable' WHERE id =?",
 
         getProductByID: 'SELECT * FROM Product WHERE id = ?',
 
