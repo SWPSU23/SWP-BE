@@ -4,11 +4,11 @@ const queries = require('../queries/queryModal');
 
 const getDayCalendar = (start_day, end_day) => {
     const query = queries.Calendar.getDayCalendar(start_day, end_day);
-    global.logger.info(query);
+    global.logger.info(`Model - Get day calendar query: ${query}`);
     return new Promise((resolve, reject) => {
         pool.query(query, [start_day, end_day], (err, result) => {
             if (err) {
-                global.logger.error('Get day calendar failed', err.message)
+                global.logger.error(`Model - Get day calendar failed: ${err}`)
                 reject(err);
             } else {
                 // convert date timestamp to YYYY-MM-DD
@@ -19,6 +19,7 @@ const getDayCalendar = (start_day, end_day) => {
                         isSpecialDay: item.isSpecialDay
                     }
                 })
+                global.logger.info(`Model - Get day calendar successfully: ${data}`)
                 resolve(data);
             }
         })
@@ -28,15 +29,17 @@ const getDayCalendar = (start_day, end_day) => {
 const updateCalendar = (date, isSpecialDay) => {
     const query = queries.Calendar.updateCalendar;
     return new Promise((resolve, reject) => {
-        pool.query(query, [isSpecialDay, date], (err, result) => {
-            if (err) {
-                global.logger.error('Update calendar failed', err.message)
-                reject(err);
-            } else {
-                global.logger.info('Update calendar successfully', result)
-                resolve('Update calendar successfully');
-            }
-        })
+        pool.query(query,
+            [isSpecialDay, date],
+            (err, result) => {
+                if (err) {
+                    global.logger.error(`Model - Update calendar failed: ${err}`)
+                    reject(err);
+                } else {
+                    global.logger.info(`Model - Update calendar successfully: ${result}`)
+                    resolve('Update calendar successfully');
+                }
+            })
     })
 }
 
@@ -45,13 +48,14 @@ const getListDayOfWeek = () => {
     return new Promise((resolve, reject) => {
         pool.query(query, (err, result) => {
             if (err) {
-                global.logger.error('Get list day of week failed', err.message)
+                global.logger.error(`Model - Get list day of week failed: ${err}`)
                 reject(err);
             } else {
                 const data = [];
                 for (let i = 0; i < result.length; i++) {
                     if (i + 6 >= result.length) break;
                     const dayOfWeek = time.getDayOfWeek(result[i].date);
+                    // get list day of week from Monday to Sunday
                     if (dayOfWeek === "Monday") {
                         data.push({
                             from_date: time.timeStampToDate(result[i].date),
@@ -59,6 +63,7 @@ const getListDayOfWeek = () => {
                         })
                     }
                 }
+                global.logger.info(`Model - Get list day of week successfully: ${data}`)
                 resolve(data);
             }
         })

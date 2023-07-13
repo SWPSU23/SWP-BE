@@ -21,8 +21,8 @@ const createProductDetails = (product) => {
     const query = queries.Product.createProductDetail
     const { error, value } = productSchema.validate(product)
     if (error) {
-        console.error('Error parsing product: ', error)
-        throw error
+        global.logger.error(`Model - Error validate product: ${error}`)
+        throw error({ message: error });
     } else {
         return new Promise((resolve, reject) => {
             pool.query(
@@ -42,10 +42,10 @@ const createProductDetails = (product) => {
                 ],
                 (error, results) => {
                     if (error) {
-                        console.error('Error executing the query: ', error)
+                        global.logger.error(`Model - Error query createProductDetails: ${error}`)
                         reject(error)
                     } else {
-                        global.logger.info('Got the results from the database: ', results)
+                        global.logger.info(`Model - Create product success: ${results}`)
                         resolve(results)
                     }
                 }
@@ -56,10 +56,11 @@ const createProductDetails = (product) => {
 
 const getListProduct = (page_index) => {
     const query = queries.Product.getListProduct(page_index)
+    global.logger.info(`Model - Get list product query: ${query}`)
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
-                console.error('Error executing the query: ', error)
+                global.logger.error(`Model - Error query getListProduct: ${error}`)
                 reject(error)
             } else {
                 const data = {
@@ -85,6 +86,7 @@ const getListProduct = (page_index) => {
                         status: item.status
                     })
                 })
+                global.logger.info(`Model - Get list product success: ${data}`)
                 resolve(data)
             }
         })
@@ -96,10 +98,10 @@ const getProductByID = (id) => {
     return new Promise((resolve, reject) => {
         pool.query(query, [id], (error, results) => {
             if (error) {
-                console.error('Error executing the query: ', error)
+                global.logger.error(`Model - Error query getProductByID: ${error}`)
                 reject(error)
             } else {
-                global.logger.info('Got the results from the database: ', results)
+                global.logger.info(`Model - Get product by id success: ${results}`)
                 resolve(results[0])
             }
         })
@@ -110,10 +112,10 @@ const updateProductByID = (id, productUpdate) => {
     return new Promise((resolve, reject) => {
         pool.query(query, [productUpdate, id], (error, results) => {
             if (error) {
-                console.error('Error executing the query: ', error)
+                global.logger.error(`Model - Error query updateProductByID: ${error}`)
                 reject(error)
             } else {
-                global.logger.info('Got the results from the database: ', results)
+                global.logger.info(`Model - Update product by id success: ${results}`)
                 resolve(results)
             }
         })
@@ -125,13 +127,10 @@ const deleteProductByID = (id) => {
     return new Promise((resolve, reject) => {
         pool.query(query, [id], (error, results) => {
             if (error) {
-                console.error('Error executing the query: ', error)
+                global.logger.error(`Model - Error query deleteProductByID: ${error}`)
                 reject(error)
             } else {
-                global.logger.info(
-                    'Got the results from the database: ',
-                    results
-                )
+                global.logger.info(`Model - Delete product by id success: ${results}`)
                 resolve(results)
             }
         })
@@ -140,11 +139,14 @@ const deleteProductByID = (id) => {
 
 const searchProductBy = (searchBy, keywords) => {
     const query = queries.Product.searchProductBy(searchBy, keywords)
+    global.logger.info(`Model - Search product by query: ${query}`)
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
+                global.logger.error(`Model - Error query searchProductBy: ${error}`)
                 reject(error)
             } else {
+                global.logger.info(`Model - Search product by success: ${results}`)
                 resolve(results)
             }
         })

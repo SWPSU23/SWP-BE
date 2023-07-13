@@ -1,4 +1,5 @@
 const worksheetModel = require('../models/worksheets.Model');
+const worksheetValidation = require('../validations/worksheets.Validation');
 
 const createWorksheet = (req, res) => {
     worksheetModel.createWorksheet(req.body)
@@ -17,7 +18,8 @@ const createWorksheet = (req, res) => {
 }
 
 const getListWorksheet = (req, res) => {
-    worksheetModel.getWorkSheetOfWeek(req.query.start_date, req.query.end_date, req.query.role)
+    worksheetModel
+        .getWorkSheetOfWeek(req.query.start_date, req.query.end_date, req.query.role)
         .then(results => {
             res.status(200).json({
                 success: true,
@@ -33,7 +35,8 @@ const getListWorksheet = (req, res) => {
 }
 
 const updateWorksheet = (req, res) => {
-    worksheetModel.updateWorksheet(req.body, req.params.id)
+    worksheetModel
+        .updateWorksheet(req.body, req.params.id)
         .then(results => {
             res.status(200).json({
                 success: true,
@@ -49,12 +52,22 @@ const updateWorksheet = (req, res) => {
 }
 
 const deleteWorksheet = (req, res) => {
-    worksheetModel.deleteWorksheet(req.params.id)
-        .then(results => {
-            res.status(200).json({
-                success: true,
-                data: results
-            })
+    worksheetValidation
+        .deleteWorksheet(req.params.id)
+        .then(() => {
+            worksheetModel.deleteWorksheet(req.params.id)
+                .then(results => {
+                    res.status(200).json({
+                        success: true,
+                        data: results
+                    })
+                })
+                .catch(error => {
+                    res.status(500).json({
+                        success: false,
+                        message: error.message
+                    })
+                })
         })
         .catch(error => {
             res.status(500).json({
@@ -65,7 +78,8 @@ const deleteWorksheet = (req, res) => {
 }
 
 const searchWorksheetBy = (req, res) => {
-    worksheetModel.searchWorksheetBy(req.query.searchBy, req.query.keywords)
+    worksheetModel
+        .searchWorksheetBy(req.query.searchBy, req.query.keywords)
         .then(results => {
             res.status(200).json({
                 success: true,
@@ -81,7 +95,8 @@ const searchWorksheetBy = (req, res) => {
 }
 
 const getWorksheetDetail = (req, res) => {
-    worksheetModel.getWorksheetDetail(req.params.id)
+    worksheetModel
+        .getWorksheetDetail(req.params.id)
         .then(results => {
             res.status(200).json({
                 success: true,

@@ -13,11 +13,12 @@ const orderSchema = Joi.object({
 
 const getListOrder = (page_index) => {
     const query = queries.Order.getListOrder(page_index);
-    global.logger.info(query);
+    global.logger.info(`Model - Get list order query: ${query}`);
+
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
-                global.logger.error(error);
+                global.logger.error(`Model - Error query getListOrder: ${error}`);
                 reject(error);
             } else {
                 const data = {
@@ -35,12 +36,13 @@ const getListOrder = (page_index) => {
                         status: order.status
                     })
                 })
-                global.logger.info("Order detail", data.order)
+                global.logger.info(`Model - Get list order success: ${data.order}`);
                 // add info page
                 data.info = {
                     total_page: Math.ceil(results[0].page / 10)
                 }
-                global.logger.info("page", data.info.page)
+                global.logger.info(`Model - Get info page success: ${data.info}`);
+                global.logger.info(`Model - Get data success: ${data}`);
                 resolve(data)
             }
         })
@@ -51,10 +53,9 @@ const createOrder = (data) => {
     const query = queries.Order.createOrder;
     const { error, value } = orderSchema.validate(data);
     if (error) {
-        global.logger.error(error);
-        new Promise.reject(error);
+        global.logger.error(`Model - Error validate data: ${error}`);
+        throw error({ message: error });
     } else {
-        global.logger.info(value);
         return new Promise((resolve, reject) => {
             pool.query(
                 query,
@@ -67,10 +68,10 @@ const createOrder = (data) => {
                 ],
                 (error, results) => {
                     if (error) {
-                        console.error('Error executing the query: ', error);
+                        global.logger.error(`Model - Error query createOrder: ${error}`);
                         reject(error);
                     } else {
-                        global.logger.info('Got the results from the database: ', results);
+                        global.logger.info(`Model - Create order success: ${results}`);
                         resolve(results.insertId);
                     }
                 }
@@ -81,58 +82,68 @@ const createOrder = (data) => {
 
 const deleteOrder = (id) => {
     const query = queries.Order.deleteOrder;
-    console.log("query: ", query)
-    console.log("id: ", id)
     return new Promise((resolve, reject) => {
-        pool.query(query, [id], (err, results) => {
-            if (err) {
-                global.logger.error(err);
-                reject(err);
-            } else {
-                global.logger.info(results);
-            }
-        })
+        // delete order
+        pool.query(query,
+            [id],
+            (error, results) => {
+                if (error) {
+                    global.logger.error(`Model - Error query deleteOrder: ${error}`);
+                    reject(error);
+                } else {
+                    global.logger.info(`Model - Delete order success: ${results}`);
+                }
+            })
 
         // update stock of product when delete order 
-        pool.query(queries.OrderProduct.updateStockProduct, [id], (err, results) => {
-            if (err) {
-                reject(err);
-            } else {
-                global.logger.info(results);
-                // loop through the results to update stock of product
-                results.map((result) => {
-                    const newStock = {
-                        stock: result.stock + result.quantity
-                    }
-                    // update stock of product
-                    pool.query(queries.Product.updateProductByID, [newStock, result.product_id], (err, results) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            global.logger.info(results);
+        pool.query(queries.OrderProduct.updateStockProduct,
+            [id],
+            (error, results) => {
+                if (error) {
+                    global.logger.error(`Model - Error query updateStockProduct: ${error}`);
+                    reject(error);
+                } else {
+                    // loop through the results to update stock of product
+                    results.map((result) => {
+                        const newStock = {
+                            stock: result.stock + result.quantity
                         }
+                        global.logger.info(`Model - Update stock of product: ${newStock} + Id product: ${result.product_id}`);
+                        // update stock of product
+                        pool.query(queries.Product.updateProductByID,
+                            [newStock, result.product_id],
+                            (error, results) => {
+                                if (error) {
+                                    global.logger.error(`Model - Error query updateProductByID: ${error}`);
+                                    reject(error);
+                                } else {
+                                    global.logger.info(`Model - Update stock of product success: ${results} + Id product: ${result.product_id}`);
+                                }
+                            })
                     })
-                })
-                resolve()
 
-            }
-        })
+                    global.logger.info(`Model - Update stock success: ${results}`);
+                    resolve();
+                }
+            })
 
     })
 }
 
 const searchOrderBy = (searchBy, keywords) => {
     const query = queries.Order.searchOrderBy(searchBy, keywords);
-    global.logger.info(query);
+    global.logger.info(`Model - Search order query: ${query}`);
     return new Promise((resolve, reject) => {
-        pool.query(query, (error, results) => {
-            if (error) {
-                global.logger.error(error.message);
-                reject(error);
-            } else {
-                resolve(results);
-            }
-        })
+        pool.query(query,
+            (error, results) => {
+                if (error) {
+                    global.logger.error(`Model - Error query searchOrderBy: ${error}`);
+                    reject(error);
+                } else {
+                    global.logger.info(`Model - Search order success: ${results}`);
+                    resolve(results);
+                }
+            })
     })
 }
 

@@ -17,8 +17,8 @@ const createEmployeeDetail = (employee_detail) => {
     const query = queries.Employee.createEmployeeDetail
     const { error, value } = employeeSchema.validate(employee_detail)
     if (error) {
-        console.error('Error validating employee', error)
-        throw error
+        global.logger.error(`Model - Error validate employee: ${error}`)
+        throw error({ message: error })
     } else {
         return new Promise((resolve, reject) => {
             pool.query(
@@ -33,11 +33,13 @@ const createEmployeeDetail = (employee_detail) => {
                     value.role,
                     value.status
                 ],
-                (err, res) => {
-                    if (err) {
-                        reject(err)
+                (error, ressults) => {
+                    if (error) {
+                        global.logger.error(`Model - Error query createEmployeeDetail: ${error}`);
+                        reject(error)
                     } else {
-                        resolve(res)
+                        global.logger.info(`Model - Create employee success: ${ressults}`)
+                        resolve(ressults)
                     }
                 }
             )
@@ -46,11 +48,13 @@ const createEmployeeDetail = (employee_detail) => {
 }
 
 const getListEmployee = (page_index) => {
-    const query = queries.Employee.getListEmployee(page_index)
+    const query = queries.Employee.getListEmployee(page_index);
+    global.logger.info(`Model - Get list employee query: ${query}`)
     return new Promise((resolve, reject) => {
-        pool.query(query, (err, results) => {
-            if (err) {
-                reject(err)
+        pool.query(query, (error, results) => {
+            if (error) {
+                global.logger.error(`Model - Error query getListEmployee: ${error}`);
+                reject(error)
             } else {
                 const data = {
                     info: {},
@@ -70,10 +74,13 @@ const getListEmployee = (page_index) => {
                         status: employee.status
                     })
                 })
+                global.logger.info(`Model - Employee detail: ${data.employee}`)
                 // add info page
                 data.info = {
                     total_page: Math.ceil(results[0].page / 10)
                 }
+                global.logger.info(`Model - Info of employee: ${data.info}`)
+                global.logger.info(`Model - Get list employee success: ${data}`)
                 resolve(data);
             }
         })
@@ -85,8 +92,10 @@ const getEmployeeDetail = (employee_id) => {
     return new Promise((resolve, reject) => {
         pool.query(query, [employee_id], (error, res) => {
             if (error) {
+                global.logger.error(`Model - Error query getEmployeeDetail: ${error}`);
                 reject(error)
             } else {
+                global.logger.info(`Model - Get employee detail success: ${res[0]}`)
                 resolve(res[0])
             }
         })
@@ -96,37 +105,48 @@ const getEmployeeDetail = (employee_id) => {
 const updateEmployeeDetail = (employee_data, employee_id) => {
     const query = queries.Employee.updateEmployeeDetail
     return new Promise((resolve, reject) => {
-        pool.query(query, [employee_data, employee_id], (err, res) => {
-            if (err) {
-                reject(err)
-            } else {
-                resolve(res)
-            }
-        })
+        pool.query(query,
+            [employee_data, employee_id],
+            (error, ressults) => {
+                if (error) {
+                    global.logger.error(`Model - Error query updateEmployeeDetail: ${error}`);
+                    reject(error)
+                } else {
+                    global.logger.info(`Model - Update employee success: ${ressults}`)
+                    resolve(ressults)
+                }
+            })
     })
 }
 
 const deleteEmployeeDetail = (employee_id) => {
     const query = queries.Employee.deleteEmployeeDetail
     return new Promise((resolve, reject) => {
-        pool.query(query, [employee_id], (err, res) => {
-            if (err) {
-                reject(err)
-            } else {
-                resolve(res)
-            }
-        })
+        pool.query(query,
+            [employee_id],
+            (error, ressults) => {
+                if (error) {
+                    global.logger.error(`Model - Error query deleteEmployeeDetail: ${error}`);
+                    reject(error)
+                } else {
+                    global.logger.info(`Model - Delete employee success: ${ressults}`)
+                    resolve(ressults)
+                }
+            })
     })
 }
 
 const searchEmployeeBy = (searchBy, keywords) => {
     const query = queries.Employee.searchEmployeeBy(searchBy, keywords);
+    global.logger.info(`Model - Search employee query: ${query}`)
     return new Promise((resolve, reject) => {
-        pool.query(query, (err, res) => {
-            if (err) {
-                reject(err)
+        pool.query(query, (error, ressults) => {
+            if (error) {
+                global.logger.error(`Model - Error query searchEmployeeBy: ${error}`);
+                reject(error)
             } else {
-                resolve(res)
+                global.logger.info(`Model - Search employee success: ${ressults}`)
+                resolve(ressults)
             }
         })
     })

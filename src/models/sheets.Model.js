@@ -13,21 +13,24 @@ const createSheet = (data) => {
     const query = queries.Sheet.createSheet;
     const { error, value } = sheetSchema.validate(data);
     if (error) {
-        global.logger.error('Error validate sheet: ', error)
-        throw error
+        global.logger.error(`Model - Error validate sheet: ${error}`)
+        throw error({ message: error })
     } else {
-        global.logger.info('Validate sheet successfully', value)
+        global.logger.info(`Model - Validate sheet successfully: ${value}`)
+
         return new Promise((resolve, reject) => {
             pool.query(query,
-                [value.start_time,
-                value.end_time,
-                value.coefficient],
+                [
+                    value.start_time,
+                    value.end_time,
+                    value.coefficient
+                ],
                 (error, results) => {
                     if (error) {
-                        global.logger.error('Error create sheet: ', error)
+                        global.logger.error(`Model - Error query create sheet: ${error}`)
                         reject(error)
                     } else {
-                        global.logger.info('Create sheet successfully')
+                        global.logger.info(`Model - Create sheet successfully: ${results}`)
                         resolve(results)
                     }
                 })
@@ -40,10 +43,11 @@ const getListSheet = () => {
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
-                global.logger.info('Error get list sheet: ', error)
+                global.logger.error(`Model - Error query get list sheet: ${error}`)
                 reject(error)
             } else {
                 const data = [];
+                // convert time to hours
                 results.forEach((element) => {
                     data.push({
                         id: element.id,
@@ -52,6 +56,7 @@ const getListSheet = () => {
                         coefficient: element.coefficient
                     })
                 })
+                global.logger.info(`Model - Get list sheet successfully: ${data}`)
                 resolve(data)
             }
         })

@@ -27,7 +27,7 @@ const updateCheckIn = (worksheet_id, check_in_at) => {
                                 global.logger.error(error);
                                 reject(error);
                             } else {
-                                global.logger.info("Update worksheet status successfully");
+                                global.logger.info("Model - Update worksheet status successfully");
                                 resolve(results);
                             }
                         })
@@ -80,7 +80,7 @@ const deleteCheckInOut = (worksheet_id) => {
     return new Promise((resolve, reject) => {
         pool.query(query, [worksheet_id], (error, results) => {
             if (error) {
-                global.logger.error("Error delete check in out: " + error);
+                global.logger.error("Model - Error delete check in out: " + error);
                 reject(error);
             } else {
                 global.logger.info("Delete check in out successfully");

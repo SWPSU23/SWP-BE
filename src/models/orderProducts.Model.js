@@ -20,16 +20,18 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
         unit_price: data.unit_price,
         total: data.total
     }));
+    global.logger.info(`Model - Add order_id to data_products: ${listProduct}`)
     // add product_id, stock to update stock for product
     const listProductUpdate = validData.map((data) => ({
         product_id: data.product_id,
         stock: data.newQuantity
     }))
+    global.logger.info(`Model - Add product_id, stock to update stock for product: ${listProductUpdate}`)
     // validate data
     const { error, value } = Joi.array().items(orderProductSchema).validate(listProduct);
     if (error) {
-        global.logger.error(error);
-        throw error;
+        global.logger.error(`Model - Error validate data: ${error}`);
+        throw error({ message: error });
     } else {
         // convert data to array
         const values = value.map((value) =>
@@ -41,26 +43,34 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
                 value.total
             ]
         );
+        global.logger.info(`Model - Convert data to array: ${values}`)
         // query to update
         return new Promise((resolve, reject) => {
             // insert list order product
-            pool.query(query, [values], (error, results) => {
-                if (error) {
-                    reject(error.message);
-                } else {
-                    global.logger.info('Create list order product success', results);
-                }
-            })
+            pool.query(query,
+                [values],
+                (error, results) => {
+                    if (error) {
+                        global.logger.error(`Model - Error query createListOrderProduct: ${error}`);
+                        reject(error);
+                    } else {
+                        global.logger.info(`Model - Create list order product success: ${results}`);
+                    }
+                })
             // update stock for product
             listProductUpdate.map((data) => {
                 pool.query(
                     queries.Product.updateProductByID,
-                    [{ stock: data.stock }, data.product_id],
+                    [
+                        { stock: data.stock },
+                        data.product_id
+                    ],
                     (error, results) => {
                         if (error) {
-                            reject(error.message);
+                            global.logger.error(`Model - Error query update stock for product: ${error}`);
+                            reject(error);
                         } else {
-                            global.logger.info('Update stock for product', results);
+                            global.logger.info(`Model - Update stock for product success: ${results}`);
                         }
                     })
             })
@@ -69,9 +79,10 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
                 [orderUpdate, order_id],
                 (error, results) => {
                     if (error) {
-                        reject(error.message);
+                        global.logger.error(`Model - Error query update total_price, product_quantity for order: ${error}`);
+                        reject(error);
                     } else {
-                        global.logger.info("Update total_price for order", results);
+                        global.logger.info(`Model - Update total_price, product_quantity for order success: ${results}`);
                     }
                 })
 
@@ -86,6 +97,7 @@ const getListDetailOrder = (order_id) => {
     return new Promise((resolve, reject) => {
         pool.query(query, [order_id], (error, results) => {
             if (error) {
+                global.logger.error(`Model - Error query getListDetailOrder: ${error}`);
                 reject(error);
             } else {
                 const data = {
@@ -101,7 +113,7 @@ const getListDetailOrder = (order_id) => {
                     quantity: result.quantity,
                     total: result.total
                 }))
-                global.logger.info("Order product detail", data.orderProduct)
+                global.logger.info(`Model - Get list detail order product success: ${data.orderProduct}`);
                 // Order detail
                 data.order = {
                     order_id: results[0].order_id,
@@ -109,7 +121,8 @@ const getListDetailOrder = (order_id) => {
                     employee_name: results[0].employee_name,
                     total_price: results[0].total_price,
                 }
-                global.logger.info("Order detail", data.order)
+                global.logger.info(`Model - Get order detail success: ${data.order}`);
+                global.logger.info(`Model - Get list detail order success: ${data}`);
                 resolve(data);
             }
         })

@@ -150,8 +150,7 @@ module.exports = {
 
         updateWorksheet: 'UPDATE `Worksheet` SET ? WHERE `id` = ?',
 
-        deleteWorksheet:
-            'UPDATE `Worksheet` SET status = `failed` WHERE `id` = ?',
+        deleteWorksheet: 'DELETE FROM `Worksheet` WHERE `id` = ?',
 
         getWorksheetDetail:
             'SELECT ws.*, e.name AS employee_name, c.check_in_at, c.check_out_at ' +
