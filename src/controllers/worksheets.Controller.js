@@ -17,7 +17,7 @@ const createWorksheet = (req, res) => {
 }
 
 const getListWorksheet = (req, res) => {
-    worksheetModel.getListWorksheet()
+    worksheetModel.getWorkSheetOfWeek(req.query.start_date, req.query.end_date, req.query.role)
         .then(results => {
             res.status(200).json({
                 success: true,
