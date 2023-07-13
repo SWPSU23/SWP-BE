@@ -30,6 +30,22 @@ router
  *   get:
  *     summary: Get all worksheets
  *     tags: [Worksheet]
+ *     description: Get all worksheets
+ *     parameters:
+ *     - name: start_date
+ *       in: query
+ *       description: Start date
+ *       required: true
+ *       type: string
+ *     - name: end_date
+ *       in: query
+ *       description: End date
+ *       required: true
+ *       type: string
+ *     - name: role
+ *       in: query
+ *       description: Role of employee
+ *       required: true
  *     responses:
  *       200:
  *         description: Success

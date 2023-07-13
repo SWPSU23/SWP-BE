@@ -86,15 +86,15 @@ const createWorksheet = (data) => {
     }
 }
 
-const getListWorksheet = () => {
-    const query = queries.Worksheet.getListWorksheet;
+const getWorkSheetOfWeek = (start_date, end_date, role) => {
+    const query = queries.Worksheet.getWorkSheetOfWeek(start_date, end_date, role);
+    global.logger.info(query)
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
                 global.logger.error("Error get list worksheet: " + error);
                 reject(error);
             } else {
-                global.logger.info("Get list worksheet successfully");
                 const data = [];
                 // convert time stamp to date
                 results.forEach(element => {
@@ -106,6 +106,7 @@ const getListWorksheet = () => {
                         status: element.status
                     })
                 })
+                global.logger.info("Get list worksheet successfully", data);
                 resolve(data);
             }
         })
@@ -176,7 +177,7 @@ const getWorksheetDetail = (id) => {
 
 module.exports = {
     createWorksheet,
-    getListWorksheet,
+    getWorkSheetOfWeek,
     updateWorksheet,
     deleteWorksheet,
     searchWorksheetBy,

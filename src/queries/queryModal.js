@@ -115,7 +115,17 @@ module.exports = {
     Worksheet: {
         createWorksheet: 'INSERT INTO `Worksheet` (employee_id, sheet_id, date, status) VALUES (?, ?, ?, ?)',
 
-        getListWorksheet: 'SELECT * FROM `Worksheet` WHERE day like %?%',
+        getWorkSheetOfWeek: (start_day, end_day, role) => {
+            return `SELECT ws.* FROM Worksheet ws `
+                + ` JOIN Employee e ON ws.employee_id = e.id `
+                + ` WHERE date BETWEEN '${start_day}' AND '${end_day}' AND e.role = '${role}'`
+        },
+
+        getWorkSheetOfWeekEmployee: (start_day, end_day, employee_id) => {
+            return `SELECT ws FROM Worksheet ws `
+                + ` JOIN Employee e ON ws.employee_id = e.id `
+                + ` WHERE date BETWEEN '${start_day}' AND '${end_day}' AND e.id = ${employee_id}`
+        },
 
         updateWorksheet: 'UPDATE `Worksheet` SET ? WHERE `id` = ?',
 
