@@ -1,13 +1,25 @@
-const employeesModel = require('../models/employees.Model')
+const employeesModel = require('../models/employees.Model');
+const employeesValidation = require('../validations/employees.Validation');
+
 
 const createEmployeeDetail = (req, res) => {
-    employeesModel
-        .createEmployeeDetail(req.body)
-        .then((data) => {
-            res.status(200).send({
-                success: true,
-                data: data
-            })
+    employeesValidation
+        .createEmployee(req.body)
+        .then(() => {
+            employeesModel
+                .createEmployeeDetail(req.body)
+                .then((data) => {
+                    res.status(200).send({
+                        success: true,
+                        data: data
+                    })
+                })
+                .catch((error) => {
+                    res.status(500).send({
+                        success: false,
+                        message: error.message
+                    })
+                })
         })
         .catch((error) => {
             res.status(500).send({

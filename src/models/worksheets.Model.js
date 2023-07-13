@@ -8,7 +8,7 @@ const worksheetSchema = joi.object({
     sheet_id: joi.number().required(),
     date: joi.string().required(),
     coefficient: joi.number().default(0),
-    status: joi.string().default('pending')
+    status: joi.string().default('not started')
 })
 
 const createWorksheet = (data) => {
@@ -179,6 +179,8 @@ const getWorksheetDetail = (id) => {
                         coefficient: element.coefficient,
                         check_in_at: time.timeStampToHours(element.check_in_at),
                         check_out_at: time.timeStampToHours(element.check_out_at),
+                        start_time: time.timeStampToHours(element.start_time),
+                        end_time: time.timeStampToHours(element.end_time),
                         status: element.status
                     })
                 })

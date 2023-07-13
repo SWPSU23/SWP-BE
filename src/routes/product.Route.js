@@ -169,7 +169,7 @@ router
  *           type: string
  *           minLength: 1
  *           maxLength: 32
- *         unit_price:
+ *         cost_price:
  *           type: number
  *           minimum: 100
  *         stock:

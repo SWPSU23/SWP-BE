@@ -1,18 +1,29 @@
 const checkInOutModel = require('../models/checkInOuts.Model');
+const checkInOutValidation = require('../validations/checkInOuts.Validation');
 
 const updateCheckIn = (req, res) => {
     global.logger.info("Update check in", req.params.worksheet_id);
-    checkInOutModel.updateCheckIn(req.params.worksheet_id)
-        .then(results => {
-            res.status(200).json({
-                sucess: true,
-                data: results
-            })
+    checkInOutValidation
+        .updateCheckIn(req.params.worksheet_id)
+        .then((check_in_at) => {
+            checkInOutModel.updateCheckIn(req.params.worksheet_id, check_in_at)
+                .then(results => {
+                    res.status(200).json({
+                        sucess: true,
+                        data: results
+                    })
+                })
+                .catch(error => {
+                    res.status(500).json({
+                        sucess: false,
+                        message: error.message
+                    })
+                })
         })
         .catch(error => {
             res.status(500).json({
                 sucess: false,
-                message: "Error update check in: " + error
+                message: error.message
             })
         })
 }
