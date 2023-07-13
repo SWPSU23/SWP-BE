@@ -116,7 +116,7 @@ module.exports = {
         createWorksheet: 'INSERT INTO `Worksheet` (employee_id, sheet_id, date, status) VALUES (?, ?, ?, ?)',
 
         getWorkSheetOfWeek: (start_day, end_day, role) => {
-            return `SELECT ws.* FROM Worksheet ws `
+            return `SELECT ws.*, e.name AS employee_name FROM Worksheet ws `
                 + ` JOIN Employee e ON ws.employee_id = e.id `
                 + ` WHERE date BETWEEN '${start_day}' AND '${end_day}' AND e.role = '${role}'`
         },
@@ -131,8 +131,10 @@ module.exports = {
 
         deleteWorksheet: 'UPDATE `Worksheet` SET status = `failed` WHERE `id` = ?',
 
-        getWorksheetDetail: 'SELECT ws.*, c.check_in_at, c.check_out_at '
-            + ' FROM `Worksheet` ws JOIN `CheckInOut` c ON ws.id = c.worksheet_id'
+        getWorksheetDetail: 'SELECT ws.*, e.name AS employee_name, c.check_in_at, c.check_out_at '
+            + ' FROM `Worksheet` ws'
+            + ' JOIN `CheckInOut` c ON ws.id = c.worksheet_id'
+            + ' JOIN `Employee` e ON ws.employee_id = e.id'
             + ' WHERE `id` = ?',
 
         getCoefficient: 'SELECT s.coefficient, c.isSpecialDay '

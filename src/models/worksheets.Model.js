@@ -101,6 +101,7 @@ const getWorkSheetOfWeek = (start_date, end_date, role) => {
                     data.push({
                         id: element.id,
                         employee_id: element.employee_id,
+                        employee_name: element.employee_name,
                         sheet_id: element.sheet_id,
                         day: time.timeStampToDate(element.day),
                         status: element.status
@@ -172,6 +173,7 @@ const getWorksheetDetail = (id) => {
                     data.push({
                         id: element.id,
                         employee_id: element.employee_id,
+                        employee_name: element.employee_name,
                         sheet_id: element.sheet_id,
                         date: time.timeStampToDate(element.date),
                         coefficient: element.coefficient,
