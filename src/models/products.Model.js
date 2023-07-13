@@ -152,21 +152,6 @@ const searchProductBy = (searchBy, keywords) => {
         })
     })
 }
-const searchProductBy = (searchBy, keyWord) => {
-    const query = queries.products.searchProductBy(searchBy, keyWord)
-    console.log(query)
-    return new Promise((resolve, reject) => {
-        pool.query(query, (error, results) => {
-            if (error) {
-                console.error('Error executing the query: ', error)
-                reject(error)
-            } else {
-                console.log('Got the results from the database: ', results)
-                resolve(results)
-            }
-        })
-    })
-}
 
 module.exports = {
     createProductDetails,

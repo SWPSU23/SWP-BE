@@ -49,7 +49,7 @@ if (cluster.isMaster) {
             store: new RedisStore({
                 client: global.redisClient,
                 // ttl 1 month
-                ttl: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+                ttl: 2592000
             }),
         })
     )
