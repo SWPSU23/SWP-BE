@@ -10,4 +10,6 @@ router.use('/sheet', require('./sheet.Route'));
 router.use('/worksheet', require('./worksheet.Route'));
 router.use('/calendar', require('./calendar.Route'));
 router.use('/category', require('./category.Route'));
+router.use('/checkInOut', require('./checkInOut.Route'));
+
 module.exports = router

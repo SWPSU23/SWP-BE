@@ -77,10 +77,10 @@ const getListProduct = (page_index) => {
                         stock: item.stock,
                         retail_price: item.retail_price,
                         category: item.category,
-                        status: item.status,
                         image: item.image,
-                        create_at: item.create_at,
-                        expired_at: item.expired_at,
+                        create_at: time.timeStampToDay(item.create_at),
+                        expired_at: time.timeStampToDay(item.expired_at),
+                        status: item.status
                     })
                 })
                 resolve(data)

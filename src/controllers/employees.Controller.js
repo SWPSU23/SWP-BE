@@ -5,14 +5,14 @@ const createEmployeeDetail = (req, res) => {
         .createEmployeeDetail(req.body)
         .then((data) => {
             res.status(200).send({
-                message: 'Successfully created employee',
-                data: data,
+                success: true,
+                data: data
             })
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'Error creating employee',
-                error: error.message,
+                success: false,
+                message: error.message
             })
         })
 }
@@ -22,14 +22,14 @@ const getListEmployee = (req, res) => {
         .getListEmployee(req.query.page_index)
         .then((data) => {
             res.status(200).send({
-                message: 'Successfully get employee list',
-                data: data,
+                success: true,
+                data: data
             })
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'Error getting employee list',
-                error: error.message,
+                success: false,
+                message: error.message
             })
         })
 }
@@ -39,14 +39,14 @@ const getEmployeeDetail = (req, res) => {
         .getEmployeeDetail(req.params.id)
         .then((data) => {
             res.status(200).send({
-                message: 'Get employee detail successfully',
-                data: data,
+                success: true,
+                data: data
             })
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'Error getting employee detail',
-                error: error.message,
+                success: false,
+                message: error.message
             })
         })
 }
@@ -56,14 +56,14 @@ const updateEmployeeDetail = (req, res) => {
         .updateEmployeeDetail(req.body, req.params.id)
         .then((data) => {
             res.status(200).send({
-                message: 'Employee updated successfully',
-                data: data,
+                success: true,
+                data: data
             })
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'Error updating employee',
-                error: error,
+                success: false,
+                message: error.message
             })
         })
 }
@@ -73,14 +73,14 @@ const deleteEmployeeDetail = (req, res) => {
         .deleteEmployeeDetail(req.params.id)
         .then((data) => {
             res.status(200).send({
-                message: 'Employee deleted successfully',
-                data: data,
+                success: true,
+                data: data
             })
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'Error deleting employee',
-                error: error,
+                success: false,
+                message: error.message
             })
         })
 }
@@ -90,14 +90,14 @@ const searchEmployeeBy = (req, res) => {
         .searchEmployeeBy(req.query.searchBy, req.query.keywords)
         .then((data) => {
             res.status(200).send({
-                message: 'Search employee successfully',
-                data: data,
+                success: true,
+                data: data
             })
         })
         .catch((error) => {
             res.status(500).send({
-                message: 'Error searching employee',
-                error: error,
+                success: false,
+                message: error.message
             })
         })
 }

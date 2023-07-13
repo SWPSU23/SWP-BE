@@ -139,15 +139,24 @@ router
  *     Worksheet:
  *       type: object
  *       properties:
- *         employee_id:
- *           type: integer
- *           description: The employee id
- *         sheet_id:
- *           type: integer
- *           description: The sheet id
- *         day:
+ *         worksheet:
+ *           type: object
+ *           properties:
+ *             employee_id:
+ *               type: integer
+ *               format: int64
+ *             sheet_id:
+ *               type: integer
+ *               format: int32
+ *             date:
+ *               type: string
+ *         role:
  *           type: string
- *           description: The day
+ *           description: Role of employee
+ *       required:
+ *         - order_id
+ *         - products
+ *         - order
  *         
 */
 
