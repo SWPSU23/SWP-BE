@@ -80,8 +80,8 @@ const getListProduct = (page_index) => {
                         retail_price: item.retail_price,
                         category: item.category,
                         image: item.image,
-                        create_at: time.timeStampToDay(item.create_at),
-                        expired_at: time.timeStampToDay(item.expired_at),
+                        create_at: time.timeStampToDate(item.create_at),
+                        expired_at: time.timeStampToDate(item.expired_at),
                         status: item.status
                     })
                 })
