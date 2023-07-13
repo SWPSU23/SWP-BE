@@ -33,6 +33,8 @@ const createProductDetails = (product) => {
                     value.unit,
                     value.cost_price,
                     value.stock,
+                    value.retail_price,
+                    value.category,
                     value.status,
                     value.image,
                     value.create_at,
