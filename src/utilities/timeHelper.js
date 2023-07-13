@@ -28,7 +28,7 @@ const timeStampToHours = (timeStamp) => {
 }
 
 const timeStampToDay = (timeStamp) => {
-    return moment(timeStamp).format('YYYY-MM-DD hh-mm-ss')
+    return moment(timeStamp).format('YYYY-MM-DD hh:mm:ss')
 }
 
 const dateToTimeStamp = (date) => {
