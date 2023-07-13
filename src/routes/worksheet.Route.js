@@ -37,15 +37,18 @@ router
  *       description: Start date
  *       required: true
  *       type: string
+ *       example: 2023-07-12
  *     - name: end_date
  *       in: query
  *       description: End date
  *       required: true
  *       type: string
+ *       example: 2023-07-18
  *     - name: role
  *       in: query
  *       description: Role of employee
  *       required: true
+ *       example: cashier
  *     responses:
  *       200:
  *         description: Success
