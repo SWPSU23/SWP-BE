@@ -16,10 +16,11 @@ const checkQuantityProduct = (products) => {
                                 reject(error);
                             } else {
                                 const checkQuantityProduct = results[0].stock - product.quantity;
+                                global.logger.info("New quantity of product in stock", checkQuantityProduct);
                                 // check quantity of product in stock
                                 if (checkQuantityProduct < 0) {
                                     global.logger.info("Quantity of product is not enough");
-                                    reject(new Error('Quantity of product is not enough'));
+                                    reject({ message: "Quantity of product is not enough" });
                                 } else {
                                     // update valid quantity of product
                                     const validData = {
@@ -29,6 +30,7 @@ const checkQuantityProduct = (products) => {
                                         total: product.total,
                                         newQuantity: checkQuantityProduct,
                                     };
+                                    global.logger.info("Valid orderProduct", validData);
                                     resolve(validData);
                                 }
                             }
@@ -40,7 +42,7 @@ const checkQuantityProduct = (products) => {
         Promise.all(pormise)
             .then((results) => {
                 // return list valid of product to insert list order product
-                global.logger.info("valid orderProduct", results)
+                global.logger.info("List valid orderProduct", results);
                 resolve(results);
             })
             .catch((error) => {
