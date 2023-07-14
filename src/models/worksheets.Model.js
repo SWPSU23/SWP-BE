@@ -2,6 +2,7 @@ const pool = require('../services/queryHelper').getPool();
 const joi = require('joi');
 const queries = require('../queries/queryModal');
 const time = require('../utilities/timeHelper');
+const moment = require('moment');
 
 const worksheetSchema = joi.object({
     employee_id: joi.number().required(),
@@ -96,23 +97,54 @@ const getWorkSheetOfWeek = (start_date, end_date, role) => {
         pool.query(query,
             (error, results) => {
                 if (error) {
-                    global.logger.error("Error get list worksheet: " + error);
+                    global.logger.error("Error query get list worksheet: " + error);
                     reject(error);
                 } else {
+
                     const data = [];
-                    // convert time stamp to date
-                    results.forEach(element => {
-                        data.push({
-                            id: element.id,
-                            employee_id: element.employee_id,
-                            employee_name: element.employee_name,
-                            sheet_id: element.sheet_id,
-                            date: time.timeStampToDate(element.date),
-                            status: element.status
-                        })
-                    })
-                    global.logger.info("Get list worksheet successfully", data);
-                    resolve(data);
+                    // if role is cashier, create 3 sheet
+                    if (role === 'cashier') {
+                        data.length = 3;
+                    }
+                    // if role is guard, create 2 sheet
+                    if (role === 'guard') {
+                        data.length = 2;
+                    }
+                    global.logger.info(`Length of data: ${data.length}`)
+
+                    for (let i = 0; i < data.length; i++) {
+                        // create sheet
+                        data[i] = {
+                            [`sheet_${i + 1}`]: []
+                        };
+                        // create date
+                        for (let currentDay = moment(start_date); currentDay <= moment(end_date); currentDay.add(1, 'day')) {
+                            global.logger.info(`Model - Current day: ${time.timeStampToDate(currentDay)}`);
+                            let detail = {};
+                            // create detail of date
+                            results.map((element) => {
+                                global.logger.info(`Model - Element date: ${element.date}`)
+                                if (time.timeStampToDate(currentDay) === time.timeStampToDate(element.date) && element.sheet_id === i + 1) {
+                                    detail = {
+                                        worksheet_id: element.id,
+                                        employee_id: element.employee_id,
+                                        employee_name: element.employee_name,
+                                        coefficient: element.coefficient,
+                                        status: element.status
+                                    }
+                                }
+                            })
+
+                            data[i][`sheet_${i + 1}`].push({
+                                date: time.timeStampToDate(currentDay),
+                                detail: detail
+                            })
+                            // create detail of date
+                        }
+                    }
+
+
+                    resolve(data)
                 }
             })
     })
@@ -125,10 +157,10 @@ const updateWorksheet = (data, id) => {
             [data, id],
             (error, results) => {
                 if (error) {
-                    global.logger.error(`Model - Error query update worksheet: ${error}`);
+                    global.logger.error(`Model - Error query update worksheet: ${error} `);
                     reject(error);
                 } else {
-                    global.logger.info(`Model - Update worksheet successfully: ${results}`);
+                    global.logger.info(`Model - Update worksheet successfully: ${results} `);
                     resolve(results);
                 }
             })
@@ -140,10 +172,10 @@ const deleteWorksheet = (id) => {
     return new Promise((resolve, reject) => {
         pool.query(query, [id], (error, results) => {
             if (error) {
-                global.logger.error(`Model - Error query delete worksheet: ${error}`);
+                global.logger.error(`Model - Error query delete worksheet: ${error} `);
                 reject(error);
             } else {
-                global.logger.info(`Model - Delete worksheet successfully: ${results}`);
+                global.logger.info(`Model - Delete worksheet successfully: ${results} `);
                 resolve(results);
             }
         })
@@ -152,14 +184,14 @@ const deleteWorksheet = (id) => {
 
 const searchWorksheetBy = (searchBy, keywords) => {
     const query = queries.Worksheet.searchWorksheetBy(searchBy, keywords);
-    global.logger.info(`Model - Query search worksheet: ${query}`);
+    global.logger.info(`Model - Query search worksheet: ${query} `);
     return new Promise((resolve, reject) => {
         pool.query(query, (error, results) => {
             if (error) {
-                global.logger.error(`Model - Error query search worksheet: ${error}`);
+                global.logger.error(`Model - Error query search worksheet: ${error} `);
                 reject(error);
             } else {
-                global.logger.info(`Model - Search worksheet successfully: ${results}`);
+                global.logger.info(`Model - Search worksheet successfully: ${results} `);
                 resolve(results);
             }
         })
@@ -168,11 +200,11 @@ const searchWorksheetBy = (searchBy, keywords) => {
 
 const getWorksheetDetail = (id) => {
     const query = queries.Worksheet.getWorksheetDetail;
-    global.logger.info(`Model - Query get worksheet detail: ${query}`);
+    global.logger.info(`Model - Query get worksheet detail: ${query} `);
     return new Promise((resolve, reject) => {
         pool.query(query, [id], (error, results) => {
             if (error) {
-                global.logger.error(`Model - Error query get worksheet detail: ${error}`);
+                global.logger.error(`Model - Error query get worksheet detail: ${error} `);
                 reject(error);
             } else {
                 const data = [];
@@ -192,7 +224,7 @@ const getWorksheetDetail = (id) => {
                         status: element.status
                     })
                 })
-                global.logger.info(`Model - Get worksheet detail successfully: ${data}`);
+                global.logger.info(`Model - Get worksheet detail successfully: ${data} `);
                 resolve(data);
             }
         })

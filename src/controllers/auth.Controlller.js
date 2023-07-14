@@ -23,7 +23,6 @@ const login = async (req, res) => {
                 }
                 if (result) {
                     req.session.user = user[0]
-                    
                     return res.status(200).send({ message: 'Login success' })
                 }
                 global.logger.info('Password is incorrect')
