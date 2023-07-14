@@ -8,10 +8,6 @@ router
     .get(worksheetController.getWorkSheetOfWeek)
 
 router
-    .route('/search')
-    .get(worksheetController.searchWorksheetBy)
-
-router
     .route('/:id')
     .get(worksheetController.getWorksheetDetail)
     .put(worksheetController.updateWorksheet)
@@ -124,31 +120,6 @@ router
  *         description: Success
  *       500:
  *         description: Internal Server Error 
- */
-
-/**
- * @swagger
- * /worksheet/search:
- *   get:
- *     summary: Search worksheets by keywords
- *     tags: [Worksheet]
- *     parameters:
- *     - name: searchBy
- *       in: query
- *       description: Search by
- *       required: true
- *       type: string
- *     - name: keywords
- *       in: query
- *       description: Keywords
- *       required: true
- *       type: string
- *     responses:
- *       200:
- *         description: Success
- *       500:
- *         description: Internal Server Error
- *       
  */
 
 /**

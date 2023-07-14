@@ -60,13 +60,13 @@ router.get('/logout', authController.logout)
  *       type: object
  *       properties:
  *         phone:
- *           type: number
+ *           type: string
  *           minLength: 9
  *           maxLength: 32
- *           example: 0123456789
+ *           example: 1234567890
  *         password:
  *           type: string
- *           example: 123456
+ *           example: $2b$10$ARPMP1cilWm7xvNBc2CzTOuXWE6WGPldnmF0nU21TcIEjcq7zNVi
  *       required:
  *         - phone
  *         - password

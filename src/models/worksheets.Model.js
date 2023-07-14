@@ -177,22 +177,6 @@ const deleteWorksheet = (id) => {
     })
 }
 
-const searchWorksheetBy = (searchBy, keywords) => {
-    const query = queries.Worksheet.searchWorksheetBy(searchBy, keywords);
-    global.logger.info(`Model - Query search worksheet: ${query} `);
-    return new Promise((resolve, reject) => {
-        pool.query(query, (error, results) => {
-            if (error) {
-                global.logger.error(`Model - Error query search worksheet: ${error} `);
-                reject(error);
-            } else {
-                global.logger.info(`Model - Search worksheet successfully: ${results} `);
-                resolve(results);
-            }
-        })
-    })
-}
-
 const getWorksheetDetail = (id) => {
     const query = queries.Worksheet.getWorksheetDetail;
     global.logger.info(`Model - Query get worksheet detail: ${query} `);
@@ -233,6 +217,5 @@ module.exports = {
     getWorkSheetOfWeek,
     updateWorksheet,
     deleteWorksheet,
-    searchWorksheetBy,
     getWorksheetDetail
 }
