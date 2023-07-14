@@ -87,23 +87,6 @@ const deleteWorksheet = (req, res) => {
         })
 }
 
-const searchWorksheetBy = (req, res) => {
-    worksheetModel
-        .searchWorksheetBy(req.query.searchBy, req.query.keywords)
-        .then(results => {
-            res.status(200).json({
-                success: true,
-                data: results
-            })
-        })
-        .catch(error => {
-            res.status(500).json({
-                success: false,
-                message: error.message
-            })
-        })
-}
-
 const getWorksheetDetail = (req, res) => {
     worksheetModel
         .getWorksheetDetail(req.params.id)
@@ -128,6 +111,5 @@ module.exports = {
     getWorkSheetOfWeek,
     updateWorksheet,
     deleteWorksheet,
-    searchWorksheetBy,
     getWorksheetDetail
 }
