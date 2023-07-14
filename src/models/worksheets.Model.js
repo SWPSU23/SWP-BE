@@ -107,7 +107,7 @@ const getWorkSheetOfWeek = (start_date, end_date, role) => {
                             employee_id: element.employee_id,
                             employee_name: element.employee_name,
                             sheet_id: element.sheet_id,
-                            day: time.timeStampToDate(element.day),
+                            date: time.timeStampToDate(element.date),
                             status: element.status
                         })
                     })

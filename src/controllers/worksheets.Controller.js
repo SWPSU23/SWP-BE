@@ -17,7 +17,7 @@ const createWorksheet = (req, res) => {
         })
 }
 
-const getListWorksheet = (req, res) => {
+const getWorkSheetOfWeek = (req, res) => {
     worksheetModel
         .getWorkSheetOfWeek(req.query.start_date, req.query.end_date, req.query.role)
         .then(results => {
@@ -115,7 +115,7 @@ const getWorksheetDetail = (req, res) => {
 
 module.exports = {
     createWorksheet,
-    getListWorksheet,
+    getWorkSheetOfWeek,
     updateWorksheet,
     deleteWorksheet,
     searchWorksheetBy,

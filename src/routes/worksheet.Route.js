@@ -5,7 +5,7 @@ const worksheetController = require('../controllers/worksheets.Controller');
 router
     .route('/')
     .post(worksheetController.createWorksheet)
-    .get(worksheetController.getListWorksheet)
+    .get(worksheetController.getWorkSheetOfWeek)
 
 router
     .route('/search')
@@ -28,9 +28,9 @@ router
  * @swagger
  * /worksheet:
  *   get:
- *     summary: Get all worksheets
+ *     summary: Get worksheet of week of all emplyoee
  *     tags: [Worksheet]
- *     description: Get all worksheets
+ *     description: Only manager can use this API
  *     parameters:
  *     - name: start_date
  *       in: query

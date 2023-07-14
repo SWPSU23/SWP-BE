@@ -102,13 +102,29 @@ const getProductByID = (id) => {
                 reject(error)
             } else {
                 global.logger.info(`Model - Get product by id success: ${results}`)
-                resolve(results[0])
+                // convert timestamp to day
+                const data = {
+                    id: results[0].id,
+                    name: results[0].name,
+                    description: results[0].description,
+                    unit: results[0].unit,
+                    cost_price: results[0].cost_price,
+                    stock: results[0].stock,
+                    retail_price: results[0].retail_price,
+                    category: results[0].category,
+                    image: results[0].image,
+                    create_at: time.timeStampToDay(results[0].create_at),
+                    expired_at: time.timeStampToDay(results[0].expired_at),
+                    status: results[0].status
+                }
+                global.logger.info(`Model - Convert time: ${data}`)
+                resolve(data)
             }
         })
     })
 }
 const updateProductByID = (id, productUpdate) => {
-    const query = queries.Product.updateProductByID
+    const query = queries.Product.updateProductByID;
     return new Promise((resolve, reject) => {
         pool.query(query, [productUpdate, id], (error, results) => {
             if (error) {
