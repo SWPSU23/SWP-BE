@@ -100,7 +100,7 @@ const getWorkSheetOfWeek = (start_date, end_date, role) => {
                     global.logger.error("Error query get list worksheet: " + error);
                     reject(error);
                 } else {
-
+                    global.logger.info(`Model - Get list worksheet successfully: ${JSON.stringify(results)}`)
                     const data = [];
                     // if role is cashier, create 3 sheet
                     if (role === 'cashier') {
@@ -110,7 +110,6 @@ const getWorkSheetOfWeek = (start_date, end_date, role) => {
                     if (role === 'guard') {
                         data.length = 2;
                     }
-                    global.logger.info(`Length of data: ${data.length}`)
 
                     for (let i = 0; i < data.length; i++) {
                         // create sheet
@@ -119,31 +118,27 @@ const getWorkSheetOfWeek = (start_date, end_date, role) => {
                         };
                         // create date
                         for (let currentDay = moment(start_date); currentDay <= moment(end_date); currentDay.add(1, 'day')) {
-                            global.logger.info(`Model - Current day: ${time.timeStampToDate(currentDay)}`);
-                            let detail = {};
+                            let detail = [];
                             // create detail of date
                             results.map((element) => {
-                                global.logger.info(`Model - Element date: ${element.date}`)
                                 if (time.timeStampToDate(currentDay) === time.timeStampToDate(element.date) && element.sheet_id === i + 1) {
-                                    detail = {
+                                    detail.push({
                                         worksheet_id: element.id,
                                         employee_id: element.employee_id,
                                         employee_name: element.employee_name,
                                         coefficient: element.coefficient,
                                         status: element.status
-                                    }
+                                    })
                                 }
                             })
-
+                            global.logger.info(`Model - Sheet_id ${i + 1} date: ${time.timeStampToDate(currentDay)} detail: ${JSON.stringify(detail)}`);
+                            // set data
                             data[i][`sheet_${i + 1}`].push({
                                 date: time.timeStampToDate(currentDay),
                                 detail: detail
                             })
-                            // create detail of date
                         }
                     }
-
-
                     resolve(data)
                 }
             })
