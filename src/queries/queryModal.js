@@ -168,6 +168,18 @@ module.exports = {
             ' Join Calendar c on ws.date = c.date' +
             ' WHERE ws.sheet_id = ? AND ws.id = ? AND s.role = ? ',
 
+        checkRoleHasWorksheetInSheet:
+            `SELECT * FROM Worksheet` +
+            ` Join Employee E on Worksheet.employee_id = E.id` +
+            ` WHERE E.role = ? AND Worksheet.date = ? AND Worksheet.sheet_id = ?`
+        ,
+
+        checkEmployeeHasWorksheetInSheet:
+            `SELECT * FROM Worksheet` +
+            ` Join Employee E on Worksheet.employee_id = E.id` +
+            ` WHERE E.id = ? AND Worksheet.date = ? AND Worksheet.sheet_id = ?`,
+
+
         searchWorksheetBy: (searchBy, keywords) => {
             return `SELECT * FROM 'Worksheet' WHERE ${searchBy} LIKE '%${keywords}%'`
         },

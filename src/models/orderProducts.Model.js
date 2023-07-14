@@ -59,20 +59,40 @@ const createListOrderProduct = (order_id, validData, orderUpdate) => {
                 })
             // update stock for product
             listProductUpdate.map((data) => {
-                pool.query(
-                    queries.Product.updateProductByID,
-                    [
-                        { stock: data.stock },
-                        data.product_id
-                    ],
-                    (error, results) => {
-                        if (error) {
-                            global.logger.error(`Model - Error query update stock for product: ${error}`);
-                            reject(error);
-                        } else {
-                            global.logger.info(`Model - Update stock for product success: ${results}`);
-                        }
-                    })
+                if (data.stock > 0) {
+                    pool.query(
+                        queries.Product.updateProductByID,
+                        [
+                            { stock: data.stock },
+                            data.product_id
+                        ],
+                        (error, results) => {
+                            if (error) {
+                                global.logger.error(`Model - Error query update stock for product: ${error}`);
+                                reject(error);
+                            } else {
+                                global.logger.info(`Model - Update stock for product success: ${results}`);
+                            }
+                        })
+                } else {
+                    pool.query(
+                        queries.Product.updateProductByID,
+                        [
+                            {
+                                stock: data.stock,
+                                status: 'unavailable'
+                            },
+                            data.product_id
+                        ],
+                        (error, results) => {
+                            if (error) {
+                                global.logger.error(`Model - Error query update stock for product: ${error}`);
+                                reject(error);
+                            } else {
+                                global.logger.info(`Model - Update stock for product success: ${results}`);
+                            }
+                        })
+                }
             })
             // update total_price, product_quantity for order
             pool.query(queries.Order.updateOrder,

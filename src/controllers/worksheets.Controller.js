@@ -2,15 +2,25 @@ const worksheetModel = require('../models/worksheets.Model');
 const worksheetValidation = require('../validations/worksheets.Validation');
 
 const createWorksheet = (req, res) => {
-    worksheetModel.createWorksheet(req.body)
-        .then(results => {
-            res.status(200).json({
-                success: true,
-                data: results
-            })
+    worksheetValidation
+        .createWorksheet(req.body)
+        .then(() => {
+            worksheetModel.createWorksheet(req.body)
+                .then(results => {
+                    res.status(200).json({
+                        success: true,
+                        data: results
+                    })
+                })
+                .catch(error => {
+                    res.status(500).json({
+                        success: false,
+                        message: error.message
+                    })
+                })
         })
         .catch(error => {
-            res.status(500).json({
+            res.status(400).json({
                 success: false,
                 message: error.message
             })
