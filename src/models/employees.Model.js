@@ -70,7 +70,6 @@ const getListEmployee = (page_index) => {
                         email_address: employee.email_address,
                         phone: employee.phone,
                         base_salary: employee.base_salary,
-                        password: employee.password,
                         role: employee.role,
                         status: employee.status
                     })
@@ -97,7 +96,17 @@ const getEmployeeDetail = (employee_id) => {
                 reject(error)
             } else {
                 global.logger.info(`Model - Get employee detail success: ${res[0]}`)
-                resolve(res[0])
+                const data = {
+                    id: res[0].id,
+                    name: res[0].name,
+                    age: res[0].age,
+                    email_address: res[0].email_address,
+                    phone: res[0].phone,
+                    base_salary: res[0].base_salary,
+                    role: res[0].role,
+                    status: res[0].status
+                }
+                resolve(data)
             }
         })
     })
