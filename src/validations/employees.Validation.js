@@ -56,7 +56,28 @@ const createEmployee = (data) => {
     })
 }
 
+const updatePassword = (data) => {
+    return new Promise((resolve, reject) => {
+        if (data.password) {
+            bcrypt.hash(data.password, 10, (err, hash) => {
+                if (err) {
+                    global.logger.error(`Validation - Error hashing password: ${err}`);
+                    reject(err);
+                } else {
+                    global.logger.info(`Validation - Hashed password: ${hash}`);
+                    data.password = hash;
+                    resolve(data);
+                }
+            })
+
+        } else {
+            resolve(data);
+        }
+    })
+}
+
 
 module.exports = {
-    createEmployee
+    createEmployee,
+    updatePassword
 }

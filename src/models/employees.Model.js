@@ -113,7 +113,7 @@ const getEmployeeDetail = (employee_id) => {
 }
 
 const updateEmployeeDetail = (employee_data, employee_id) => {
-    const query = queries.Employee.updateEmployeeDetail
+    const query = queries.Employee.updateEmployeeDetail;
     return new Promise((resolve, reject) => {
         pool.query(query,
             [employee_data, employee_id],

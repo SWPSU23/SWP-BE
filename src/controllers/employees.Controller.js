@@ -64,13 +64,23 @@ const getEmployeeDetail = (req, res) => {
 }
 
 const updateEmployeeDetail = (req, res) => {
-    employeesModel
-        .updateEmployeeDetail(req.body, req.params.id)
+    employeesValidation
+        .updatePassword(req.body)
         .then((data) => {
-            res.status(200).send({
-                success: true,
-                data: data
-            })
+            employeesModel
+                .updateEmployeeDetail(data, req.params.id)
+                .then((data) => {
+                    res.status(200).send({
+                        success: true,
+                        data: data
+                    })
+                })
+                .catch((error) => {
+                    res.status(500).send({
+                        success: false,
+                        message: error.message
+                    })
+                })
         })
         .catch((error) => {
             res.status(500).send({
