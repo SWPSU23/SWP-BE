@@ -19,7 +19,7 @@ const checkQuantityProduct = (products) => {
                                 global.logger.info("New quantity of product in stock", checkQuantityProduct);
                                 // check quantity of product in stock
                                 if (checkQuantityProduct < 0) {
-                                    global.logger.info("Quantity of product is not enough");
+                                    global.logger.error(`Quantity of product is not enough ${product.product_id} just have ${results[0].stock}`);
                                     reject({ message: "Quantity of product is not enough" });
                                 } else {
                                     // update valid quantity of product

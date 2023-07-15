@@ -56,28 +56,64 @@ const createEmployee = (data) => {
     })
 }
 
-const updatePassword = (data) => {
+const updateEmployee = (data) => {
     return new Promise((resolve, reject) => {
+
+        if (data.email_address) {
+            const query = queries.Employee.searchEmployeeBy('email_address', data.email_address);
+            global.logger.info(`Validation - Search employee by email: ${query}`);
+            pool.query(query, (error, results) => {
+                if (error) {
+                    global.logger.error(`Validation - Error search employee by email: ${error}`);
+                    reject(error);
+                } else {
+                    if (results.length > 0) {
+                        global.logger.error("Validation - Email is existed: ");
+                        reject({ message: "Email is existed" });
+                    } else {
+                        global.logger.info("Validation - Email is not existed: ");
+                    }
+                }
+            });
+        }
+
+        if (data.phone) {
+            const query = queries.Employee.searchEmployeeBy('phone', data.phone);
+            global.logger.info(`Validation - Search employee by phone: ${query}`);
+            pool.query(query, (error, results) => {
+                if (error) {
+                    global.logger.error(`Validation - Error search employee by phone: ${error}`);
+
+                    reject(error);
+                } else {
+                    if (results.length > 0) {
+                        global.logger.error("Validation - Phone number is existed: ");
+                        reject({ message: "Phone number is existed" });
+                    } else {
+                        global.logger.info("Validation - Phone number is not existed: ");
+                    }
+                }
+            });
+        }
+
         if (data.password) {
             bcrypt.hash(data.password, 10, (err, hash) => {
                 if (err) {
                     global.logger.error(`Validation - Error hashing password: ${err}`);
-                    reject(err);
+                    reject({ message: "Error hashing password" });
                 } else {
                     global.logger.info(`Validation - Hashed password: ${hash}`);
                     data.password = hash;
                     resolve(data);
                 }
-            })
-
-        } else {
-            resolve(data);
+            });
         }
-    })
-}
+
+    });
+};
 
 
 module.exports = {
     createEmployee,
-    updatePassword
+    updateEmployee
 }

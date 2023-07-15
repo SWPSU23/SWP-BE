@@ -22,7 +22,7 @@ const createEmployeeDetail = (req, res) => {
                 })
         })
         .catch((error) => {
-            res.status(500).send({
+            res.status(400).send({
                 success: false,
                 message: error.message
             })
@@ -65,7 +65,7 @@ const getEmployeeDetail = (req, res) => {
 
 const updateEmployeeDetail = (req, res) => {
     employeesValidation
-        .updatePassword(req.body)
+        .updateEmployee(req.body)
         .then((data) => {
             employeesModel
                 .updateEmployeeDetail(data, req.params.id)
@@ -83,7 +83,7 @@ const updateEmployeeDetail = (req, res) => {
                 })
         })
         .catch((error) => {
-            res.status(500).send({
+            res.status(400).send({
                 success: false,
                 message: error.message
             })
