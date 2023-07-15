@@ -1,6 +1,6 @@
 const pool = require('../services/queryHelper').getPool()
 const queries = require('../queries/queryModal');
-const Joi = require('joi')
+const Joi = require('joi');
 
 const employeeSchema = Joi.object({
     name: Joi.string().min(3).required(),
@@ -20,6 +20,7 @@ const createEmployeeDetail = (employee_detail) => {
         global.logger.error(`Model - Error validate employee: ${error}`)
         throw error({ message: error })
     } else {
+        // insert employee
         return new Promise((resolve, reject) => {
             pool.query(
                 query,

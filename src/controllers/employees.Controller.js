@@ -5,9 +5,9 @@ const employeesValidation = require('../validations/employees.Validation');
 const createEmployeeDetail = (req, res) => {
     employeesValidation
         .createEmployee(req.body)
-        .then(() => {
+        .then((data) => {
             employeesModel
-                .createEmployeeDetail(req.body)
+                .createEmployeeDetail(data)
                 .then((data) => {
                     res.status(200).send({
                         success: true,

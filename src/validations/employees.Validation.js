@@ -1,7 +1,9 @@
 const queries = require('../queries/queryModal');
 const pool = require('../services/queryHelper').getPool();
+const bcrypt = require('bcrypt');
 
 const createEmployee = (data) => {
+
     return new Promise((resolve, reject) => {
         // check if email is existed
         const queryEmail = queries.Employee.searchEmployeeBy('email_address', data.email_address);
@@ -36,10 +38,20 @@ const createEmployee = (data) => {
                         reject({ message: " Phone number is existed" });
                     } else {
                         global.logger.info("Validation - Phone number is not existed: ");
+                        // hash password
+                        bcrypt.hash(data.password, 10, (err, hash) => {
+                            if (err) {
+                                global.logger.error(`Validation - Error hashing password: ${err}`);
+                                reject(err);
+                            } else {
+                                global.logger.info(`Validation - Hashed password: ${hash}`);
+                                data.password = hash;
+                                resolve(data);
+                            }
+                        })
                     }
                 }
             })
-        resolve();
 
     })
 }
