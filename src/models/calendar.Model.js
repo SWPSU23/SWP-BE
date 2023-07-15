@@ -55,19 +55,23 @@ const getListDayOfWeek = () => {
                     current_week: -1,
                     list_week: []
                 };
+                let current_week = -1;
                 for (let i = 0; i < result.length; i++) {
                     if (i + 6 >= result.length) break;
+                    // day of list 
                     const day = time.getDayOfWeek(result[i].date);
-                    let current_week = -1;
-                    // get list day of week from Monday to Sunday
+                    // check if day is Monday
                     if (day === "Monday") {
+                        // get list day of week from Monday to Sunday
                         data.list_week.push({
                             from_date: time.timeStampToDate(result[i].date),
                             to_date: time.timeStampToDate(result[i + 6].date),
                         })
+
                         current_week++;
                         // get info of current day
                         if (getPossitionCurrentDay(result[i].date, result[i + 6].date)) {
+                            global.logger.info(`current_week: ${current_week}`)
                             data.current_week = `list_week[${current_week}]`;
                         }
                     }
