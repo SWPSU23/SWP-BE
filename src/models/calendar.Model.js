@@ -72,7 +72,7 @@ const getListDayOfWeek = () => {
                         // get info of current day
                         if (getPossitionCurrentDay(result[i].date, result[i + 6].date)) {
                             global.logger.info(`current_week: ${current_week}`)
-                            data.current_week = `list_week[${current_week}]`;
+                            data.current_week = current_week;
                         }
                     }
                     // get info of current day
