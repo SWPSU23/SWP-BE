@@ -51,17 +51,27 @@ const getListDayOfWeek = () => {
                 global.logger.error(`Model - Get list day of week failed: ${err}`)
                 reject(err);
             } else {
-                const data = [];
+                const data = {
+                    current_week: -1,
+                    list_week: []
+                };
                 for (let i = 0; i < result.length; i++) {
                     if (i + 6 >= result.length) break;
-                    const dayOfWeek = time.getDayOfWeek(result[i].date);
+                    const day = time.getDayOfWeek(result[i].date);
+                    let current_week = -1;
                     // get list day of week from Monday to Sunday
-                    if (dayOfWeek === "Monday") {
-                        data.push({
+                    if (day === "Monday") {
+                        data.list_week.push({
                             from_date: time.timeStampToDate(result[i].date),
                             to_date: time.timeStampToDate(result[i + 6].date),
                         })
+                        current_week++;
+                        // get info of current day
+                        if (getPossitionCurrentDay(result[i].date, result[i + 6].date)) {
+                            data.current_week = `list_week[${current_week}]`;
+                        }
                     }
+                    // get info of current day
                 }
                 global.logger.info(`Model - Get list day of week successfully: ${data}`)
                 resolve(data);
@@ -69,6 +79,17 @@ const getListDayOfWeek = () => {
         })
     })
 }
+
+const getPossitionCurrentDay = (start_date, end_date) => {
+    const current_date = time.getNowDate();
+    start_date = time.timeStampToDate(start_date);
+    end_date = time.timeStampToDate(end_date);
+    if (current_date >= start_date && current_date <= end_date) {
+        return true;
+    }
+    return false;
+}
+
 
 module.exports = {
     getDayCalendar,

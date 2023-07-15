@@ -180,9 +180,6 @@ module.exports = {
             ` WHERE E.id = ? AND Worksheet.date = ? AND Worksheet.sheet_id = ?`,
 
 
-        searchWorksheetBy: (searchBy, keywords) => {
-            return `SELECT * FROM 'Worksheet' WHERE ${searchBy} LIKE '%${keywords}%'`
-        },
     },
 
     CheckInOut: {

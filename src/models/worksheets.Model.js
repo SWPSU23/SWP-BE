@@ -145,6 +145,54 @@ const getWorkSheetOfWeek = (start_date, end_date, role) => {
     })
 }
 
+const getWorkSheetOfWeekEmployee = (start_date, end_date, employee_id) => {
+    const query = queries.Worksheet.getWorkSheetOfWeekEmployee(start_date, end_date, employee_id);
+    global.logger.info(`Model - Query getWorkSheetOfWeekEmployee: ${query}`);
+    return new Promise((resolve, reject) => {
+        pool.query(query,
+            (error, results) => {
+                if (error) {
+                    global.logger.error(`Model - Error query getWorkSheetOfWeekEmployee: ${error}`);
+                    reject(error);
+                } else {
+                    global.logger.info(`Model - Get list worksheet successfully: ${JSON.stringify(results)}`)
+                    const data = [];
+                    // create sheet
+                    data.length = 3;
+                    for (let i = 0; i < data.length; i++) {
+                        // create sheet
+                        data[i] = {
+                            [`sheet_${i + 1}`]: []
+                        };
+                        // create date
+                        for (let currentDay = moment(start_date); currentDay <= moment(end_date); currentDay.add(1, 'day')) {
+                            let detail = [];
+                            // create detail of date
+                            results.map((element) => {
+                                if (time.timeStampToDate(currentDay) === time.timeStampToDate(element.date) && element.sheet_id === i + 1) {
+                                    detail.push({
+                                        worksheet_id: element.id,
+                                        employee_id: element.employee_id,
+                                        employee_name: element.employee_name,
+                                        coefficient: element.coefficient,
+                                        status: element.status
+                                    })
+                                }
+                            })
+                            global.logger.info(`Model - Sheet_id ${i + 1} date: ${time.timeStampToDate(currentDay)} detail: ${JSON.stringify(detail)}`);
+                            // set data
+                            data[i][`sheet_${i + 1}`].push({
+                                date: time.timeStampToDate(currentDay),
+                                detail: detail
+                            })
+                        }
+                    }
+                    resolve(data)
+                }
+            })
+    })
+}
+
 const updateWorksheet = (data, id) => {
     const query = queries.Worksheet.updateWorksheet;
     return new Promise((resolve, reject) => {
@@ -217,5 +265,6 @@ module.exports = {
     getWorkSheetOfWeek,
     updateWorksheet,
     deleteWorksheet,
-    getWorksheetDetail
+    getWorksheetDetail,
+    getWorkSheetOfWeekEmployee
 }
