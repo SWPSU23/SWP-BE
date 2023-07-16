@@ -65,7 +65,7 @@ const getEmployeeDetail = (req, res) => {
 
 const updateEmployeeDetail = (req, res) => {
     employeesValidation
-        .updateEmployee(req.body)
+        .updateEmployee(req.body, req.params.id)
         .then((data) => {
             employeesModel
                 .updateEmployeeDetail(data, req.params.id)

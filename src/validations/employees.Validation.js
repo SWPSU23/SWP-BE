@@ -55,7 +55,7 @@ const createEmployee = (data) => {
     })
 }
 
-const updateEmployee = (data) => {
+const updateEmployee = (data, id) => {
     return new Promise((resolve, reject) => {
         const validationPromises = [];
         // check if email is existed
@@ -69,7 +69,10 @@ const updateEmployee = (data) => {
                             global.logger.error(`Validation - Error search employee by email: ${error}`);
                             reject(error);
                         } else {
-                            if (results.length > 0) {
+                            // filter employee by id
+                            const resultMail = results.filter((item) => item.id !== parseInt(id))
+                            global.logger.info(`Validation - Filter employee by id: ${JSON.stringify(resultMail)}`)
+                            if (resultMail.length > 0) {
                                 global.logger.error("Validation - Email is existed: ");
                                 reject({ message: "Email is existed" });
                             } else {
@@ -92,7 +95,10 @@ const updateEmployee = (data) => {
                             global.logger.error(`Validation - Error search employee by phone: ${error}`);
                             reject(error);
                         } else {
-                            if (results.length > 0) {
+                            // filter employee by id
+                            const resultPhone = results.filter(item => item.id !== parseInt(id))
+                            global.logger.info(`Validation - Filter employee by id: ${JSON.stringify(resultPhone)}`)
+                            if (resultPhone.length > 0) {
                                 global.logger.error("Validation - Phone number is existed: ");
                                 reject({ message: "Phone number is existed" });
                             } else {
