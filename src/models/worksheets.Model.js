@@ -213,13 +213,23 @@ const updateWorksheet = (data, id) => {
 const deleteWorksheet = (id) => {
     const query = queries.Worksheet.deleteWorksheet;
     return new Promise((resolve, reject) => {
-        pool.query(query, [id], (error, results) => {
+        // delete check in out 
+        pool.query(queries.CheckInOut.deleteCheckInOut, [id], (error, results) => {
             if (error) {
-                global.logger.error(`Model - Error query delete worksheet: ${error} `);
+                global.logger.error(`Model - Error query delete check in out: ${error} `);
                 reject(error);
             } else {
-                global.logger.info(`Model - Delete worksheet successfully: ${results} `);
-                resolve(results);
+                global.logger.info(`Model - Delete check in out successfully: ${results} `);
+                // delete worksheet
+                pool.query(query, [id], (error, results) => {
+                    if (error) {
+                        global.logger.error(`Model - Error query delete worksheet: ${error} `);
+                        reject(error);
+                    } else {
+                        global.logger.info(`Model - Delete worksheet successfully: ${results} `);
+                        resolve(results);
+                    }
+                })
             }
         })
     })

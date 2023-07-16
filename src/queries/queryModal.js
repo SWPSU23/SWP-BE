@@ -159,7 +159,7 @@ module.exports = {
             ' FROM `Worksheet` ws' +
             ' JOIN `CheckInOut` c ON ws.id = c.worksheet_id' +
             ' JOIN `Employee` e ON ws.employee_id = e.id' +
-            ' WHERE `id` = ?',
+            ' WHERE ws.id = ?',
 
         getCoefficient:
             'SELECT s.coefficient, c.isSpecialDay ' +
@@ -191,7 +191,7 @@ module.exports = {
 
         updateCheckInOut: 'UPDATE `CheckInOut` SET ? WHERE `worksheet_id` = ?',
 
-        deleteCheckInOut: 'DELETE FROM `CheckInOut` WHERE `id` = ?',
+        deleteCheckInOut: 'DELETE FROM `CheckInOut` WHERE `worksheet_id` = ?',
 
         getCheckInOutDetail:
             'SELECT * FROM `CheckInOut` WHERE `employee_id` = ?',
