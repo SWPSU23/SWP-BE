@@ -114,7 +114,12 @@ const getWorksheetDetail = async (req, res) => {
 
 const getWorksheetEmployeeDetail = async (req, res) => {
     try {
-        const data = await worksheetModel.getWorkSheetOfWeekEmployee(req.query.start_date, req.query.end_date, req.query.employee_id);
+        const data = await worksheetModel
+            .getWorkSheetOfWeekEmployee(
+                req.query.start_date,
+                req.query.end_date,
+                req.query.employee_id
+            );
         res
             .status(200)
             .json({

@@ -1,4 +1,4 @@
-const pool = require('../services/query.Service').getPool();
+const pool = require('../services/query.Service');
 const queries = require('../queries/queryModal');
 const Joi = require('joi');
 const time = require('../utilities/timeHelper');

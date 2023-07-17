@@ -8,6 +8,10 @@ router
     .get(worksheetController.getWorkSheetOfWeek)
 
 router
+    .route('/employee')
+    .get(worksheetController.getWorksheetEmployeeDetail)
+
+router
     .route('/:id')
     .get(worksheetController.getWorksheetDetail)
     .put(worksheetController.updateWorksheet)

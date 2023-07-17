@@ -1,5 +1,5 @@
 const queries = require('../queries/queryModal');
-const pool = require('../services/query.Service').getPool();
+const pool = require('../services/query.Service');
 
 const updateCheckIn = async (worksheet_id, check_in_at) => {
     try {
