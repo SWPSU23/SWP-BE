@@ -1,5 +1,5 @@
 const winston = require('winston')
-const time = require('./timeHelper')
+const time = require('../utilities/timeHelper')
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.combine(winston.format.json()),

@@ -19,8 +19,9 @@ const getData = (queryString, [...args]) => {
         pool.query(queryString, args, (err, result) => {
             if (err) {
                 return reject(err.message)
+            } else {
+                return resolve(result)
             }
-            return resolve(result)
         })
     })
 }
@@ -29,17 +30,17 @@ const setData = (queryString, [...args]) => {
     return new Promise((resolve, reject) => {
         pool.query(queryString, args, (err, result) => {
             if (err) {
-				global.logger.error(err.message)
+                global.logger.error(err.message)
                 return reject(err)
+            } else {
+                global.logger.info(result)
+                return resolve(result)
             }
-			global.logger.info(result)
-            return resolve(result)
         })
     })
 }
 module.exports = {
-    // pool: pool,
-    getPool: getPool,
-    getData: getData,
-    setData: setData,
+    getPool,
+    getData,
+    setData
 }

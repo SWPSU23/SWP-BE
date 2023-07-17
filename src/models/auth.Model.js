@@ -1,5 +1,5 @@
 const Joi = require("joi")
-const pool = require("../services/queryHelper").getPool()
+const pool = require("../services/query.Service").getPool()
 const authSchema = Joi.object({
     phone: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required(),
 })

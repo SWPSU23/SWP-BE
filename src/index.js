@@ -1,7 +1,7 @@
 // init global config
 const config = require('./configs')
 // init global logger
-const logger = require('./utilities/logger')
+const logger = require('./services/logger.Service')
 // init global redis client
 const redis = require('redis')
 const redisClient = redis.createClient({

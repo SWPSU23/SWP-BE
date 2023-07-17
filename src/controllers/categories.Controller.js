@@ -1,67 +1,65 @@
 const categoryModel = require('../models/categories.Model');
 
-const createCategory = (req, res) => {
-    categoryModel.createCategory(req.body)
-        .then((results) => {
-            res.status(200).send({
-                status: true,
-                data: results,
-            });
+const createCategory = async (req, res) => {
+    try {
+        const results = await categoryModel.createCategory(req.body);
+        // 201 meaning resource successfully created
+        res.status(201).send({
+            status: true,
+            category_id: results.insertId,
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: false,
+            message: error.message,
         })
-        .catch((error) => {
-            res.status(500).send({
-                status: false,
-                message: error.message,
-            })
-        })
+    }
 }
 
-const getListCategory = (req, res) => {
-    categoryModel.getListCategory()
-        .then((results) => {
-            res.status(200).send({
-                status: true,
-                data: results,
-            });
+const getListCategory = async (req, res) => {
+    try {
+        const data = await categoryModel.getListCategory();
+        res.status(200).send({
+            status: true,
+            data: data,
         })
-        .catch((error) => {
-            res.status(500).send({
-                status: false,
-                message: error.message,
-            })
+    } catch (error) {
+        res.status(500).send({
+            status: false,
+            message: error.message,
         })
+    }
 }
 
-const updateCategory = (req, res) => {
-    categoryModel.updateCategory(req.params.name, req.body)
-        .then((results) => {
-            res.status(200).send({
-                status: true,
-                data: results,
-            });
+const updateCategory = async (req, res) => {
+    try {
+        const data = await categoryModel.updateCategory(req.params.name, req.body);
+        // 201 meaning resource successfully created
+        res.status(201).send({
+            status: true,
+            data: data,
         })
-        .catch((error) => {
-            res.status(500).send({
-                status: false,
-                message: error.message,
-            })
+    } catch (error) {
+        res.status(500).send({
+            status: false,
+            message: error.message,
         })
+    }
 }
 
-const deleteCategory = (req, res) => {
-    categoryModel.deleteCategory(req.params.name)
-        .then((results) => {
-            res.status(200).send({
-                status: true,
-                data: results,
-            });
+const deleteCategory = async (req, res) => {
+    try {
+        const data = await categoryModel.deleteCategory(req.params.name);
+        res.status(200).send({
+            status: true,
+            data: data,
         })
-        .catch((error) => {
-            res.status(500).send({
-                status: false,
-                message: error.message,
-            })
+    } catch (error) {
+        res.status(500).send({
+            status: false,
+            message: error.message,
         })
+    }
 }
 
 module.exports = {

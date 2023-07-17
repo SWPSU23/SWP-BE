@@ -1,5 +1,5 @@
-const redisHelper = require('../services/redisFileStorageHelper')
-const fileTypes = require('../configs/enumeration').fileTypes
+const redisHelper = require('../services/redisFileStorage.Service')
+const fileTypes = require('../configs/enumeration.Config').fileTypes
 
 const uploadProductImage = (req, res) => {
     // Check if file is present

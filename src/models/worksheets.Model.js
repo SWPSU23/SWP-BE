@@ -1,4 +1,4 @@
-const pool = require('../services/queryHelper').getPool();
+const pool = require('../services/query.Service');
 const joi = require('joi');
 const queries = require('../queries/queryModal');
 const time = require('../utilities/timeHelper');
@@ -12,137 +12,109 @@ const worksheetSchema = joi.object({
     status: joi.string().default('not started')
 })
 
-const createWorksheet = (data) => {
-    const query = queries.Worksheet.createWorksheet;
-    const role = data.role;
-    const { error, value } = worksheetSchema.validate(data.worksheet);
-    if (error) {
+const createWorksheet = async (data) => {
+    try {
+        const { error, value } = worksheetSchema.validate(data.worksheet);
+        if (error) {
+            global.logger.error(`Model - Error validate worksheet: ${error}`)
+            throw error;
+        } else {
+            let results_coffiecitent = await pool
+                .getData(
+                    queries.Worksheet.getCoefficient,
+                    [
+                        data.worksheet.sheet_id,
+                        data.worksheet.id,
+                        data.role
+                    ]
+                );
+
+            if (results_coffiecitent[0].isSpecialDay === 'yes') {
+                value.coefficient = 3
+            } else {
+                value.coefficient = results_coffiecitent[0].coefficient
+            }
+            // create worksheet
+            const results = await pool
+                .setData(
+                    queries.Worksheet.createWorksheet,
+                    [
+                        value.employee_id,
+                        value.sheet_id,
+                        value.date,
+                        value.coefficient,
+                        value.status
+                    ]
+                );
+            global.logger.info(`Model - Create worksheet successfully: ${JSON.stringify(results)}`)
+            // create check in out
+            await pool
+                .setData(
+                    queries.CheckInOut.createCheckInOut,
+                    [
+                        value.employee_id,
+                        results.insertId
+                    ]
+                )
+
+            return results;
+
+        }
+    } catch (error) {
         global.logger.error(`Model - Error validate worksheet: ${error}`)
-        throw error({ message: error })
-    } else {
-        return new Promise((resolve, reject) => {
-            // insert data to worksheet table
-            pool.query(query,
-                [
-                    value.employee_id,
-                    value.sheet_id,
-                    value.date,
-                    value.status
-                ],
-                (error, results) => {
-                    if (error) {
-                        global.logger.error(`Model - Error query create worksheet: ${error}`)
-                        reject(error);
-                    } else {
-                        global.logger.info(`Model - Create worksheet successfully: ${results}`);
-                        const worksheetId = results.insertId;
-                        // get coefficient from sheet table\
-                        pool.query(queries.Worksheet.getCoefficient,
-                            [value.sheet_id,
-                                worksheetId,
-                                role],
-                            (error, results) => {
-                                if (error) {
-                                    global.logger.error(error);
-                                    reject(error);
-                                } else {
-                                    // check if day is special day set coefficient = 3
-                                    let coefficient = {};
-                                    if (results[0].isSpecialDay === 'yes') {
-                                        coefficient = {
-                                            coefficient: 3
-                                        };
-                                    } else {
-                                        coefficient = {
-                                            coefficient: results[0].coefficient
-                                        };
-                                    }
-                                    global.logger.info("Model - Set coefficient", coefficient);
-                                    // update coefficient to worksheet table
-                                    pool.query(queries.Worksheet.updateWorksheet,
-                                        [coefficient, worksheetId],
-                                        (error, results) => {
-                                            if (error) {
-                                                global.logger.error(`Model - Error update coefficient: ${error}`);
-                                                reject(error);
-                                            } else {
-                                                global.logger.info("Model - Update coefficient successfully", results);
-                                            }
-                                        })
-                                    // create check in out record
-                                    pool.query(queries.CheckInOut.createCheckInOut,
-                                        [value.employee_id,
-                                            worksheetId]
-                                        , (error, results) => {
-                                            if (error) {
-                                                global.logger.error(`Model - Error create check in out: ${error}`);
-                                                reject(error);
-                                            } else {
-                                                global.logger.info("Model - Create check in out successfully", results);
-                                            }
-                                        })
-                                }
-                            })
-                    }
-                })
-            resolve("Create worksheet successfully");
-        })
+        throw error;
     }
+
 }
 
-const getWorkSheetOfWeek = (start_date, end_date, role) => {
-    const query = queries.Worksheet.getWorkSheetOfWeek(start_date, end_date, role);
-    global.logger.info(`Model - Query getWorkSheetOfWeek: ${query}`);
-    return new Promise((resolve, reject) => {
-        pool.query(query,
-            (error, results) => {
-                if (error) {
-                    global.logger.error("Error query get list worksheet: " + error);
-                    reject(error);
-                } else {
-                    global.logger.info(`Model - Get list worksheet successfully: ${JSON.stringify(results)}`)
-                    const data = [];
-                    // if role is cashier, create 3 sheet
-                    if (role === 'cashier') {
-                        data.length = 3;
-                    }
-                    // if role is guard, create 2 sheet
-                    if (role === 'guard') {
-                        data.length = 2;
-                    }
+const getWorkSheetOfWeek = async (start_date, end_date, role) => {
+    try {
+        const results = await pool
+            .getData(
+                queries.Worksheet.getWorkSheetOfWeek(start_date, end_date, role)
+            );
+        const data = [];
+        // if role is cashier, create 3 sheet
+        if (role === 'cashier') {
+            data.length = 3;
+        }
+        // if role is guard, create 2 sheet
+        if (role === 'guard') {
+            data.length = 2;
+        }
 
-                    for (let i = 0; i < data.length; i++) {
-                        // create sheet
-                        data[i] = {
-                            [`sheet_${i + 1}`]: []
-                        };
-                        // create date
-                        for (let currentDay = moment(start_date); currentDay <= moment(end_date); currentDay.add(1, 'day')) {
-                            let detail = [];
-                            // create detail of date
-                            results.map((element) => {
-                                if (time.timeStampToDate(currentDay) === time.timeStampToDate(element.date) && element.sheet_id === i + 1) {
-                                    detail.push({
-                                        worksheet_id: element.id,
-                                        employee_id: element.employee_id,
-                                        employee_name: element.employee_name,
-                                        coefficient: element.coefficient,
-                                        status: element.status
-                                    })
-                                }
-                            })
-                            global.logger.info(`Model - Sheet_id ${i + 1} date: ${time.timeStampToDate(currentDay)} detail: ${JSON.stringify(detail)}`);
-                            // set data
-                            data[i][`sheet_${i + 1}`].push({
-                                date: time.timeStampToDate(currentDay),
-                                detail: detail
-                            })
-                        }
+        for (let i = 0; i < data.length; i++) {
+            // create sheet
+            data[i] = {
+                [`sheet_${i + 1}`]: []
+            };
+            // create date
+            for (let currentDay = moment(start_date); currentDay <= moment(end_date); currentDay.add(1, 'day')) {
+                let detail = [];
+                // create detail of date
+                results.map((element) => {
+                    if (time.timeStampToDate(currentDay) === time.timeStampToDate(element.date) && element.sheet_id === i + 1) {
+                        detail.push({
+                            worksheet_id: element.id,
+                            employee_id: element.employee_id,
+                            employee_name: element.employee_name,
+                            coefficient: element.coefficient,
+                            status: element.status
+                        })
                     }
-                    resolve(data)
-                }
-            })
-    })
+                })
+                global.logger.info(`Model - Sheet_id ${i + 1} date: ${time.timeStampToDate(currentDay)} detail: ${JSON.stringify(detail)}`);
+                // set data
+                data[i][`sheet_${i + 1}`].push({
+                    date: time.timeStampToDate(currentDay),
+                    detail: detail
+                })
+            }
+        }
+    } catch (error) {
+        global.logger.error(`Model - Error query get worksheet of week: ${error}`);
+        throw error;
+    }
 }
 
 const getWorkSheetOfWeekEmployee = (start_date, end_date, employee_id) => {

@@ -1,4 +1,4 @@
-const pool = require('../services/queryHelper').getPool();
+const pool = require('../services/query.Service').getPool();
 const queries = require('../queries/queryModal');
 const Joi = require('joi');
 const time = require('../utilities/timeHelper');
@@ -11,140 +11,123 @@ const orderSchema = Joi.object({
     status: Joi.string().default('succeed')
 })
 
-const getListOrder = (page_index) => {
-    const query = queries.Order.getListOrder(page_index);
-    global.logger.info(`Model - Get list order query: ${query}`);
-
-    return new Promise((resolve, reject) => {
-        pool.query(query, (error, results) => {
-            if (error) {
-                global.logger.error(`Model - Error query getListOrder: ${error}`);
-                reject(error);
-            } else {
-                const data = {
-                    info: {},
-                    order: []
-                }
-                results.map((order) => {
-                    data.order.push({
-                        id: order.id,
-                        employee_id: order.employee_id,
-                        cashier_name: order.cashier_name,
-                        create_at: time.timeStampToDay(order.create_at),
-                        total_price: order.total_price,
-                        product_quantity: order.product_quantity,
-                        status: order.status
-                    })
+const getListOrder = async (page_index) => {
+    try {
+        const results = await pool
+            .getData(
+                queries.Order.getListOrder(page_index),
+                []
+            );
+        const data = {
+            info: {},
+            order: []
+        }
+        results.map(
+            (result) => {
+                data.order.push({
+                    order_id: result.order_id,
+                    employee_id: result.employee_id,
+                    product_quantity: result.product_quantity,
+                    total_price: result.total_price,
+                    create_at: time.timeStampToDay(result.create_at),
+                    status: result.status
                 })
-                global.logger.info(`Model - Get list order success: ${data.order}`);
-                // add info page
-                data.info = {
-                    total_page: Math.ceil(results[0].page / 10)
-                }
-                global.logger.info(`Model - Get info page success: ${data.info}`);
-                global.logger.info(`Model - Get data success: ${data}`);
-                resolve(data)
-            }
-        })
-    })
-}
-
-const createOrder = (data) => {
-    const query = queries.Order.createOrder;
-    const { error, value } = orderSchema.validate(data);
-    if (error) {
-        global.logger.error(`Model - Error validate data: ${error}`);
-        throw error({ message: error });
-    } else {
-        return new Promise((resolve, reject) => {
-            pool.query(
-                query,
-                [
-                    value.employee_id,
-                    value.product_quantity,
-                    value.total_price,
-                    value.create_at,
-                    value.status
-                ],
-                (error, results) => {
-                    if (error) {
-                        global.logger.error(`Model - Error query createOrder: ${error}`);
-                        reject(error);
-                    } else {
-                        global.logger.info(`Model - Create order success: ${results}`);
-                        resolve(results.insertId);
-                    }
-                }
-            )
-        });
+            })
+    } catch (error) {
+        global.logger.error(`Model - Error query getListOrder: ${error}, query: ${queries.Order.getListOrder(page_index)}`);
+        throw error;
     }
 }
 
-const deleteOrder = (id) => {
-    const query = queries.Order.deleteOrder;
-    return new Promise((resolve, reject) => {
-        // delete order
-        pool.query(query,
-            [id],
-            (error, results) => {
-                if (error) {
-                    global.logger.error(`Model - Error query deleteOrder: ${error}`);
-                    reject(error);
-                } else {
-                    global.logger.info(`Model - Delete order success: ${results}`);
-                }
-            })
-
-        // update stock of product when delete order 
-        pool.query(queries.OrderProduct.updateStockProduct,
-            [id],
-            (error, results) => {
-                if (error) {
-                    global.logger.error(`Model - Error query updateStockProduct: ${error}`);
-                    reject(error);
-                } else {
-                    // loop through the results to update stock of product
-                    results.map((result) => {
-                        const newStock = {
-                            stock: result.stock + result.quantity
-                        }
-                        global.logger.info(`Model - Update stock of product: ${newStock} + Id product: ${result.product_id}`);
-                        // update stock of product
-                        pool.query(queries.Product.updateProductByID,
-                            [newStock, result.product_id],
-                            (error, results) => {
-                                if (error) {
-                                    global.logger.error(`Model - Error query updateProductByID: ${error}`);
-                                    reject(error);
-                                } else {
-                                    global.logger.info(`Model - Update stock of product success: ${results} + Id product: ${result.product_id}`);
-                                }
-                            })
-                    })
-
-                    global.logger.info(`Model - Update stock success: ${results}`);
-                    resolve();
-                }
-            })
-
-    })
+const createOrder = async (data) => {
+    try {
+        const { error, value } = orderSchema.validate(data);
+        if (error) {
+            global.logger.error(`Model - Error validate createOrder: ${error}, value: ${data}`);
+            throw error;
+        } else {
+            const result = await pool
+                .setData(
+                    queries.Order.createOrder,
+                    [
+                        value.employee_id,
+                        value.create_at,
+                        value.product_quantity,
+                        value.total_price,
+                        value.status
+                    ]
+                );
+            global.logger.info(`Model - Create order success id: ${JSON.stringify(result)}`);
+            return result;
+        }
+    } catch (error) {
+        global.logger.error(`Model - Error createOrder: ${error} + query: ${queries.Order.createOrder} + data: ${data}`);
+        throw error;
+    }
 }
 
-const searchOrderBy = (searchBy, keywords) => {
-    const query = queries.Order.searchOrderBy(searchBy, keywords);
-    global.logger.info(`Model - Search order query: ${query}`);
-    return new Promise((resolve, reject) => {
-        pool.query(query,
-            (error, results) => {
-                if (error) {
-                    global.logger.error(`Model - Error query searchOrderBy: ${error}`);
-                    reject(error);
-                } else {
-                    global.logger.info(`Model - Search order success: ${results}`);
-                    resolve(results);
-                }
-            })
-    })
+const deleteOrder = async (id) => {
+    try {
+        const results = await pool
+            .setData(
+                queries.Order.deleteOrder,
+                [id]
+            );
+        // update stock product
+        const listOrderDetail = await pool
+            .getData(
+                queries.OrderProduct.getListDetailOrder,
+                [id]
+            );
+        // a loop for get product_id and quantity
+        listOrderDetail.map(
+            async (orderDetail) => {
+                const quantity = orderDetail.quantity;
+                const product_id = orderDetail.product_id;
+                const productDetail = await pool
+                    .getData(
+                        queries.Product.getProductById,
+                        [product_id]
+                    );
+                // new stock = old stock + quantity
+                const stockUpdate = productDetail.stock + quantity;
+                await pool.setData(
+                    queries.Product.updateProductByID,
+                    [
+                        { stock: stockUpdate },
+                        product_id]
+                );
+            });
+        return results;
+
+    } catch (error) {
+        global.logger.error(`Model - Error query deleteOrder: ${error}, query: ${queries.Order.deleteOrder}, id: ${id}`);
+        throw error;
+    }
+}
+
+const searchOrderBy = async (searchBy, keywords) => {
+    try {
+        const results = await pool
+            .getData(
+                queries.Order.searchOrderBy(searchBy, keywords),
+                []
+            );
+        const data = results.map((result) => (
+            {
+                order_id: result.order_id,
+                employee_id: result.employee_id,
+                product_quantity: result.product_quantity,
+                total_price: result.total_price,
+                create_at: time.timeStampToDay(result.create_at),
+                status: result.status
+            }
+        ));
+        return data;
+    } catch (error) {
+        global.logger.error(`Model - Error query searchOrderBy: ${error}, query: ${queries.Order.searchOrderBy(searchBy, keywords)}`);
+        throw error;
+    }
 }
 
 module.exports = {

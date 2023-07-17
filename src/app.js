@@ -1,4 +1,4 @@
-require('./utilities/logger')
+require('./services/logger.Service')
 const cluster = require('cluster')
 const os = require('os')
 const express = require('express')

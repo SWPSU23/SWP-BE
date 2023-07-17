@@ -1,4 +1,4 @@
-const pool = require('../services/queryHelper').getPool()
+const pool = require('../services/query.Service');
 const queries = require('../queries/queryModal')
 const time = require('../utilities/timeHelper')
 const Joi = require('joi')
@@ -17,156 +17,135 @@ const productSchema = Joi.object({
     expired_at: Joi.string().required(),
 })
 
-const createProductDetails = (product) => {
-    const query = queries.Product.createProductDetail
+const createProductDetails = async (product) => {
     const { error, value } = productSchema.validate(product)
     if (error) {
         global.logger.error(`Model - Error validate product: ${error}`)
         throw error({ message: error });
     } else {
-        return new Promise((resolve, reject) => {
-            pool.query(
-                query,
-                [
-                    value.name,
-                    value.description,
-                    value.unit,
-                    value.cost_price,
-                    value.stock,
-                    value.retail_price,
-                    value.category,
-                    value.status,
-                    value.image,
-                    value.create_at,
-                    value.expired_at,
-                ],
-                (error, results) => {
-                    if (error) {
-                        global.logger.error(`Model - Error query createProductDetails: ${error}`)
-                        reject(error)
-                    } else {
-                        global.logger.info(`Model - Create product success: ${results}`)
-                        resolve(results)
-                    }
-                }
-            )
+        try {
+            const results = await pool.setData(queries.Product.createProductDetail, [
+                value.name,
+                value.description,
+                value.unit,
+                value.cost_price,
+                value.stock,
+                value.retail_price,
+                value.category,
+                value.status,
+                value.image,
+                value.create_at,
+                value.expired_at,
+            ]);
+            global.logger.info(`Model - Create product success: ${JSON.stringify(results)}`)
+            return results;
+        } catch (error) {
+            global.logger.error(`Model - Error query createProductDetails: ${error}`)
+            throw error({ message: error })
+        }
+    }
+
+}
+
+const getListProduct = async (page_index) => {
+    try {
+        const results = await pool
+            .getData(
+                queries.Product.getListProduct(page_index),
+                []
+            );
+        const data = {
+            info: {},
+            product: []
+        };
+        results.map((item) => {
+            data.product.push({
+                id: item.id,
+                name: item.name,
+                description: item.description,
+                unit: item.unit,
+                cost_price: item.cost_price,
+                stock: item.stock,
+                retail_price: item.retail_price,
+                category: item.category,
+                image: item.image,
+                create_at: time.timeStampToDay(item.create_at),
+                expired_at: time.timeStampToDay(item.expired_at),
+                status: item.status
+            })
         })
+        global.logger.info(`Model - Get list product success: ${JSON.stringify(data.product)}`);
+        data.info = {
+            total_page: Math.ceil(results[0].page / 10),
+        }
+        global.logger.info(`Model - Get info product success: ${JSON.stringify(data.info)}`);
+
+        return data;
+
+    } catch (error) {
+        global.logger.error(`Model - Error query getListProduct: ${error}`)
+        throw error({ message: error })
+    }
+
+}
+
+const getProductByID = async (id) => {
+    try {
+        const results = await pool
+            .getDataCondition(
+                queries.Product.getProductByID,
+                [id]
+            );
+        global.logger.info(`Model - Get product by id success: ${JSON.stringify(results[0])}`);
+        return results[0];
+    } catch (error) {
+        global.logger.error(`Model - Error query getProductByID: ${error}`)
+        throw error({ message: error })
+    }
+}
+const updateProductByID = async (id, productUpdate) => {
+    try {
+        const results = await pool
+            .setData(
+                queries.Product.updateProductByID,
+                [productUpdate, id]
+            );
+        global.logger.info(`Model - Update product by id success: ${JSON.stringify(results)}`);
+        return results;
+    } catch (error) {
+        global.logger.error(`Model - Error query updateProductByID: ${error}`)
+        throw error({ message: error })
     }
 }
 
-const getListProduct = (page_index) => {
-    const query = queries.Product.getListProduct(page_index)
-    global.logger.info(`Model - Get list product query: ${query}`)
-    return new Promise((resolve, reject) => {
-        pool.query(query, (error, results) => {
-            if (error) {
-                global.logger.error(`Model - Error query getListProduct: ${error}`)
-                reject(error)
-            } else {
-                const data = {
-                    info: {},
-                    product: [],
-                }
-                data.info = {
-                    total_page: Math.ceil(results[0].page / 10)
-                }
-                results.map((item) => {
-                    data.product.push({
-                        id: item.id,
-                        name: item.name,
-                        description: item.description,
-                        unit: item.unit,
-                        cost_price: item.cost_price,
-                        stock: item.stock,
-                        retail_price: item.retail_price,
-                        category: item.category,
-                        image: item.image,
-                        create_at: time.timeStampToDay(item.create_at),
-                        expired_at: time.timeStampToDay(item.expired_at),
-                        status: item.status
-                    })
-                })
-                global.logger.info(`Model - Get list product success: ${data}`)
-                resolve(data)
-            }
-        })
-    })
+const deleteProductByID = async (id) => {
+    try {
+        const results = await pool
+            .setData(
+                queries.Product.deleteProductByID,
+                [id]
+            );
+        global.logger.info(`Model - Delete product by id success: ${JSON.stringify(results)}`);
+        return results;
+    } catch (error) {
+        global.logger.error(`Model - Error query deleteProductByID: ${error}`)
+        throw error({ message: error })
+    }
 }
 
-const getProductByID = (id) => {
-    const query = queries.Product.getProductByID
-    return new Promise((resolve, reject) => {
-        pool.query(query, [id], (error, results) => {
-            if (error) {
-                global.logger.error(`Model - Error query getProductByID: ${error}`)
-                reject(error)
-            } else {
-                global.logger.info(`Model - Get product by id success: ${results}`)
-                // convert timestamp to day
-                const data = {
-                    id: results[0].id,
-                    name: results[0].name,
-                    description: results[0].description,
-                    unit: results[0].unit,
-                    cost_price: results[0].cost_price,
-                    stock: results[0].stock,
-                    retail_price: results[0].retail_price,
-                    category: results[0].category,
-                    image: results[0].image,
-                    create_at: time.timeStampToDay(results[0].create_at),
-                    expired_at: time.timeStampToDay(results[0].expired_at),
-                    status: results[0].status
-                }
-                global.logger.info(`Model - Convert time: ${data}`)
-                resolve(data)
-            }
-        })
-    })
-}
-const updateProductByID = (id, productUpdate) => {
-    const query = queries.Product.updateProductByID;
-    return new Promise((resolve, reject) => {
-        pool.query(query, [productUpdate, id], (error, results) => {
-            if (error) {
-                global.logger.error(`Model - Error query updateProductByID: ${error}`)
-                reject(error)
-            } else {
-                global.logger.info(`Model - Update product by id success: ${results}`)
-                resolve(results)
-            }
-        })
-    })
-}
-
-const deleteProductByID = (id) => {
-    const query = queries.Product.deleteProductByID
-    return new Promise((resolve, reject) => {
-        pool.query(query, [id], (error, results) => {
-            if (error) {
-                global.logger.error(`Model - Error query deleteProductByID: ${error}`)
-                reject(error)
-            } else {
-                global.logger.info(`Model - Delete product by id success: ${results}`)
-                resolve(results)
-            }
-        })
-    })
-}
-
-const searchProductBy = (searchBy, keywords) => {
-    const query = queries.Product.searchProductBy(searchBy, keywords)
-    global.logger.info(`Model - Search product by query: ${query}`)
-    return new Promise((resolve, reject) => {
-        pool.query(query, (error, results) => {
-            if (error) {
-                global.logger.error(`Model - Error query searchProductBy: ${error}`)
-                reject(error)
-            } else {
-                global.logger.info(`Model - Search product by success: ${results}`)
-                resolve(results)
-            }
-        })
-    })
+const searchProductBy = async (searchBy, keywords) => {
+    try {
+        const results = await pool
+            .getData(
+                queries.Product.searchProductBy(searchBy, keywords),
+                []
+            );
+        global.logger.info(`Model - Search product by ${searchBy} success: ${JSON.stringify(results)}`);
+        return results;
+    } catch (error) {
+        global.logger.error(`Model - Error query searchProductBy: ${error}`)
+        throw error({ message: error })
+    }
 }
 
 module.exports = {

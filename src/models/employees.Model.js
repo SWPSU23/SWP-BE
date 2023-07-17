@@ -1,4 +1,4 @@
-const pool = require('../services/queryHelper').getPool()
+const pool = require('../services/query.Service').getPool()
 const queries = require('../queries/queryModal');
 const Joi = require('joi');
 
@@ -13,17 +13,15 @@ const employeeSchema = Joi.object({
     status: Joi.string().default('working'),
 })
 
-const createEmployeeDetail = (employee_detail) => {
-    const query = queries.Employee.createEmployeeDetail
-    const { error, value } = employeeSchema.validate(employee_detail)
-    if (error) {
-        global.logger.error(`Model - Error validate employee: ${error}`)
-        throw error({ message: error })
-    } else {
-        // insert employee
-        return new Promise((resolve, reject) => {
-            pool.query(
-                query,
+const createEmployeeDetail = async (employee_detail) => {
+    try {
+        const { error, value } = await employeeSchema.validateAsync(employee_detail);
+        if (error) {
+            global.logger.error(`Model - Error validate : ${error}`);
+            throw new Error(error);
+        } else {
+            const results = await pool.setData(
+                queries.Employee.createEmployeeDetail,
                 [
                     value.name,
                     value.age,
@@ -33,133 +31,109 @@ const createEmployeeDetail = (employee_detail) => {
                     value.base_salary,
                     value.role,
                     value.status
-                ],
-                (error, ressults) => {
-                    if (error) {
-                        global.logger.error(`Model - Error query createEmployeeDetail: ${error}`);
-                        reject(error)
-                    } else {
-                        global.logger.info(`Model - Create employee success: ${ressults}`)
-                        resolve(ressults)
-                    }
-                }
+                ]
             )
-        })
+            global.logger.info(`Model - Create employee success: ${results}`)
+            return results;
+        }
+    } catch (error) {
+        global.logger.error(`Model - Error createEmployeeDetail: ${error}`);
+        throw new Error(error);
     }
 }
 
-const getListEmployee = (page_index) => {
-    const query = queries.Employee.getListEmployee(page_index);
-    global.logger.info(`Model - Get list employee query: ${query}`)
-    return new Promise((resolve, reject) => {
-        pool.query(query, (error, results) => {
-            if (error) {
-                global.logger.error(`Model - Error query getListEmployee: ${error}`);
-                reject(error)
-            } else {
-                const data = {
-                    info: {},
-                    employee: []
-                }
-                // detail employee
-                results.forEach((employee) => {
-                    data.employee.push({
-                        id: employee.id,
-                        name: employee.name,
-                        age: employee.age,
-                        email_address: employee.email_address,
-                        phone: employee.phone,
-                        base_salary: employee.base_salary,
-                        role: employee.role,
-                        status: employee.status
-                    })
-                })
-                global.logger.info(`Model - Employee detail: ${data.employee}`)
-                // add info page
-                data.info = {
-                    total_page: Math.ceil(results[0].page / 10)
-                }
-                global.logger.info(`Model - Info of employee: ${data.info}`)
-                global.logger.info(`Model - Get list employee success: ${data}`)
-                resolve(data);
-            }
-        })
-    })
-}
-
-const getEmployeeDetail = (employee_id) => {
-    const query = queries.Employee.getEmployeeDetails
-    return new Promise((resolve, reject) => {
-        pool.query(query, [employee_id], (error, res) => {
-            if (error) {
-                global.logger.error(`Model - Error query getEmployeeDetail: ${error}`);
-                reject(error)
-            } else {
-                global.logger.info(`Model - Get employee detail success: ${res[0]}`)
-                const data = {
-                    id: res[0].id,
-                    name: res[0].name,
-                    age: res[0].age,
-                    email_address: res[0].email_address,
-                    phone: res[0].phone,
-                    base_salary: res[0].base_salary,
-                    role: res[0].role,
-                    status: res[0].status
-                }
-                resolve(data)
-            }
-        })
-    })
-}
-
-const updateEmployeeDetail = (employee_data, employee_id) => {
-    const query = queries.Employee.updateEmployeeDetail;
-    return new Promise((resolve, reject) => {
-        pool.query(query,
-            [employee_data, employee_id],
-            (error, ressults) => {
-                if (error) {
-                    global.logger.error(`Model - Error query updateEmployeeDetail: ${error}`);
-                    reject(error)
-                } else {
-                    global.logger.info(`Model - Update employee success: ${ressults}`)
-                    resolve(ressults)
-                }
+const getListEmployee = async (page_index) => {
+    try {
+        const results = await pool
+            .getData(
+                queries.Employee.getListEmployee,
+                [page_index]
+            );
+        const data = {
+            info: {},
+            employee: []
+        }
+        results.map((item) => {
+            data.employee.push({
+                id: item.id,
+                name: item.name,
+                age: item.age,
+                email_address: item.email_address,
+                base_salary: item.base_salary,
+                role: item.role,
+                status: item.status
             })
-    })
+        })
+        data.info = {
+            total_page: Math.ceil(results[0].page / 10),
+        }
+    } catch (error) {
+        global.logger.error(`Model - Error getListEmployee: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
+const getEmployeeDetail = async (employee_id) => {
+    try {
+        const results = await pool
+            .getData(
+                queries.Employee.getEmployeeDetails,
+                [employee_id]
+            );
+        global.logger.info(`Model - Get employee detail success: ${results[0]}`);
+        return results[0];
+    } catch (error) {
+        global.logger.error(`Model - Error getEmployeeDetail: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
+const updateEmployeeDetail = async (employee_data, employee_id) => {
+    try {
+        const results = await pool
+            .setData(
+                queries.Employee.updateEmployeeDetail,
+                [
+                    employee_data,
+                    employee_id
+                ]
+            );
+        global.logger.info(`Model - Update employee success: ${results}`);
+        return results;
+    } catch (error) {
+        global.logger.error(`Model - Error updateEmployeeDetail: ${error}`);
+        throw new Error(error.message);
+    }
 }
 
 const deleteEmployeeDetail = (employee_id) => {
-    const query = queries.Employee.deleteEmployeeDetail
-    return new Promise((resolve, reject) => {
-        pool.query(query,
-            [employee_id],
-            (error, ressults) => {
-                if (error) {
-                    global.logger.error(`Model - Error query deleteEmployeeDetail: ${error}`);
-                    reject(error)
-                } else {
-                    global.logger.info(`Model - Delete employee success: ${ressults}`)
-                    resolve(ressults)
-                }
-            })
-    })
+    try {
+        const results = pool
+            .setData(
+                queries.Employee.deleteEmployeeDetail,
+                [
+                    employee_id
+                ]
+            );
+        global.logger.info(`Model - Delete employee success: ${results}`);
+    } catch (error) {
+        global.logger.error(`Model - Error deleteEmployeeDetail: ${error}`);
+        throw new Error(error.message);
+    }
 }
 
 const searchEmployeeBy = (searchBy, keywords) => {
-    const query = queries.Employee.searchEmployeeBy(searchBy, keywords);
-    global.logger.info(`Model - Search employee query: ${query}`)
-    return new Promise((resolve, reject) => {
-        pool.query(query, (error, ressults) => {
-            if (error) {
-                global.logger.error(`Model - Error query searchEmployeeBy: ${error}`);
-                reject(error)
-            } else {
-                global.logger.info(`Model - Search employee success: ${ressults}`)
-                resolve(ressults)
-            }
-        })
-    })
+    try {
+        const results = pool
+            .getData(
+                queries.Employee.searchEmployeeBy(searchBy, keywords),
+                []
+            );
+        global.logger.info(`Model - Search employee success: ${results}`);
+    } catch (error) {
+        global.logger.error(`Model - Error searchEmployeeBy: ${error}`);
+        throw new Error(error.message);
+    }
 }
 
 module.exports = {

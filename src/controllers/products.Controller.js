@@ -1,67 +1,62 @@
 const productsModel = require('../models/products.Model')
 
-const createProductDetail = (req, res) => {
-    productsModel
-        .createProductDetails(req.body)
-        .then((result) => {
-            res.status(200).send({
-                status: 'success',
-                data: result,
-            })
-        })
-        .catch((error) => {
-            res.status(500).json({ message: error.message })
-        })
+const createProductDetail = async (req, res) => {
+    try {
+        const data = await productsModel.createProductDetails(req.body);
+        res.status(200).send({
+            status: true,
+            product_id: data.insertId
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: false,
+            message: error.message
+        });
+    }
 }
 
-const getListProduct = (req, res) => {
-    productsModel
-        .getListProduct(req.query.page_index)
-        .then((result) => {
-            res.status(200).send({
-                status: true,
-                data: result,
-            })
+const getListProduct = async (req, res) => {
+    try {
+        const data = await productsModel.getListProduct(req.query.page_index);
+        res.status(200).send({
+            status: true,
+            data: data
         })
-        .catch((error) => {
-            res.status(500).json({
-                status: false,
-                message: error.message,
-            })
+    } catch (error) {
+        res.status(500).json({
+            status: false,
+            message: error.message
         })
+    }
 }
 
-const getProductByID = (req, res) => {
-    productsModel
-        .getProductByID(req.params.id)
-        .then((result) => {
-            res.status(200).send({
-                status: true,
-                data: result
-            })
+const getProductByID = async (req, res) => {
+    try {
+        const data = await productsModel.getProductByID(req.params.id);
+        res.status(200).send({
+            status: true,
+            data: data
         })
-        .catch((err) => {
-            return res.status(500).json({
-                status: false,
-                message: err.message
-            })
+    } catch (error) {
+        res.status(500).json({
+            status: false,
+            message: error.message
         })
+    }
 }
-const updateProductByID = (req, res) => {
-    productsModel
-        .updateProductByID(req.params.id, req.body)
-        .then((result) => {
-            res.status(200).send({
-                status: true,
-                data: result
-            })
+const updateProductByID = async (req, res) => {
+    try {
+        const data = await productsModel.updateProductByID(req.params.id, req.body);
+        res.status(200).send({
+            status: true,
+            data: data
         })
-        .catch((err) => {
-            return res.status(500).json({
-                status: false,
-                message: err.message
-            })
+    } catch (error) {
+        res.status(500).json({
+            status: false,
+            message: error.message
         })
+    }
 }
 
 const deleteProductByID = (req, res) => {

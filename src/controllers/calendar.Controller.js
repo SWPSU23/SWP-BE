@@ -1,55 +1,60 @@
 const calendarModel = require('../models/calendar.Model')
 
-const getDayCalendar = (req, res) => {
-    const start_day = req.query.start_day;
-    const end_day = req.query.end_day;
-    calendarModel.getDayCalendar(start_day, end_day)
-        .then((result) => {
-            res.status(200).send({
+const getDayCalendar = async (req, res) => {
+    try {
+        const data = await calendarModel.getDayCalendar(req.query.start_day, req.query.end_day);
+        res
+            .status(200)
+            .send({
                 success: true,
-                data: result
+                data: data
             })
-        })
-        .catch((err) => {
-            res.status(500).send({
+    } catch (error) {
+        res
+            .status(500)
+            .send({
                 success: false,
-                message: err.message
+                message: error.message
             })
-        })
+    }
 }
 
-const updateCalendar = (req, res) => {
-    const date = req.params.date;
-    const isSpecialDay = req.body.isSpecialDay;
-    calendarModel.updateCalendar(date, isSpecialDay)
-        .then((result) => {
-            res.status(200).send({
+const updateCalendar = async (req, res) => {
+    try {
+        const data = await calendarModel.updateCalendar(req.body.date, req.body);
+        res
+            .status(200)
+            .send({
                 success: true,
-                data: result
+                data: data
             })
-        })
-        .catch((err) => {
-            res.status(500).send({
+    } catch (error) {
+        res
+            .status(500)
+            .send({
                 success: false,
-                message: err.message
+                message: error.message
             })
-        })
+    }
 }
 
-const getListDayOfWeek = (req, res) => {
-    calendarModel.getListDayOfWeek()
-        .then((result) => {
-            res.status(200).send({
+const getListDayOfWeek = async (req, res) => {
+    try {
+        const data = await calendarModel.getListDayOfWeek();
+        res
+            .status(200)
+            .send({
                 success: true,
-                data: result
+                data: data
             })
-        })
-        .catch((err) => {
-            res.status(500).send({
+    } catch (error) {
+        res
+            .status(500)
+            .send({
                 success: false,
-                message: err.message
+                message: error.message
             })
-        })
+    }
 }
 
 module.exports = {
