@@ -68,12 +68,13 @@ const updateWorksheet = (req, res) => {
 
 const deleteWorksheet = async (req, res) => {
     try {
-        const data = await worksheetModel(
-            await worksheetValidator
-                .validateDeleteWorksheet(
-                    req.params.id
-                )
-        );
+        const data = await worksheetModel
+            .deleteWorksheet(
+                await worksheetValidator
+                    .validateDeleteWorksheet(
+                        req.params.id
+                    )
+            );
 
         res
             .status(200)

@@ -176,13 +176,14 @@ const getWorkSheetOfWeekEmployee = async (start_date, end_date, employee_id) => 
 
 const updateWorksheet = async (data, id) => {
     try {
-        const results = await pool.setData(
-            queries.Worksheet.updateWorksheet,
-            [
-                data,
-                id
-            ]
-        );
+        const results = await pool
+            .setData(
+                queries.Worksheet.updateWorksheet,
+                [
+                    data,
+                    id
+                ]
+            );
         global.logger.info(`Model - Update worksheet successfully: ${JSON.stringify(results)}`);
         return results;
     } catch (error) {
