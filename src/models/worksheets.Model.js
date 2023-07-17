@@ -217,8 +217,8 @@ const getWorksheetDetail = async (id) => {
     try {
         const results = await pool
             .getData(
-                queries.Worksheet.getWorksheetDetail(id),
-                []
+                queries.Worksheet.getWorksheetDetail,
+                [id]
             );
         const data = [];
         // convert time stamp to date
@@ -237,7 +237,7 @@ const getWorksheetDetail = async (id) => {
                 status: element.status
             })
         });
-        return data;
+        return data[0];
     } catch (error) {
         global.logger.error(`Model - Error query get worksheet detail: ${error}`);
         throw error;
