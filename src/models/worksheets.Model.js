@@ -71,7 +71,8 @@ const getWorkSheetOfWeek = async (start_date, end_date, role) => {
     try {
         const results = await pool
             .getData(
-                queries.Worksheet.getWorkSheetOfWeek(start_date, end_date, role)
+                queries.Worksheet.getWorkSheetOfWeek(start_date, end_date, role),
+                []
             );
         const data = [];
         // if role is cashier, create 3 sheet
@@ -111,6 +112,7 @@ const getWorkSheetOfWeek = async (start_date, end_date, role) => {
                 })
             }
         }
+        return data;
     } catch (error) {
         global.logger.error(`Model - Error query get worksheet of week: ${error}`);
         throw error;
