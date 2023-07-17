@@ -25,8 +25,9 @@ const getListOrder = async (page_index) => {
         results.map(
             (result) => {
                 data.order.push({
-                    order_id: result.order_id,
+                    id: result.id,
                     employee_id: result.employee_id,
+                    cashier_name: result.cashier_name,
                     product_quantity: result.product_quantity,
                     total_price: result.total_price,
                     create_at: time.timeStampToDay(result.create_at),
