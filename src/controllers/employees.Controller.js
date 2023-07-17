@@ -106,19 +106,23 @@ const updateEmployeeDetail = async (req, res) => {
     }
 }
 
-const deleteEmployeeDetail = (req, res) => {
+const deleteEmployeeDetail = async (req, res) => {
     try {
-        const results = employeesModel.deleteEmployeeDetail(req.params.id);
+        const results = await employeesModel.deleteEmployeeDetail(req.params.id);
         global.logger.debug(`Controller - Delete employee success: ${results}`);
-        res.status(200).send({
-            success: true,
-            data: results
-        })
+        res
+            .status(200)
+            .send({
+                success: true,
+                data: results
+            })
     } catch (error) {
-        res.status(500).send({
-            success: false,
-            message: error.message
-        })
+        res
+            .status(500)
+            .send({
+                success: false,
+                message: error.message
+            })
     }
 }
 

@@ -112,9 +112,9 @@ const updateEmployeeDetail = async (employee_data, employee_id) => {
     }
 }
 
-const deleteEmployeeDetail = (employee_id) => {
+const deleteEmployeeDetail = async (employee_id) => {
     try {
-        const results = pool
+        const results = await pool
             .setData(
                 queries.Employee.deleteEmployeeDetail,
                 [
@@ -122,6 +122,7 @@ const deleteEmployeeDetail = (employee_id) => {
                 ]
             );
         global.logger.info(`Model - Delete employee success: ${results}`);
+        return results;
     } catch (error) {
         global.logger.error(`Model - Error deleteEmployeeDetail: ${error}`);
         throw new Error(error.message);

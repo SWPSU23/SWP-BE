@@ -33,6 +33,8 @@ const getListOrder = async (page_index) => {
                     status: result.status
                 })
             })
+        data.info.total_page = Math.ceil(results[0].page / 10);
+        return data;
     } catch (error) {
         global.logger.error(`Model - Error query getListOrder: ${error}, query: ${queries.Order.getListOrder(page_index)}`);
         throw error;
