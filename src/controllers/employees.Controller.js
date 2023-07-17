@@ -122,9 +122,13 @@ const deleteEmployeeDetail = (req, res) => {
     }
 }
 
-const searchEmployeeBy = (req, res) => {
+const searchEmployeeBy = async (req, res) => {
     try {
-        const results = employeesModel.searchEmployeeBy(req.query.search_by, req.query.keywords);
+        const results = await employeesModel
+            .searchEmployeeBy(
+                req.query.searchBy,
+                req.query.keywords
+            );
         global.logger.debug(`Controller - Search employee success: ${results}`);
         res
             .status(200)

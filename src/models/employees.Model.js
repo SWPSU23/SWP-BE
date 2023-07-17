@@ -62,6 +62,7 @@ const getListEmployee = async (page_index) => {
                 id: item.id,
                 name: item.name,
                 age: item.age,
+                phone: item.phone,
                 email_address: item.email_address,
                 base_salary: item.base_salary,
                 role: item.role,
@@ -127,14 +128,17 @@ const deleteEmployeeDetail = (employee_id) => {
     }
 }
 
-const searchEmployeeBy = (searchBy, keywords) => {
+const searchEmployeeBy = async (searchBy, keywords) => {
     try {
-        const results = pool
+        global.logger.info(`Model - Search employee by ${searchBy} key: ${keywords}`)
+        const results = await pool
             .getData(
                 queries.Employee.searchEmployeeBy(searchBy, keywords),
                 []
             );
-        global.logger.info(`Model - Search employee success: ${results}`);
+        global.logger.info(`Model - Search employee success: ${JSON.stringify(results)}`);
+
+        return results;
     } catch (error) {
         global.logger.error(`Model - Error searchEmployeeBy: ${error}`);
         throw new Error(error.message);
