@@ -32,14 +32,14 @@ const validateCreateWorksheet = async (data) => {
             .getData(
                 queries.Worksheet.checkEmployeeHasWorksheetInSheet,
                 [
-                    data.worksheet.employee,
+                    data.worksheet.employee_id,
                     data.worksheet.date,
                     data.worksheet.sheet_id
                 ]
             );
         if (worksheet_employee.length > 0) {
-            global.logger.error(`Validation - Employee ${data.worksheet.employee} has a worksheet in this sheet`);
-            throw new Error(`Employee ${data.worksheet.employee} has a worksheet in this sheet`);
+            global.logger.error(`Validation - Employee ${data.worksheet.employee_id} has a worksheet in this sheet`);
+            throw new Error(`Employee id: ${data.worksheet.employee_id} has a worksheet in this sheet`);
         }
         return data;
     } catch (error) {

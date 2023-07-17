@@ -19,21 +19,6 @@ const createWorksheet = async (data) => {
             global.logger.error(`Model - Error validate worksheet: ${error}`)
             throw error;
         } else {
-            let results_coffiecitent = await pool
-                .getData(
-                    queries.Worksheet.getCoefficient,
-                    [
-                        data.worksheet.sheet_id,
-                        data.worksheet.id,
-                        data.role
-                    ]
-                );
-
-            if (results_coffiecitent[0].isSpecialDay === 'yes') {
-                value.coefficient = 3
-            } else {
-                value.coefficient = results_coffiecitent[0].coefficient
-            }
             // create worksheet
             const results = await pool
                 .setData(
@@ -42,11 +27,35 @@ const createWorksheet = async (data) => {
                         value.employee_id,
                         value.sheet_id,
                         value.date,
-                        value.coefficient,
                         value.status
                     ]
                 );
             global.logger.info(`Model - Create worksheet successfully: ${JSON.stringify(results)}`)
+            // get coefficient
+            const results_coffiecitent = await pool
+                .getData(
+                    queries.Worksheet.getCoefficient,
+                    [
+                        data.worksheet.sheet_id,
+                        results.insertId,
+                        data.role
+                    ],
+                );
+
+            if (results_coffiecitent[0].isSpecialDay === 'yes') {
+                value.coefficient = 3
+            } else {
+                value.coefficient = results_coffiecitent[0].coefficient
+            }
+            // update coefficient
+            await pool.
+                setData(
+                    queries.Worksheet.updateWorksheet,
+                    [
+                        { coefficient: value.coefficient },
+                        results.insertId
+                    ],
+                )
             // create check in out
             await pool
                 .setData(
@@ -129,7 +138,9 @@ const getWorkSheetOfWeekEmployee = async (start_date, end_date, employee_id) => 
         const employee_detail = await pool
             .getData(
                 queries.Employee.getEmployeeDetails,
-                [employee_id]
+                [
+                    employee_id
+                ]
             );
 
         const data = [];
