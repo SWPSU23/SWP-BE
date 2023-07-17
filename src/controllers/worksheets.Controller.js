@@ -112,6 +112,24 @@ const getWorksheetDetail = async (req, res) => {
     }
 }
 
+const getWorksheetEmployeeDetail = async (req, res) => {
+    try {
+        const data = await worksheetModel.getWorkSheetOfWeekEmployee(req.query.start_date, req.query.end_date, req.query.employee_id);
+        res
+            .status(200)
+            .json({
+                success: true,
+                data: data
+            })
+    } catch (error) {
+        res
+            .status(500)
+            .json({
+                success: false,
+                message: error.message
+            })
+    }
+}
 
 
 module.exports = {
@@ -119,5 +137,6 @@ module.exports = {
     getWorkSheetOfWeek,
     updateWorksheet,
     deleteWorksheet,
-    getWorksheetDetail
+    getWorksheetDetail,
+    getWorksheetEmployeeDetail
 }
