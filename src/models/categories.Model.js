@@ -29,7 +29,10 @@ const createCategory = async (data) => {
 
 const getListCategory = async () => {
     try {
-        const results = await pool.getData(queries.Category.getListCategory);
+        const results = await pool.getData(
+            queries.Category.getListCategory,
+            []
+        );
         const data = results.map((item) => item.name);
         global.logger.info(`Model - Get list category success: ${JSON.stringify(data)}`);
         return data;
