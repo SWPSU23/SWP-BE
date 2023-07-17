@@ -39,6 +39,11 @@ const envVarsSchema = Joi.object()
         SESSION_SECRET: Joi.string()
             .required()
             .description('Session secret key'),
+        // mail config
+        MAIL_HOST: Joi.string().required().description('Mail host'),
+        MAIL_PORT: Joi.number().default(587).description('Mail port'),
+        MAIL_ACCOUNT: Joi.string().required().description('Mail account'),
+        MAIL_PASSWORD: Joi.string().required().description('Mail password'),
     })
     .unknown()
 
@@ -80,5 +85,11 @@ module.exports = {
     },
     session: {
         secret: envVars.SESSION_SECRET,
+    },
+    mail: {
+        host: envVars.MAIL_HOST,
+        port: envVars.MAIL_PORT,
+        user: envVars.MAIL_ACCOUNT,
+        password: envVars.MAIL_PASSWORD,
     },
 }
