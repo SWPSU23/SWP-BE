@@ -74,7 +74,7 @@ const updateEmployee = (data, id) => {
                             global.logger.info(`Validation - Filter employee by id: ${JSON.stringify(resultMail)}`)
                             if (resultMail.length > 0) {
                                 global.logger.error("Validation - Email is existed: ");
-                                reject({ message: "Email is existed" });
+                                reject({ message: `Email is exist of ${resultMail.map((resultMail) => resultMail.name)}` });
                             } else {
                                 global.logger.info("Validation - Email is not existed: ");
                                 resolve();
