@@ -1,7 +1,7 @@
 const pool = require('../services/query.Service');
 const queries = require('../queries/queryModal');
 const Joi = require('joi');
-
+const bcrypt = require('bcrypt');
 const employeeSchema = Joi.object({
     name: Joi.string().min(3).required(),
     age: Joi.number().min(16).required(),
@@ -20,6 +20,10 @@ const createEmployeeDetail = async (employee_detail) => {
             global.logger.error(`Model - Error validate : ${error}`);
             throw new Error(error);
         } else {
+            // handle send mail to employee
+
+            // hash password
+            value.password = await bcrypt.hash(value.password, 10);
             const results = await pool.setData(
                 queries.Employee.createEmployeeDetail,
                 [

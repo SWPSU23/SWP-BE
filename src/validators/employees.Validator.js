@@ -24,8 +24,6 @@ const validateCreateEmployee = async (data) => {
             global.logger.error(`Validation - Phone already exists: ${results_phone[0].phone} of ${results_phone[0].name}`);
             throw new Error(`Phone already exists: ${results_phone[0].phone} of ${results_phone[0].name}`);
         }
-        // hash passwords
-        data.password = await bcrypt.hash(data.password, 10);
         return data;
     } catch (error) {
         global.logger.error(`Validation - Error create employee: ${error}`);
@@ -41,6 +39,7 @@ const validateUpdateEmployee = async (data, id) => {
                 queries.Employee.searchEmployeeBy('email_address', data.email_address),
                 []
             );
+        // filter email not inclue employee
         const check_email = results_email.filter((item) => item.id !== parseInt(id));
         if (check_email.length > 0) {
             global.logger.error(`Validation - Email already exists: ${check_email[0].email_address} of ${check_email[0].name}`);
