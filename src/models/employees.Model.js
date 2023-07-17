@@ -7,7 +7,7 @@ const employeeSchema = Joi.object({
     age: Joi.number().min(16).required(),
     email_address: Joi.string().email().required(),
     password: Joi.string().min(5).required(),
-    phone: Joi.number().min(9).required(),
+    phone: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required(),
     base_salary: Joi.number().min(1000).required(),
     role: Joi.string().required(),
     status: Joi.string().default('working'),

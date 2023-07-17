@@ -63,7 +63,7 @@ router
  *             age: 17
  *             email_address: bb@gmail.com
  *             password: hcb123
- *             phone: 1234567890
+ *             phone: "1234567890"
  *             base_salary: 1000
  *             role: manager      
  *     responses:
@@ -186,8 +186,7 @@ router
  *           type: string
  *           minLength: 5
  *         phone:
- *           type: number
- *           minimum: 9
+ *           type: string
  *         base_salary:
  *           type: number
  *           minimum: 1000
