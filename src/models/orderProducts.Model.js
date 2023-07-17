@@ -20,24 +20,26 @@ const createListOrderProduct = async (order_id, valid_products, orderUpdate) => 
             unit_price: product.unit_price,
             total: product.total
         }))
-        const { error, value } = Joi.validate(products, Joi.array().items(orderProductSchema));
+        const { error, value } = Joi.array().items(orderProductSchema).validate(products);
         if (error) {
             global.logger.error(`Model - Error validate create list order product: ${error}`);
             throw new Error(error.message);
         } else {
             // convert value to array
-            const values = value.map((product) => {
+            const values = value.map((value) =>
                 [
-                    product.order_id,
-                    product.product_id,
-                    product.quantity,
-                    product.unit_price,
-                    product.total
+                    order_id,
+                    value.product_id,
+                    value.quantity,
+                    value.unit_price,
+                    value.total
                 ]
-            });
+            );
             // create list order product
             const results_order_product = await pool
-                .setData(queries.OrderProduct.createListOrderProduct, [values]
+                .setData(
+                    queries.OrderProduct.createListOrderProduct,
+                    [values]
                 );
             // update order
             await pool

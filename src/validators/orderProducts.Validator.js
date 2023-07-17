@@ -16,8 +16,8 @@ const validateCheckQuantityProduct = async (products) => {
                 valid_products.push({
                     product_id: product.product_id,
                     quantity: product.quantity,
-                    unit_price: product_detail.unit_price,
-                    total: product.quantity * product_detail.unit_price,
+                    unit_price: product.unit_price,
+                    total: product.total,
                     new_stock: product_detail.stock - product.quantity
                 });
             }

@@ -19,10 +19,11 @@ const createOrder = async (req, res) => {
     try {
         const data = await ordersModel.createOrder(req.body);
         // 201 meaning resource successfully created
-        res.status(201).send({
-            success: true,
-            order_id: data.insetId
-        })
+        res.status(201)
+            .send({
+                success: true,
+                order_id: data.insertId
+            })
     } catch (error) {
         res.status(500).send({
             success: false,

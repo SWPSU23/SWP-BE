@@ -3,9 +3,9 @@ const router = express.Router();
 const orderProductController = require('../controllers/orderProducts.Controller');
 
 router
-    .route('/')
-    .post(orderProductController.createListOrderProduct)
+    .route('/:order_id')
     .get(orderProductController.getListDetailOrder)
+    .post(orderProductController.createListOrderProduct);
 
 /**
  * @swagger
@@ -16,11 +16,16 @@ router
 
 /**
  * @swagger
- * /orderProduct:
+ * /orderProduct/{order_id}:
  *   post:
  *     summary: Create order products
  *     description: Manage list order products
  *     tags: [OrderProduct]
+ *     parameters:
+ *     - name: order_id
+ *       in: path
+ *       required: true
+ *       description: Id of Order
  *     requestBody:
  *       required: true
  *       content:
@@ -39,7 +44,7 @@ router
  *     tags: [OrderProduct]
  *     parameters:
  *     - name: order_id
- *       in: query
+ *       in: path
  *       required: true
  *       description: Id of Order
  *     responses:
@@ -56,9 +61,6 @@ router
  *     OrderProduct:
  *       type: object
  *       properties:
- *         order_id:
- *           type: integer
- *           format: int64
  *         products:
  *           type: array
  *           format: int64

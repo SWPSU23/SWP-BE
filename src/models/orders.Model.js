@@ -54,9 +54,9 @@ const createOrder = async (data) => {
                     queries.Order.createOrder,
                     [
                         value.employee_id,
-                        value.create_at,
                         value.product_quantity,
                         value.total_price,
+                        value.create_at,
                         value.status
                     ]
                 );
