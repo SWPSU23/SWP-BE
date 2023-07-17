@@ -120,7 +120,7 @@ const getWorkSheetOfWeek = async (start_date, end_date, role) => {
 const getWorkSheetOfWeekEmployee = async (start_date, end_date, employee_id) => {
     try {
         const results = await pool
-            .getPool(
+            .getData(
                 queries.Worksheet.getWorkSheetOfWeekEmployee(start_date, end_date, employee_id),
                 []
             );
@@ -158,7 +158,6 @@ const getWorkSheetOfWeekEmployee = async (start_date, end_date, employee_id) => 
                         })
                     }
                 })
-                global.logger.info(`Model - Sheet_id ${i + 1} date: ${time.timeStampToDate(currentDay)} detail: ${JSON.stringify(detail)}`);
                 // set data
                 data[i][`sheet_${i + 1}`].push({
                     date: time.timeStampToDate(currentDay),
@@ -166,6 +165,7 @@ const getWorkSheetOfWeekEmployee = async (start_date, end_date, employee_id) => 
                 })
             }
         }
+        return data;
     } catch (error) {
         global.logger.error(`Model - Error query get worksheet of week: ${error}`);
         throw error;

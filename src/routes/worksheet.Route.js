@@ -128,6 +128,39 @@ router
 
 /**
  * @swagger
+ * /worksheet/employee:
+ *   get:
+ *     summary: Get worksheet of week of an emplyoee
+ *     tags: [Worksheet]
+ *     description: Only employee can get his/her worksheet
+ *     parameters:
+ *     - name: start_date
+ *       in: query
+ *       description: Start date
+ *       required: true
+ *       example: 2023-07-12
+ *       type: string
+ *     - name: end_date
+ *       in: query
+ *       description: End date
+ *       required: true
+ *       example: 2023-07-18
+ *       type: string
+ *     - name: employee_id
+ *       in: query
+ *       description: ID of employee
+ *       required: true
+ *       example: 1
+ *       type: integer
+ *     responses:
+ *       200:
+ *         description: Success
+ *       500:
+ *         description: Internal Server Error
+ */
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     Worksheet:

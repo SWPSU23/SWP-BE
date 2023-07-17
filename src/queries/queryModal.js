@@ -144,7 +144,7 @@ module.exports = {
 
         getWorkSheetOfWeekEmployee: (start_day, end_day, employee_id) => {
             return (
-                `SELECT ws FROM Worksheet ws ` +
+                `SELECT ws.* FROM Worksheet ws` +
                 ` JOIN Employee e ON ws.employee_id = e.id ` +
                 ` WHERE date BETWEEN '${start_day}' AND '${end_day}' AND e.id = ${employee_id}`
             )
