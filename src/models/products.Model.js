@@ -92,7 +92,7 @@ const getListProduct = async (page_index) => {
 const getProductByID = async (id) => {
     try {
         const results = await pool
-            .getDataCondition(
+            .getData(
                 queries.Product.getProductByID,
                 [id]
             );
