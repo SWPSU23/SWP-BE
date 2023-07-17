@@ -1,5 +1,5 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 const ordersController = require('../controllers/orders.Controller')
 
 router
@@ -7,13 +7,9 @@ router
     .post(ordersController.createOrder)
     .get(ordersController.getListOrder)
 
-router
-    .route('/search')
-    .get(ordersController.searchOrder)
+router.route('/search').get(ordersController.searchOrder)
 
-router
-    .route('/:id')
-    .delete(ordersController.deleteOrder)
+router.route('/:id').delete(ordersController.deleteOrder)
 
 /**
  * @swagger
@@ -42,7 +38,7 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
- * 
+ *
  *  get:
  *     summary: Get list order
  *     description: Only cashier is allowed
@@ -80,7 +76,6 @@ router
  *         description: Bad request
  */
 
-
 /**
  * @swagger
  * /order/search:
@@ -98,7 +93,7 @@ router
  *        in: query
  *        description: Keywords to search
  *        required: true
- *        type: string        
+ *        type: string
  *     responses:
  *       200:
  *         description: Success
