@@ -36,7 +36,8 @@ const createEmployeeDetail = async (req, res) => {
 
 const getListEmployee = async (req, res) => {
     try {
-        const data = await employeesModel.getListEmployee(req.query.page_index);
+        const data = await employeesModel
+            .getListEmployee(req.query.page_index);
         res
             .status(200)
             .send({

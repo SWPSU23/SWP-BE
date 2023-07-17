@@ -50,8 +50,8 @@ const getListEmployee = async (page_index) => {
     try {
         const results = await pool
             .getData(
-                queries.Employee.getListEmployee,
-                [page_index]
+                queries.Employee.getListEmployee(page_index),
+                []
             );
         const data = {
             info: {},
@@ -71,6 +71,7 @@ const getListEmployee = async (page_index) => {
         data.info = {
             total_page: Math.ceil(results[0].page / 10),
         }
+        return data;
     } catch (error) {
         global.logger.error(`Model - Error getListEmployee: ${error}`);
         throw new Error(error.message);
