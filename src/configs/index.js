@@ -5,10 +5,6 @@ require('dotenv').config({
 })
 const envVarsSchema = Joi.object()
     .keys({
-        // app environment
-        NODE_ENV: Joi.string()
-            .valid('development', 'production', 'test')
-            .required(),
         HOST_URL: Joi.string().required().description('Database host name'),
         HOST_PORT: Joi.number().default(8080),
         // jwt config
@@ -55,8 +51,8 @@ if (error) {
 }
 
 module.exports = {
-    env: envVars.NODE_ENV,
-    isDev: envVars.NODE_ENV === 'development',
+    env: process.env.NODE_ENV,
+    isDev: process.env.NODE_ENV === 'development',
     url: envVars.HOST_URL,
     port: envVars.HOST_PORT,
     jwt: {

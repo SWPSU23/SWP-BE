@@ -20,7 +20,7 @@ router.get('/logout', authController.logout)
  *     summary: Login
  *     description: Authontication login
  *     tags: [Authorization]
- *    security:
+ *     security:
  *     - basicAuth: []
  *     requestBody:
  *       required: true

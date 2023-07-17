@@ -1,7 +1,7 @@
 // init global config
-const config = require('./configs')
+const config = require('./src/configs')
 // init global logger
-const logger = require('./services/logger.Service')
+const logger = require('./src/services/logger.Service')
 // init global redis client
 const redis = require('redis')
 const redisClient = redis.createClient({
@@ -15,10 +15,10 @@ global.redisClient = redisClient
 global.config = config
 global.logger = logger
 // init express app
-require('./app')
+require('./src/app')
 
 // init socket.io
-require('./socket')
+require('./src/socket')
 // init global error handler
 let server = global.server
 const exitHandler = () => {
