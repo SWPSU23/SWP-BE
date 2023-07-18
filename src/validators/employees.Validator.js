@@ -38,8 +38,8 @@ const validateUpdateEmployee = async (data, id) => {
         // check if email is existed
         const results_email = await pool
             .getData(
-                queries.Employee.searchEmployeeBy('email_address', data.email_address),
-                []
+                queries.Validate.checkEmail,
+                [data.email_address]
             );
         // filter email not inclue employee
         const check_email = results_email.filter((item) => item.id !== parseInt(id));
@@ -50,9 +50,10 @@ const validateUpdateEmployee = async (data, id) => {
         // check if phone is existed
         const results_phone = await pool
             .getData(
-                queries.Employee.searchEmployeeBy('phone', data.phone),
-                []
+                queries.Validate.checkPhone,
+                [data.phone]
             );
+        // filter phone not inclue employee
         const check_phone = results_phone.filter((item) => item.id !== parseInt(id));
         if (check_phone.length > 0) {
             global.logger.error(`Validation - Phone already exists: ${check_phone[0].phone} of ${check_phone[0].name}`);

@@ -217,14 +217,21 @@ module.exports = {
     LeaveManagement: {
         createLeaveForm:
             'INSERT INTO `LeaveManagement`' +
-            '(employee_id, number_of_leave_days_used, start_date_of_leave, end_date_of_leave, reason_leave, status)' +
-            'VALUES (?, ?, ?, ?, ?, ?)',
+            '(employee_id, number_of_leave_days_used, start_date_of_leave, end_date_of_leave, reason_leave, status, manager_replied)' +
+            'VALUES (?, ?, ?, ?, ?, ?, ?)',
 
-        getListLeaveForm: 'SELECT * FROM `LeaveManagement`',
+        getListLeaveForm: (page_index) => {
+            return (
+                `SELECT *, (SELECT COUNT(*) FROM LeaveManagement) AS page` +
+                ` FROM LeaveManagement` +
+                ` ORDER BY status ASC,start_date_of_leave ASC` +
+                ` LIMIT 10 OFFSET ${(page_index - 1) * 10}`
+            )
+        },
 
         updateLeaveForm: 'UPDATE `LeaveManagement` SET ? WHERE `id` = ?',
 
-        getDetailLeaveForm:
+        getLeaveFormByEmployee:
             'SELECT * FROM `LeaveManagement` WHERE `employee_id` = ?',
     },
 

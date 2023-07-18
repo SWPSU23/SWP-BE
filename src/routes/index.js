@@ -12,5 +12,6 @@ router.use('/calendar', require('./calendar.Route'));
 router.use('/category', require('./category.Route'));
 router.use('/checkInOut', require('./checkInOut.Route'));
 router.use('/auth', require('./auth.Route'));
+router.use('/leaveForm', require('./leaveForm.Route'));
 
 module.exports = router
