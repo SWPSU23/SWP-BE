@@ -17,14 +17,14 @@ const validateCreateWorksheet = async (data) => {
         if (data.role === 'cashier') {
             if (worksheet_role.length >= 3) {
                 global.logger.error(`Validation - Role ${data.role} has existed`);
-                throw new Error(`Role ${data.role} has 3 worker in this sheet`);
+                throw new Error(`Role ${data.role} has 3 worker in this sheet  Employee_name: ${(worksheet_role).map((item) => item.name)}`);
             }
         }
         // check guard has 2 worker in this sheet
         if (data.role === 'guard') {
             if (worksheet_role.length >= 2) {
                 global.logger.error(`Validation - Role ${data.role} has existed`);
-                throw new Error(`Role ${data.role} has 2 worker in this sheet`);
+                throw new Error(`Role ${data.role} has 2 worker in this sheet Employee_name: ${(worksheet_role).map((item) => item.name)}`);
             }
         }
         // check employee has a worksheet in this sheet

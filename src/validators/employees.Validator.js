@@ -7,9 +7,10 @@ const validateCreateEmployee = async (data) => {
         // check email if existed
         const results_email = await pool
             .getData(
-                queries.Employee.searchEmployeeBy('email_address', data.email_address),
-                []
+                queries.Validate.checkEmail,
+                [data.email_address]
             );
+        console.log(JSON.stringify(results_email))
         if (results_email.length > 0) {
             global.logger.error(`Validation - Email already exists: ${results_email[0].email_address} of ${results_email[0].name}`);
             throw new Error(`Email already exists: ${results_email[0].email_address} of ${results_email[0].name}`);
@@ -17,13 +18,14 @@ const validateCreateEmployee = async (data) => {
         // check phone if existed
         const results_phone = await pool
             .getData(
-                queries.Employee.searchEmployeeBy('phone', data.phone),
-                []
+                queries.Validate.checkPhone,
+                [data.phone]
             );
         if (results_phone.length > 0) {
             global.logger.error(`Validation - Phone already exists: ${results_phone[0].phone} of ${results_phone[0].name}`);
             throw new Error(`Phone already exists: ${results_phone[0].phone} of ${results_phone[0].name}`);
         }
+
         return data;
     } catch (error) {
         global.logger.error(`Validation - Error create employee: ${error}`);

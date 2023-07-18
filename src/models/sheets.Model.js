@@ -11,7 +11,7 @@ const sheetSchema = joi.object({
 
 const createSheet = async (data) => {
     try {
-        const { error, value } = await sheetSchema.validateAsync(data);
+        const { error, value } = sheetSchema.validate(data);
         if (error) {
             global.logger.error(`Model - Error validate create sheet: ${error}`)
             throw new Error(error)
@@ -83,7 +83,7 @@ const deleteSheet = async (id) => {
         return results;
     } catch (error) {
         global.logger.error(`Model - Error delete sheet: ${error}`)
-        throw new Error(error)
+        throw error
     }
 }
 

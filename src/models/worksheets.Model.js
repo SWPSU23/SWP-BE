@@ -113,7 +113,6 @@ const getWorkSheetOfWeek = async (start_date, end_date, role) => {
                         })
                     }
                 })
-                global.logger.info(`Model - Sheet_id ${i + 1} date: ${time.timeStampToDate(currentDay)} detail: ${JSON.stringify(detail)}`);
                 // set data
                 data[i][`sheet_${i + 1}`].push({
                     date: time.timeStampToDate(currentDay),
@@ -121,6 +120,7 @@ const getWorkSheetOfWeek = async (start_date, end_date, role) => {
                 })
             }
         }
+        global.logger.info(`Model - Get worksheet of week successfully:`);
         return data;
     } catch (error) {
         global.logger.error(`Model - Error query get worksheet of week: ${error}`);

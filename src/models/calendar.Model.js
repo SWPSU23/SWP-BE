@@ -17,7 +17,6 @@ const getDayCalendar = async (start_day, end_day) => {
                 isSpecialDay: item.isSpecialDay
             })
         })
-        global.logger.info(`Model - Get day calendar successfully: ${JSON.stringify(data)}`)
         return data;
     } catch (err) {
         global.logger.error(`Model - Get day calendar failed: ${err}`)
@@ -68,7 +67,6 @@ const getListDayOfWeek = async () => {
                 current_week++;
                 // get info of current day
                 if (getPossitionCurrentDay(result[i].date, result[i + 6].date)) {
-                    global.logger.info(`current_week: ${current_week}`)
                     data.current_week = current_week;
                 }
             }

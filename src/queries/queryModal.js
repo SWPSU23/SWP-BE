@@ -240,7 +240,14 @@ module.exports = {
 
         getCalendar: 'SELECT * FROM `Calendar`',
     },
+
     Auth: {
         login: 'SELECT * FROM Employee WHERE phone = ?',
     },
+
+    Validate: {
+        checkEmail: 'SELECT * FROM Employee WHERE email_address = ?',
+
+        checkPhone: 'SELECT * FROM Employee WHERE phone = ?',
+    }
 }

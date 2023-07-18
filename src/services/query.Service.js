@@ -33,7 +33,6 @@ const setData = (queryString, [...args]) => {
                 global.logger.error(err.message)
                 return reject(err)
             } else {
-                global.logger.info(result)
                 return resolve(result)
             }
         })

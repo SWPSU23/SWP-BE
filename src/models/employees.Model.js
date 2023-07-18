@@ -6,7 +6,7 @@ const employeeSchema = Joi.object({
     name: Joi.string().min(3).required(),
     age: Joi.number().min(16).required(),
     email_address: Joi.string().email().required(),
-    password: Joi.string().min(5).required(),
+    password: Joi.string().min(10).required(),
     phone: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required(),
     base_salary: Joi.number().min(1000).required(),
     role: Joi.string().required(),
@@ -15,7 +15,7 @@ const employeeSchema = Joi.object({
 
 const createEmployeeDetail = async (employee_detail) => {
     try {
-        const { error, value } = await employeeSchema.validateAsync(employee_detail);
+        const { error, value } = employeeSchema.validate(employee_detail);
         if (error) {
             global.logger.error(`Model - Error validate : ${error}`);
             throw new Error(error);
