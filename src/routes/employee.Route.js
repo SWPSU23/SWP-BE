@@ -14,6 +14,10 @@ router
     .get(employeesController.searchEmployeeBy)
 
 router
+    .route('/forgot-password')
+    .post(employeesController.updatePassWord)
+
+router
     .route('/:id')
     // get employee details
     .get(employeesController.getEmployeeDetail)
@@ -172,6 +176,30 @@ router
  *       500:
  *         description: Internal server error
  * 
+ */
+
+/**
+ * @swagger
+ * /employee/forgot-password:
+ *   post:
+ *     summary: Update password
+ *     description: Employee can access
+ *     tags: [Employees]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/Employee"
+ *           example:
+ *             email_address: bb@gmail.com       
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server errors
+ *                 
  */
 
 /**

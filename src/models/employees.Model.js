@@ -9,7 +9,7 @@ const employeeSchema = Joi.object({
     age: Joi.number().min(16).required(),
     email_address: Joi.string().email().required().trim(),
     phone: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required(),
-    base_salary: Joi.number().min(1000).required(),
+    base_salary: Joi.number().min(20000).required(),
     role: Joi.string().required().trim(),
     status: Joi.string().default('working'),
 });
@@ -127,6 +127,41 @@ const updateEmployeeDetail = async (employee_data, employee_id) => {
     }
 }
 
+const updatePassWord = async (email) => {
+    try {
+        const employee_detail = await pool
+            .getData(
+                queries.Validate.checkEmail,
+                [email]
+            );
+        if (employee_detail.length === 0) {
+            throw new Error(`ValidationError: Email is not exist`);
+        } else {
+            // generate password
+            const password = generatePassWord.generate({
+                length: 10,
+                numbers: true
+            });
+            // hash password
+            const hashPassword = await bcrypt.hash(password, 10);
+            // update password in database
+            const results = await pool
+                .setData(
+                    queries.Employee.updateEmployeeDetail,
+                    [
+                        { password: hashPassword },
+                        employee_detail[0].id
+                    ]
+                )
+            // handle send mail to employee
+            return results;
+        }
+    } catch (error) {
+        global.logger.error(`Model - Error updatePassWord: ${error}`);
+        throw error;
+    }
+}
+
 const deleteEmployeeDetail = async (employee_id) => {
     try {
         const results = await pool
@@ -165,5 +200,6 @@ module.exports = {
     getEmployeeDetail,
     updateEmployeeDetail,
     deleteEmployeeDetail,
-    searchEmployeeBy
+    searchEmployeeBy,
+    updatePassWord
 }

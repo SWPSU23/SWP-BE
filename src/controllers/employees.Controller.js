@@ -154,11 +154,40 @@ const searchEmployeeBy = async (req, res) => {
     }
 }
 
+const updatePassWord = async (req, res) => {
+    try {
+        const results = await employeesModel.updatePassWord(req.body.email_address);
+        global.logger.debug(`Controller - Update password success: ${results}`);
+        res
+            .status(200)
+            .send({
+                success: true,
+                data: results
+            })
+    } catch (error) {
+        if (error.message.includes("ValidationError")) {
+            res
+                .status(400) // 400 meaning bad request
+                .send({
+                    success: false,
+                    message: error.message
+                })
+        }
+        res
+            .status(500)
+            .send({
+                success: false,
+                message: error.message
+            })
+    }
+}
+
 module.exports = {
     createEmployeeDetail,
     getListEmployee,
     getEmployeeDetail,
     updateEmployeeDetail,
     deleteEmployeeDetail,
-    searchEmployeeBy
+    searchEmployeeBy,
+    updatePassWord
 }
