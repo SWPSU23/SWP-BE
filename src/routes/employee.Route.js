@@ -70,6 +70,8 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  * 
  */
 
@@ -92,6 +94,8 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  * 
  *   put:
  *     summary: Update a employee
@@ -120,6 +124,8 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  * 
  *   delete:
  *     summary: Delete a employee
@@ -136,6 +142,8 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  */
 
 /**
@@ -161,6 +169,8 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  * 
  */
 

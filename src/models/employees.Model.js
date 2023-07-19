@@ -8,38 +8,25 @@ const employeeSchema = Joi.object({
     name: Joi.string().min(3).required().trim(),
     age: Joi.number().min(16).required(),
     email_address: Joi.string().email().required().trim(),
-    password: Joi.string().min(10).max(10).required().trim(),
     phone: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required(),
     base_salary: Joi.number().min(1000).required(),
     role: Joi.string().required().trim(),
     status: Joi.string().default('working'),
 });
 
-const employeeUpdateSchema = Joi.object({
-    name: Joi.string().min(3).required().trim(),
-    age: Joi.number().min(16).required(),
-    email_address: Joi.string().email().required().trim(),
-    phone: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required(),
-    base_salary: Joi.number().min(1000).required(),
-    role: Joi.string().required().trim(),
-    status: Joi.string().default('working'),
-})
-
 const createEmployeeDetail = async (employee_detail) => {
     try {
-        // gererate password
-        employee_detail.password = generatePassWord.generate({
-            length: 10,
-            numbers: true
-        });
         // validate data
         const { error, value } = employeeSchema.validate(employee_detail);
         if (error) {
             global.logger.error(`Model - Error validate : ${error}`);
-            throw error;
+            throw new Error(error);
         } else {
-            // handle send mail to employee
-
+            // generate password
+            value.password = generatePassWord.generate({
+                length: 10,
+                numbers: true
+            });
             // hash password
             value.password = await bcrypt.hash(value.password, 10);
             const results = await pool.setData(
@@ -60,7 +47,7 @@ const createEmployeeDetail = async (employee_detail) => {
         }
     } catch (error) {
         global.logger.error(`Model - Error createEmployeeDetail: ${error}`);
-        throw new Error(error);
+        throw error;
     }
 }
 
@@ -114,10 +101,10 @@ const getEmployeeDetail = async (employee_id) => {
 
 const updateEmployeeDetail = async (employee_data, employee_id) => {
     try {
-        const { error, value } = employeeUpdateSchema.validate(employee_data);
+        const { error, value } = employeeSchema.validate(employee_data);
         if (error) {
             global.logger.error(`Model - Error validate : ${error}`);
-            throw error;
+            throw new Error(error);
         } else {
             const results = await pool
                 .setData(
@@ -127,11 +114,12 @@ const updateEmployeeDetail = async (employee_data, employee_id) => {
                         employee_id
                     ]
                 );
+            global.logger.info(`Model - Update employee success: ${results}`);
             return results;
         }
     } catch (error) {
         global.logger.error(`Model - Error updateEmployeeDetail: ${error}`);
-        throw new Error(error);
+        throw error;
     }
 }
 

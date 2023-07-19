@@ -10,12 +10,21 @@ const createProductDetail = async (req, res) => {
                 product_id: data.insertId
             });
     } catch (error) {
-        res
-            .status(500)
-            .json({
-                status: false,
-                message: error.message
-            });
+        if (error.message.includes("ValidationError")) {
+            res
+                .status(400) // 400 meaning bad request
+                .send({
+                    success: false,
+                    message: error.message
+                })
+        } else {
+            res
+                .status(500)
+                .send({
+                    success: false,
+                    message: error.message
+                })
+        }
     }
 }
 

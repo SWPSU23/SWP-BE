@@ -21,7 +21,7 @@ const createProductDetails = async (product) => {
     const { error, value } = productSchema.validate(product)
     if (error) {
         global.logger.error(`Model - Error validate product: ${error}`)
-        throw error;
+        throw new Error(error);
     } else {
         try {
             const results = await pool.setData(queries.Product.createProductDetail, [

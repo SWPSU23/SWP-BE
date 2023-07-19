@@ -17,20 +17,21 @@ const createEmployeeDetail = async (req, res) => {
                 data: results
             })
     } catch (error) {
-
-        if (error.message === "Email is existed" || error.message === "Phone number is existed") {
+        if (error.message.includes("ValidationError")) {
             res
-                .status(400)
+                .status(400) // 400 meaning bad request
+                .send({
+                    success: false,
+                    message: error.message
+                })
+        } else {
+            res
+                .status(500)
                 .send({
                     success: false,
                     message: error.message
                 })
         }
-
-        res.status(500).send({
-            success: false,
-            message: error.message
-        })
     }
 }
 
@@ -75,13 +76,13 @@ const getEmployeeDetail = async (req, res) => {
 
 const updateEmployeeDetail = async (req, res) => {
     try {
-        const results = employeesModel.updateEmployeeDetail(
-            await employeesValidation.validateUpdateEmployee(
-                req.body,
-                req.params.id
-            ),
-            req.params.id
-        );
+        const results = await employeesModel
+            .updateEmployeeDetail(
+                await employeesValidation.validateUpdateEmployee(
+                    req.body,
+                    req.params.id
+                ),
+                req.params.id);
         res
             .status(200)
             .send({
@@ -89,22 +90,25 @@ const updateEmployeeDetail = async (req, res) => {
                 data: results
             })
     } catch (error) {
-        if (error.message === "Email is existed" || error.message === "Phone number is existed") {
+
+        if (error.message.includes("ValidationError")) {
             res
                 .status(400) // 400 meaning bad request
                 .send({
                     success: false,
                     message: error.message
                 })
+        } else {
+            res
+                .status(500)
+                .send({
+                    success: false,
+                    message: error.message
+                })
         }
-        res
-            .status(500)
-            .send({
-                success: false,
-                message: error.message
-            })
     }
 }
+
 
 const deleteEmployeeDetail = async (req, res) => {
     try {
