@@ -11,21 +11,27 @@ const createListOrderProduct = async (req, res) => {
                         req.body.products
                     ),
                 req.body.order);
-        res.status(200).send({
-            success: true,
-            data: results
-        })
+        res
+            .status(200)
+            .send({
+                success: true,
+                data: results
+            })
     } catch (error) {
-        if (error.message.includes('out of stock')) {
-            res.status(400).send({
+        if (error.message.includes('ValidationError')) {
+            res
+                .status(400)
+                .send({
+                    success: false,
+                    message: error.message
+                })
+        }
+        res
+            .status(500)
+            .send({
                 success: false,
                 message: error.message
             })
-        }
-        res.status(500).send({
-            success: false,
-            message: error.message
-        })
     }
 }
 

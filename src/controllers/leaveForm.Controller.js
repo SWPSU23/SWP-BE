@@ -1,4 +1,5 @@
 const leaveFormModel = require('../models/leaveForm.Model');
+const leaveFormValidator = require('../validators/leaveForm.Validator');
 
 const getAllLeaveForm = async (req, res) => {
     try {
@@ -15,7 +16,11 @@ const getAllLeaveForm = async (req, res) => {
 
 const createLeaveForm = async (req, res) => {
     try {
-        const data = await leaveFormModel.createLeaveForm(req.body);
+        const data = await leaveFormModel
+            .createLeaveForm(
+                await leaveFormValidator.validadteCrateLeaveForm(req.body)
+            );
+
         res
             .status(201)
             .json(data);
@@ -28,7 +33,10 @@ const createLeaveForm = async (req, res) => {
 
 const updateLeaveForm = async (req, res) => {
     try {
-        const data = await leaveFormModel.updateLeaveForm(req.body, req.params.id);
+        const data = await leaveFormModel
+            .updateLeaveForm(
+                await leaveFormValidator.valiateUpdateLeaveForm(req.body),
+                req.params.id);
         res
             .status(200)
             .json(data);

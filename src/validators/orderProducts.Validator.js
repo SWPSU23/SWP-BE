@@ -11,7 +11,7 @@ const validateCheckQuantityProduct = async (products) => {
                     [product.product_id]
                 );
             if (product_detail.stock < product.quantity) {
-                throw new Error(`Product ${product.product_id} is out of stock`);
+                throw new Error(`ValidationError: Product ${product_detail.name} is out of stock`);
             } else {
                 valid_products.push({
                     product_id: product.product_id,
@@ -24,8 +24,8 @@ const validateCheckQuantityProduct = async (products) => {
         })
         return valid_products;
     } catch (error) {
-        global.logger.error(`Validation - Error check quantity product: ${error}`);
-        throw new Error(error.message);
+        global.logger.error(`ValidationError: Error check quantity product: ${error}`);
+        throw error;
     }
 }
 module.exports = {

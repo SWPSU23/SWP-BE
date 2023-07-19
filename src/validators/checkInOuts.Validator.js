@@ -26,10 +26,10 @@ const validateUpdateCheckIn = async (worksheet_id) => {
         // check if check in time is valid
         if (check_in < start_time) {
             global.logger.error("Validation - Can't check out right now: ");
-            throw { message: "Can't check in right now" };
+            throw new Error(`ValidationError: Can't check in right now`);
         } else if (check_in > latest_time) {
             global.logger.error("Validation - Out of time to check in: ");
-            throw { message: "Out of time to check in" };
+            throw new Error(`ValidationError: Out of time to check in`);
         } else {
             global.logger.info("Validation - Can check in right now: ");
             return time.timeStampToDay(check_in);
@@ -59,10 +59,10 @@ const validateUpdateCheckOut = async (worksheet_id) => {
         // check if check in time is valid
         if (check_out < start_time) {
             global.logger.error("Validation - Can't check out right now: ");
-            throw ({ message: "Can't check out right now" });
+            throw new Error(`ValidationError: Can't check out right now`);
         } else if (check_out > latest_time) {
             global.logger.error("Validation - Out of time to check out: ");
-            throw ({ message: "Out of time to check out" });
+            throw new Error(`ValidationError: Out of time to check out`);
         } else {
             global.logger.info("Validation - Can check out right now: ");
             return (time.timeStampToDay(check_out));

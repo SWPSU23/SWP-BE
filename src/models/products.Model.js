@@ -5,7 +5,7 @@ const Joi = require('joi')
 
 const productSchema = Joi.object({
     name: Joi.string().min(5).max(64).required().trim(),
-    description: Joi.string().required().min(5).max(102).trim(),
+    description: Joi.string().required().min(5).max(10240).trim(),
     unit: Joi.string().required().min(1).max(32).trim(),
     cost_price: Joi.number().required().min(5000),
     stock: Joi.number().integer().required().min(1),
@@ -121,7 +121,7 @@ const updateProductByID = async (id, productUpdate) => {
         const { error, value } = productSchema.validate(productUpdate);
         if (error) {
             global.logger.error(`Model - Error validate product: ${error}`)
-            throw error;
+            throw new Error(error);
         } else {
             const results = await pool
                 .setData(
@@ -158,7 +158,7 @@ const searchProductBy = async (searchBy, keywords) => {
     try {
         const results = await pool
             .getData(
-                queries.Product.searchProductBy(searchBy, keywords),
+                queries.Product.searchProductBy(searchBy.trim(), keywords.trim()),
                 []
             );
         global.logger.info(`Model - Search product by ${searchBy} success: ${JSON.stringify(results)}`);

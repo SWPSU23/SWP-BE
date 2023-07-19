@@ -36,16 +36,23 @@ const createWorksheet = async (data) => {
                 .getData(
                     queries.Worksheet.getCoefficient,
                     [
-                        data.worksheet.sheet_id,
+                        value.sheet_id,
                         results.insertId,
                         data.role
                     ],
                 );
-
-            if (results_coffiecitent[0].isSpecialDay === 'yes') {
-                value.coefficient = 3
-            } else {
-                value.coefficient = results_coffiecitent[0].coefficient
+            // check sheet is sheet 3
+            if (value.sheet_id === 3) {
+                // check day is sunday
+                if (time.getDayOfWeek(value.date) === 'Sunday') {
+                    value.coefficient = 2;
+                }
+                // check day is holiday
+                if (results_coffiecitent[0].isSpecialDay === 'yes') {
+                    value.coefficient = 3;
+                } else {
+                    value.coefficient = results_coffiecitent[0].coefficient
+                }
             }
             // update coefficient
             await pool.
@@ -120,7 +127,6 @@ const getWorkSheetOfWeek = async (start_date, end_date, role) => {
                 })
             }
         }
-        global.logger.info(`Model - Get worksheet of week successfully:`);
         return data;
     } catch (error) {
         global.logger.error(`Model - Error query get worksheet of week: ${error}`);

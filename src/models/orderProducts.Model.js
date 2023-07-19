@@ -23,7 +23,7 @@ const createListOrderProduct = async (order_id, valid_products, orderUpdate) => 
         const { error, value } = Joi.array().items(orderProductSchema).validate(products);
         if (error) {
             global.logger.error(`Model - Error validate create list order product: ${error}`);
-            throw new Error(error.message);
+            throw new Error(error);
         } else {
             // convert value to array
             const values = value.map((value) =>
@@ -60,7 +60,7 @@ const createListOrderProduct = async (order_id, valid_products, orderUpdate) => 
         }
     } catch (error) {
         global.logger.error(`Model - Error create list order product: ${error}`);
-        throw new Error(error.message);
+        throw error;
     }
 }
 
