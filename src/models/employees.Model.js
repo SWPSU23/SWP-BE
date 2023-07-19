@@ -27,6 +27,8 @@ const createEmployeeDetail = async (employee_detail) => {
                 length: 10,
                 numbers: true
             });
+            // password
+            const password = value.password;
             // hash password
             value.password = await bcrypt.hash(value.password, 10);
             const results = await pool.setData(
@@ -43,6 +45,8 @@ const createEmployeeDetail = async (employee_detail) => {
                 ]
             )
             global.logger.info(`Model - Create employee success: ${results}`)
+            // handle send mail to employee
+            global.logger.info(`Model - Pass: ${password}`)
             return results;
         }
     } catch (error) {
@@ -80,7 +84,7 @@ const getListEmployee = async (page_index) => {
         return data;
     } catch (error) {
         global.logger.error(`Model - Error getListEmployee: ${error}`);
-        throw new Error(error);
+        throw error;
     }
 }
 
@@ -95,7 +99,7 @@ const getEmployeeDetail = async (employee_id) => {
         return results[0];
     } catch (error) {
         global.logger.error(`Model - Error getEmployeeDetail: ${error}`);
-        throw new Error(error);
+        throw error;
     }
 }
 
@@ -136,7 +140,7 @@ const deleteEmployeeDetail = async (employee_id) => {
         return results;
     } catch (error) {
         global.logger.error(`Model - Error deleteEmployeeDetail: ${error}`);
-        throw new Error(error);
+        throw error;
     }
 }
 
@@ -148,12 +152,10 @@ const searchEmployeeBy = async (searchBy, keywords) => {
                 queries.Employee.searchEmployeeBy(searchBy, keywords),
                 []
             );
-        global.logger.info(`Model - Search employee success: ${JSON.stringify(results)}`);
-
         return results;
     } catch (error) {
         global.logger.error(`Model - Error searchEmployeeBy: ${error}`);
-        throw new Error(error);
+        throw error;
     }
 }
 

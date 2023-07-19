@@ -89,32 +89,6 @@ router
  *         - order_id
  *         - products
  *         - order
- * 
- *     UpdateOrderProductsRequest:
- *       type: object
- *       properties:
- *         order:
- *           type: object
- *           properties:
- *             order_id:
- *               type: string
- *             employee_id:
- *               type: string
- *             total_price:
- *               type: number
- *         orderProduct:
- *           type: array
- *           items:
- *             type: object
- *             properties:
- *               id:
- *                 type: string
- *               quantity:
- *                 type: integer
- *               unit_price:
- *                 type: number
- *               total:
- *                 type: number
  */
 
 module.exports = router;

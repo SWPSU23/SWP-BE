@@ -14,7 +14,7 @@ const productSchema = Joi.object({
     status: Joi.string().default('available'),
     image: Joi.string().min(32).max(32).required(),
     create_at: Joi.string().default(time.getNow),
-    expired_at: Joi.string().required(),
+    expired_at: Joi.string().required().pattern(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/),
 });
 
 const createProductDetails = async (product) => {
