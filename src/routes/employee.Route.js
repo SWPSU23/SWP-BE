@@ -62,7 +62,6 @@ router
  *             name: huynh chi bao
  *             age: 17
  *             email_address: bb@gmail.com
- *             password: hcb123
  *             phone: "1234567890"
  *             base_salary: 1000
  *             role: manager      
@@ -113,7 +112,6 @@ router
  *             name: huynh chi bao
  *             age: 17
  *             email_address: bb@gmail.com
- *             password: hcb123
  *             phone: 1234567890
  *             base_salary: 1000
  *             role: manager      
@@ -182,9 +180,6 @@ router
  *         email_address:
  *           type: string
  *           format: email
- *         password:
- *           type: string
- *           minLength: 5
  *         phone:
  *           type: string
  *         base_salary:
@@ -196,7 +191,6 @@ router
  *         - name
  *         - age
  *         - email_address
- *         - password
  *         - phone
  *         - base_salary
  *         - role

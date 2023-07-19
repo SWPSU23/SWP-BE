@@ -4,18 +4,18 @@ const time = require('../utilities/timeHelper')
 const Joi = require('joi')
 
 const productSchema = Joi.object({
-    name: Joi.string().min(5).max(32).required(),
-    description: Joi.string().required().min(5).max(102),
-    unit: Joi.string().required().min(1).max(32),
-    cost_price: Joi.number().required().min(100),
+    name: Joi.string().min(5).max(64).required().trim(),
+    description: Joi.string().required().min(5).max(102).trim(),
+    unit: Joi.string().required().min(1).max(32).trim(),
+    cost_price: Joi.number().required().min(5000),
     stock: Joi.number().integer().required().min(1),
-    retail_price: Joi.number().required().min(100),
-    category: Joi.string().required(),
+    retail_price: Joi.number().required().min(10000),
+    category: Joi.string().min(3).max(64).required().trim(),
     status: Joi.string().default('available'),
     image: Joi.string().min(32).max(32).required(),
     create_at: Joi.string().default(time.getNow),
     expired_at: Joi.string().required(),
-})
+});
 
 const createProductDetails = async (product) => {
     const { error, value } = productSchema.validate(product)
@@ -84,7 +84,7 @@ const getListProduct = async (page_index) => {
 
     } catch (error) {
         global.logger.error(`Model - Error query getListProduct: ${error}`)
-        throw error({ message: error })
+        throw error;
     }
 
 }
@@ -96,25 +96,46 @@ const getProductByID = async (id) => {
                 queries.Product.getProductByID,
                 [id]
             );
-        global.logger.info(`Model - Get product by id success: ${JSON.stringify(results[0])}`);
-        return results[0];
+        const data = {
+            id: results[0].id,
+            name: results[0].name,
+            description: results[0].description,
+            unit: results[0].unit,
+            cost_price: results[0].cost_price,
+            reatail_price: results[0].reatail_price,
+            stock: results[0].stock,
+            category: results[0].category,
+            image: results[0].image,
+            create_at: time.timeStampToDay(results[0].create_at),
+            expired_at: time.timeStampToDay(results[0].expired_at),
+            status: results[0].status
+        }
+        return data;
     } catch (error) {
         global.logger.error(`Model - Error query getProductByID: ${error}`)
-        throw error({ message: error })
+        throw error;
     }
 }
 const updateProductByID = async (id, productUpdate) => {
     try {
-        const results = await pool
-            .setData(
-                queries.Product.updateProductByID,
-                [productUpdate, id]
-            );
-        global.logger.info(`Model - Update product by id success: ${JSON.stringify(results)}`);
-        return results;
+        const { error, value } = productSchema.validate(productUpdate);
+        if (error) {
+            global.logger.error(`Model - Error validate product: ${error}`)
+            throw error;
+        } else {
+            const results = await pool
+                .setData(
+                    queries.Product.updateProductByID,
+                    [
+                        value,
+                        id
+                    ]
+                );
+            return results;
+        }
     } catch (error) {
         global.logger.error(`Model - Error query updateProductByID: ${error}`)
-        throw error({ message: error })
+        throw error;
     }
 }
 
@@ -129,7 +150,7 @@ const deleteProductByID = async (id) => {
         return results;
     } catch (error) {
         global.logger.error(`Model - Error query deleteProductByID: ${error}`)
-        throw error({ message: error })
+        throw error;
     }
 }
 
@@ -144,7 +165,7 @@ const searchProductBy = async (searchBy, keywords) => {
         return results;
     } catch (error) {
         global.logger.error(`Model - Error query searchProductBy: ${error}`)
-        throw error({ message: error })
+        throw error;
     }
 }
 

@@ -171,19 +171,20 @@ router
  *           maxLength: 32
  *         cost_price:
  *           type: number
- *           minimum: 100
+ *           minimum: 5000
  *         stock:
  *           type: integer
  *           minimum: 1
  *         retail_price:
  *           type: number
- *           minimum: 100
+ *           minimum: 10000
  *         category:
  *           type: string
+ *           maxLength: 64
  *         image:
  *           type: string
- *           minLength: 1
- *           maxLength: 102
+ *           minLength: 32
+ *           maxLength: 32
  *         expired_at:
  *           type: string
  *       required:

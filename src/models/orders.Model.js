@@ -7,9 +7,9 @@ const orderSchema = Joi.object({
     employee_id: Joi.number().integer().required(),
     create_at: Joi.string().default(time.getNow),
     product_quantity: Joi.number().integer().default(0),
-    total_price: Joi.number().default(0),
+    total_price: Joi.number().min(10000).default(0),
     status: Joi.string().default('succeed')
-})
+});
 
 const getListOrder = async (page_index) => {
     try {

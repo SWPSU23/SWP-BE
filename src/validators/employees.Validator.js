@@ -1,6 +1,5 @@
 const queries = require('../queries/queryModal');
 const pool = require('../services/query.Service');
-const bcrypt = require('bcrypt');
 
 const validateCreateEmployee = async (data) => {
     try {
@@ -60,12 +59,6 @@ const validateUpdateEmployee = async (data, id) => {
             throw new Error(`Phone already exists: ${check_phone[0].phone} of ${check_phone[0].name}`);
         }
         // check if password is existed
-        if (data.password) {
-            // handle send mail to employee
-
-            // hash passwords
-            data.password = await bcrypt.hash(data.password, 10);
-        }
         return data;
     } catch (error) {
         global.logger.error(`Validation - Error update employee: ${error}`);

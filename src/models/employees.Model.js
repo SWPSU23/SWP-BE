@@ -2,23 +2,41 @@ const pool = require('../services/query.Service');
 const queries = require('../queries/queryModal');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
+const generatePassWord = require(`generate-password`);
+
 const employeeSchema = Joi.object({
-    name: Joi.string().min(3).required(),
+    name: Joi.string().min(3).required().trim(),
     age: Joi.number().min(16).required(),
-    email_address: Joi.string().email().required(),
-    password: Joi.string().min(10).required(),
+    email_address: Joi.string().email().required().trim(),
+    password: Joi.string().min(10).max(10).required().trim(),
     phone: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required(),
     base_salary: Joi.number().min(1000).required(),
-    role: Joi.string().required(),
+    role: Joi.string().required().trim(),
+    status: Joi.string().default('working'),
+});
+
+const employeeUpdateSchema = Joi.object({
+    name: Joi.string().min(3).required().trim(),
+    age: Joi.number().min(16).required(),
+    email_address: Joi.string().email().required().trim(),
+    phone: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required(),
+    base_salary: Joi.number().min(1000).required(),
+    role: Joi.string().required().trim(),
     status: Joi.string().default('working'),
 })
 
 const createEmployeeDetail = async (employee_detail) => {
     try {
+        // gererate password
+        employee_detail.password = generatePassWord.generate({
+            length: 10,
+            numbers: true
+        });
+        // validate data
         const { error, value } = employeeSchema.validate(employee_detail);
         if (error) {
             global.logger.error(`Model - Error validate : ${error}`);
-            throw new Error(error);
+            throw error;
         } else {
             // handle send mail to employee
 
@@ -75,7 +93,7 @@ const getListEmployee = async (page_index) => {
         return data;
     } catch (error) {
         global.logger.error(`Model - Error getListEmployee: ${error}`);
-        throw new Error(error.message);
+        throw new Error(error);
     }
 }
 
@@ -86,29 +104,34 @@ const getEmployeeDetail = async (employee_id) => {
                 queries.Employee.getEmployeeDetails,
                 [employee_id]
             );
-        global.logger.info(`Model - Get employee detail success: ${results[0]}`);
+        global.logger.info(`Model - Get employee detail success: ${JSON.stringify(results[0])}`);
         return results[0];
     } catch (error) {
         global.logger.error(`Model - Error getEmployeeDetail: ${error}`);
-        throw new Error(error.message);
+        throw new Error(error);
     }
 }
 
 const updateEmployeeDetail = async (employee_data, employee_id) => {
     try {
-        const results = await pool
-            .setData(
-                queries.Employee.updateEmployeeDetail,
-                [
-                    employee_data,
-                    employee_id
-                ]
-            );
-        global.logger.info(`Model - Update employee success: ${results}`);
-        return results;
+        const { error, value } = employeeUpdateSchema.validate(employee_data);
+        if (error) {
+            global.logger.error(`Model - Error validate : ${error}`);
+            throw error;
+        } else {
+            const results = await pool
+                .setData(
+                    queries.Employee.updateEmployeeDetail,
+                    [
+                        value,
+                        employee_id
+                    ]
+                );
+            return results;
+        }
     } catch (error) {
         global.logger.error(`Model - Error updateEmployeeDetail: ${error}`);
-        throw new Error(error.message);
+        throw new Error(error);
     }
 }
 
@@ -125,7 +148,7 @@ const deleteEmployeeDetail = async (employee_id) => {
         return results;
     } catch (error) {
         global.logger.error(`Model - Error deleteEmployeeDetail: ${error}`);
-        throw new Error(error.message);
+        throw new Error(error);
     }
 }
 
@@ -142,7 +165,7 @@ const searchEmployeeBy = async (searchBy, keywords) => {
         return results;
     } catch (error) {
         global.logger.error(`Model - Error searchEmployeeBy: ${error}`);
-        throw new Error(error.message);
+        throw new Error(error);
     }
 }
 
