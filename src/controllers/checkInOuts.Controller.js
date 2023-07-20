@@ -16,12 +16,22 @@ const updateCheckIn = async (req, res) => {
                 data: results
             })
     } catch (error) {
-        res
-            .status(500)
-            .json({
-                success: false,
-                message: error.message
-            })
+        if (error.message.includes("ValidationError")) {
+            res
+                .status(400)
+                .json({
+                    success: false,
+                    message: error.message
+                })
+        } else {
+            res
+                .status(500)
+                .json({
+                    success: false,
+                    message: error.message
+                })
+        }
+
     }
 }
 
@@ -41,12 +51,21 @@ const updateCheckOut = async (req, res) => {
                 data: results
             })
     } catch (error) {
-        res
-            .status(500)
-            .json({
-                success: false,
-                message: error.message
-            })
+        if (error.message.includes("ValidationError")) {
+            res
+                .status(400)
+                .json({
+                    success: false,
+                    message: error.message
+                })
+        } else {
+            res
+                .status(500)
+                .json({
+                    success: false,
+                    message: error.message
+                })
+        }
     }
 }
 

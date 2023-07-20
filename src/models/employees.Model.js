@@ -2,26 +2,33 @@ const pool = require('../services/query.Service');
 const queries = require('../queries/queryModal');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
+const generatePassWord = require(`generate-password`);
+
 const employeeSchema = Joi.object({
-    name: Joi.string().min(3).required(),
+    name: Joi.string().min(3).required().trim(),
     age: Joi.number().min(16).required(),
-    email_address: Joi.string().email().required(),
-    password: Joi.string().min(10).required(),
+    email_address: Joi.string().email().required().trim(),
     phone: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required(),
-    base_salary: Joi.number().min(1000).required(),
-    role: Joi.string().required(),
+    base_salary: Joi.number().min(20000).required(),
+    role: Joi.string().required().trim(),
     status: Joi.string().default('working'),
-})
+});
 
 const createEmployeeDetail = async (employee_detail) => {
     try {
+        // validate data
         const { error, value } = employeeSchema.validate(employee_detail);
         if (error) {
             global.logger.error(`Model - Error validate : ${error}`);
             throw new Error(error);
         } else {
-            // handle send mail to employee
-
+            // generate password
+            value.password = generatePassWord.generate({
+                length: 10,
+                numbers: true
+            });
+            // password
+            const password = value.password;
             // hash password
             value.password = await bcrypt.hash(value.password, 10);
             const results = await pool.setData(
@@ -38,11 +45,13 @@ const createEmployeeDetail = async (employee_detail) => {
                 ]
             )
             global.logger.info(`Model - Create employee success: ${results}`)
+            // handle send mail to employee
+            global.logger.info(`Model - Pass: ${password}`)
             return results;
         }
     } catch (error) {
         global.logger.error(`Model - Error createEmployeeDetail: ${error}`);
-        throw new Error(error);
+        throw error;
     }
 }
 
@@ -75,7 +84,7 @@ const getListEmployee = async (page_index) => {
         return data;
     } catch (error) {
         global.logger.error(`Model - Error getListEmployee: ${error}`);
-        throw new Error(error.message);
+        throw error;
     }
 }
 
@@ -86,29 +95,70 @@ const getEmployeeDetail = async (employee_id) => {
                 queries.Employee.getEmployeeDetails,
                 [employee_id]
             );
-        global.logger.info(`Model - Get employee detail success: ${results[0]}`);
+        global.logger.info(`Model - Get employee detail success: ${JSON.stringify(results[0])}`);
         return results[0];
     } catch (error) {
         global.logger.error(`Model - Error getEmployeeDetail: ${error}`);
-        throw new Error(error.message);
+        throw error;
     }
 }
 
 const updateEmployeeDetail = async (employee_data, employee_id) => {
     try {
-        const results = await pool
-            .setData(
-                queries.Employee.updateEmployeeDetail,
-                [
-                    employee_data,
-                    employee_id
-                ]
-            );
-        global.logger.info(`Model - Update employee success: ${results}`);
-        return results;
+        const { error, value } = employeeSchema.validate(employee_data);
+        if (error) {
+            global.logger.error(`Model - Error validate : ${error}`);
+            throw new Error(error);
+        } else {
+            const results = await pool
+                .setData(
+                    queries.Employee.updateEmployeeDetail,
+                    [
+                        value,
+                        employee_id
+                    ]
+                );
+            global.logger.info(`Model - Update employee success: ${results}`);
+            return results;
+        }
     } catch (error) {
         global.logger.error(`Model - Error updateEmployeeDetail: ${error}`);
-        throw new Error(error.message);
+        throw error;
+    }
+}
+
+const updatePassWord = async (email) => {
+    try {
+        const employee_detail = await pool
+            .getData(
+                queries.Validate.checkEmail,
+                [email]
+            );
+        if (employee_detail.length === 0) {
+            throw new Error(`ValidationError: Email is not exist`);
+        } else {
+            // generate password
+            const password = generatePassWord.generate({
+                length: 10,
+                numbers: true
+            });
+            // hash password
+            const hashPassword = await bcrypt.hash(password, 10);
+            // update password in database
+            const results = await pool
+                .setData(
+                    queries.Employee.updateEmployeeDetail,
+                    [
+                        { password: hashPassword },
+                        employee_detail[0].id
+                    ]
+                )
+            // handle send mail to employee
+            return results;
+        }
+    } catch (error) {
+        global.logger.error(`Model - Error updatePassWord: ${error}`);
+        throw error;
     }
 }
 
@@ -125,7 +175,7 @@ const deleteEmployeeDetail = async (employee_id) => {
         return results;
     } catch (error) {
         global.logger.error(`Model - Error deleteEmployeeDetail: ${error}`);
-        throw new Error(error.message);
+        throw error;
     }
 }
 
@@ -137,12 +187,10 @@ const searchEmployeeBy = async (searchBy, keywords) => {
                 queries.Employee.searchEmployeeBy(searchBy, keywords),
                 []
             );
-        global.logger.info(`Model - Search employee success: ${JSON.stringify(results)}`);
-
         return results;
     } catch (error) {
         global.logger.error(`Model - Error searchEmployeeBy: ${error}`);
-        throw new Error(error.message);
+        throw error;
     }
 }
 
@@ -152,5 +200,6 @@ module.exports = {
     getEmployeeDetail,
     updateEmployeeDetail,
     deleteEmployeeDetail,
-    searchEmployeeBy
+    searchEmployeeBy,
+    updatePassWord
 }

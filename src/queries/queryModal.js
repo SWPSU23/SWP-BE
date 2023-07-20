@@ -16,13 +16,13 @@ module.exports = {
 
         updateProductByID: 'UPDATE Product SET ?  WHERE id =?',
 
-        deleteProductByID:
-            "UPDATE Product SET status = 'unavailable' WHERE id =?",
+        deleteProductByID: "UPDATE Product SET status = 'unavailable' WHERE id =?",
 
         getProductByID: 'SELECT * FROM Product WHERE id = ?',
 
         searchProductBy: (searchBy, keywords) => {
-            return `SELECT * FROM Product WHERE ${searchBy} LIKE '%${keywords}%' ORDER BY expired_at ASC`
+            return `SELECT * FROM Product WHERE ${searchBy} LIKE '%${keywords}%' `
+                + ` ORDER BY status ASC, expired_at ASC`
         },
     },
 
@@ -45,7 +45,8 @@ module.exports = {
         getListEmployee: (page_index) => {
             return (
                 `SELECT *, (SELECT COUNT(*) FROM Employee) AS page` +
-                ` FROM Employee ORDER BY status ASC` +
+                ` FROM Employee` +
+                ` ORDER BY status ASC, role ASC` +
                 ` LIMIT 10 OFFSET ${(page_index - 1) * 10}`
             )
         },
@@ -54,11 +55,11 @@ module.exports = {
 
         updateEmployeeDetail: 'UPDATE Employee SET ? WHERE id = ?',
 
-        deleteEmployeeDetail:
-            "UPDATE Employee SET status = 'retired' WHERE id = ?",
+        deleteEmployeeDetail: "UPDATE Employee SET status = 'retired' WHERE id = ?",
 
         searchEmployeeBy: (searchBy, keywords) => {
-            return `SELECT * FROM Employee WHERE ${searchBy} LIKE '%${keywords}%'`
+            return `SELECT * FROM Employee WHERE ${searchBy} LIKE '%${keywords}%' ` +
+                `ORDER BY status ASC`
         },
     },
 

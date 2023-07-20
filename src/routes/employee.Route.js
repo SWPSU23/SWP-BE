@@ -14,6 +14,10 @@ router
     .get(employeesController.searchEmployeeBy)
 
 router
+    .route('/forgot-password')
+    .post(employeesController.updatePassWord)
+
+router
     .route('/:id')
     // get employee details
     .get(employeesController.getEmployeeDetail)
@@ -62,7 +66,6 @@ router
  *             name: huynh chi bao
  *             age: 17
  *             email_address: bb@gmail.com
- *             password: hcb123
  *             phone: "1234567890"
  *             base_salary: 1000
  *             role: manager      
@@ -71,6 +74,8 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  * 
  */
 
@@ -93,6 +98,8 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  * 
  *   put:
  *     summary: Update a employee
@@ -113,7 +120,6 @@ router
  *             name: huynh chi bao
  *             age: 17
  *             email_address: bb@gmail.com
- *             password: hcb123
  *             phone: 1234567890
  *             base_salary: 1000
  *             role: manager      
@@ -122,6 +128,8 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  * 
  *   delete:
  *     summary: Delete a employee
@@ -138,6 +146,8 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  */
 
 /**
@@ -163,7 +173,33 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  * 
+ */
+
+/**
+ * @swagger
+ * /employee/forgot-password:
+ *   post:
+ *     summary: Update password
+ *     description: Employee can access
+ *     tags: [Employees]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/Employee"
+ *           example:
+ *             email_address: bb@gmail.com       
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server errors
+ *                 
  */
 
 /**
@@ -182,9 +218,6 @@ router
  *         email_address:
  *           type: string
  *           format: email
- *         password:
- *           type: string
- *           minLength: 5
  *         phone:
  *           type: string
  *         base_salary:
@@ -196,7 +229,6 @@ router
  *         - name
  *         - age
  *         - email_address
- *         - password
  *         - phone
  *         - base_salary
  *         - role

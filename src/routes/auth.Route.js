@@ -27,7 +27,7 @@ router.get('/logout', authController.logout)
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/components/schemas/Authorization"
+ *             $ref: "#/components/schemas/Login"
  *     responses:
  *       200:
  *         description: Success
@@ -58,17 +58,17 @@ router.get('/logout', authController.logout)
  * @swagger
  * components:
  *   schemas:
- *     Authorization:
+ *     Login:
  *       type: object
  *       properties:
  *         phone:
  *           type: string
  *           minLength: 9
  *           maxLength: 32
- *           example: 1234567890
+ *           example: '0243567890'
  *         password:
  *           type: string
- *           example: $2b$10$ARPMP1cilWm7xvNBc2CzTOuXWE6WGPldnmF0nU21TcIEjcq7zNVi
+ *           example: OlHO7VO4lE
  *       required:
  *         - phone
  *         - password

@@ -48,10 +48,9 @@ const getListDayOfWeek = async () => {
             );
 
         const data = {
-            current_week: -1,
+            current_week: {},
             list_week: []
         };
-        let current_week = -1;
         for (let i = 0; i < result.length; i++) {
             if (i + 6 >= result.length) break;
             // day of list 
@@ -64,10 +63,12 @@ const getListDayOfWeek = async () => {
                     to_date: time.timeStampToDate(result[i + 6].date),
                 })
 
-                current_week++;
                 // get info of current day
                 if (getPossitionCurrentDay(result[i].date, result[i + 6].date)) {
-                    data.current_week = current_week;
+                    data.current_week = {
+                        from_date: time.timeStampToDate(result[i].date),
+                        to_date: time.timeStampToDate(result[i + 6].date),
+                    };
                 }
             }
             // get info of current day
