@@ -4,7 +4,7 @@ const authController = require('../controllers/auth.Controlller')
 
 router.post('/login', authController.login)
 router.get('/logout', authController.logout)
-
+router.get('/getUserInfo', authController.getUserInfo)
 
 /**
  * @swagger
@@ -53,6 +53,21 @@ router.get('/logout', authController.logout)
  *         description: Internal Server Error
  */
 
+/**
+ * @swagger
+ * /auth/getUserInfo:
+ *  get:
+ *      summary: Get user info
+ *      description: Get user info
+ *      tags: [Authorization]
+ *      responses:
+ *          200:
+ *            description: Success
+ *          400:
+ *            description: Bad request
+ *          500:
+ *            description: Internal Server Error
+ */
 
 /**
  * @swagger

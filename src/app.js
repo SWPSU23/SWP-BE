@@ -11,7 +11,7 @@ const cors = require('cors')
 const swaggerUi = require('swagger-ui-express')
 const swaggerSpec = require('./utilities/swagger')
 const apiRoute = require('./routes/index')
-// require('./utilities/tester')
+require('./utilities/tester')
 
 // setup parallel
 if (cluster.isMaster) {
