@@ -1,38 +1,43 @@
-const pool = require('../services/query.Service').getPool();
+const pool = require('../services/query.Service');
 const queries = require('../queries/queryModal');
 const time = require('../utilities/timeHelper');
 const moment = require('moment');
 
 
-const validateUpdateCheckIn = async (worksheet_id) => {
+const validateUpdateCheckIn = async (employee_id) => {
     try {
-        const results = await pool
+        // search for worksheet of employee
+        const date = time.getNowDate();
+        const hours = time.getNowTime();
+        const list_worksheet_of_day = await pool
             .getData(
-                queries.Worksheet.getWorksheetDetail,
-                [worksheet_id]
+                queries.Worksheet.getWorkSheetByDateAndEmployee(employee_id, date),
+                []
             );
-        // get current time set to check in
-        const check_in = moment(time.getNow(), 'YYYY-MM-DD HH:mm:ss');
-        global.logger.info(`Validation - Check in time: ${time.timeStampToHours(check_in)}`);
-        // get start time
-        const start_time = moment(results[0].start_time, 'YYYY-MM-DD HH:mm:ss')
-        global.logger.info(`Validation - Start time: ${time.timeStampToHours(start_time)}`);
-        // get earliest time to check in
-        const earliest_time = start_time.clone().subtract(30, 'minutes');
-        global.logger.info(`Validation - The earliest time to check in: ${time.timeStampToHours(earliest_time)}`);
-        // get latest time to check in
-        const latest_time = start_time.clone().add(10, 'minutes');
-        global.logger.info(`Validation - The latest time to check in: ${time.timeStampToHours(latest_time)}`);
-        // check if check in time is valid
-        if (check_in < start_time) {
-            global.logger.error("Validation - Can't check out right now: ");
-            throw new Error(`ValidationError: Can't check in right now`);
-        } else if (check_in > latest_time) {
-            global.logger.error("Validation - Out of time to check in: ");
-            throw new Error(`ValidationError: Out of time to check in`);
+        // check if employee has worksheet today
+        if (list_worksheet_of_day.length === 0) {
+            global.logger.error("Validation - Employee has no worksheet today: ");
+            throw new Error(`ValidationError: Employee has no worksheet today`);
         } else {
-            global.logger.info("Validation - Can check in right now: ");
-            return time.timeStampToDay(check_in);
+            list_worksheet_of_day.map((detail_worksheet_of_day) => {
+                const start_time = time.timeStampToHours(detail_worksheet_of_day.start_time);
+                // Convert the hours timestamp to 'HH:mm:ss' format
+
+                // check if employee has worksheet in this time
+                const earliest_time_to_check_in = moment(start_time, 'HH:mm:ss').subtract(30, 'minutes');
+                const latest_time_to_check_in = moment(start_time, 'HH:mm:ss').add(10, 'minutes');
+
+                // check if check in time is valid
+                if (hours > earliest_time_to_check_in && hours < latest_time_to_check_in) {
+                    return {
+                        worksheet_id: detail_worksheet_of_day.id,
+                        check_in: hours
+                    };
+                }
+                // check if check in time is invalid
+                global.logger.error("Validation - Can't check in right now: ");
+                throw new Error(`ValidationError: Can't check in right now`);
+            });
         }
     } catch (error) {
         global.logger.error(`Validation - Error query get worksheet detail: ${error}`);
@@ -41,31 +46,36 @@ const validateUpdateCheckIn = async (worksheet_id) => {
 }
 
 
-const validateUpdateCheckOut = async (worksheet_id) => {
+const validateUpdateCheckOut = async (employee_id) => {
     try {
-        const results = await pool
+        const date = time.getNowDate();
+        const hours = time.getNowTime();
+        const list_worksheet_of_day = await pool
             .getData(
-                queries.Worksheet.getWorksheetDetail,
-                [worksheet_id]
+                queries.Worksheet.getWorkSheetByDateAndEmployee(employee_id, date),
+                []
             );
-        const check_out = moment(time.getNow(), 'YYYY-MM-DD HH:mm:ss');
-        global.logger.info(`Validation - Check out time: ${time.timeStampToHours(check_out)}`);
-        // get start time
-        const start_time = moment(results[0].end_time, 'YYYY-MM-DD HH:mm:ss')
-        global.logger.info(`Validation - Start time: ${time.timeStampToHours(start_time)}`);
-        // get latest time to check out
-        const latest_time = start_time.clone().add(30, 'minutes');
-        global.logger.info(`Validation - The latest time to check out: ${time.timeStampToHours(latest_time)}`);
-        // check if check in time is valid
-        if (check_out < start_time) {
-            global.logger.error("Validation - Can't check out right now: ");
-            throw new Error(`ValidationError: Can't check out right now`);
-        } else if (check_out > latest_time) {
-            global.logger.error("Validation - Out of time to check out: ");
-            throw new Error(`ValidationError: Out of time to check out`);
+        // check if employee has worksheet today
+        if (list_worksheet_of_day.length === 0) {
+            global.logger.error("Validation - Employee has no worksheet today: ");
+            throw new Error(`ValidationError: Employee has no worksheet today`);
         } else {
-            global.logger.info("Validation - Can check out right now: ");
-            return (time.timeStampToDay(check_out));
+            list_worksheet_of_day.map((detail_worksheet_of_day) => {
+                const end_time = time.timeStampToHours(detail_worksheet_of_day.end_time);
+                // check if employee has worksheet in this time
+                const earliest_time_to_check_out = moment(end_time, 'HH:mm:ss').subtract(10, 'minutes');
+                const latest_time_to_check_out = moment(end_time, 'HH:mm:ss').add(30, 'minutes');
+                // check if check out time is valid
+                if (hours > earliest_time_to_check_out && hours < latest_time_to_check_out) {
+                    return {
+                        worksheet_id: detail_worksheet_of_day.id,
+                        check_out: hours
+                    };
+                }
+                // check if check out time is invalid
+                global.logger.error("Validation - Can't check out right now: ");
+                throw new Error(`ValidationError: Can't check out right now`);
+            })
         }
     } catch (error) {
         global.logger.error(`Validation - Error query get worksheet detail: ${error}`);

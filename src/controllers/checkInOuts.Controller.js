@@ -3,10 +3,10 @@ const checkInOutValidator = require('../validators/checkInOuts.Validator');
 
 const updateCheckIn = async (req, res) => {
     try {
-        const results = await checkInOutModel.updateCheckIn(req.params.worksheet_id,
+        const results = await checkInOutModel.updateCheckIn(
             await checkInOutValidator
                 .validateUpdateCheckIn(
-                    req.params.worksheet_id
+                    req.body.employee_id
                 )
         );
         res

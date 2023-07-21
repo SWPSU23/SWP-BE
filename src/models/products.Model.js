@@ -102,7 +102,7 @@ const getProductByID = async (id) => {
             description: results[0].description,
             unit: results[0].unit,
             cost_price: results[0].cost_price,
-            reatail_price: results[0].reatail_price,
+            retail_price: results[0].retail_price,
             stock: results[0].stock,
             category: results[0].category,
             image: results[0].image,

@@ -3,11 +3,11 @@ const router = express.Router()
 const checkInOutController = require('../controllers/checkInOuts.Controller')
 
 router
-    .route('/checkin/:worksheet_id')
+    .route('/checkin')
     .put(checkInOutController.updateCheckIn);
 
 router
-    .route('/checkout/:worksheet_id/')
+    .route('/checkout')
     .put(checkInOutController.updateCheckOut);
 
 /**
@@ -19,16 +19,19 @@ router
 
 /**
  * @swagger
- * /checkInOut/checkin/{worksheet_id}:
+ * /checkInOut/checkin:
  *   put:
  *     tags: [CheckInOut]
  *     summary: Update check in time
  *     description: Only employee can access
- *     parameters:
- *     - name: worksheet_id
- *       in: path
+ *     requestBody:
  *       required: true
- *       description: ID of worksheet
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/CheckInOut"
+ *           example:
+ *             employee_id: 1
  *     responses:
  *       200:
  *         description: Success
@@ -38,16 +41,19 @@ router
 
 /**
  * @swagger
- * /checkInOut/checkout/{worksheet_id}:
+ * /checkInOut/checkout:
  *   put:
  *     tags: [CheckInOut]
- *     summary: Update check out time
+ *     summary: Update check in time
  *     description: Only employee can access
- *     parameters:
- *     - name: worksheet_id
- *       in: path
+ *     requestBody:
  *       required: true
- *       description: ID of worksheet
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/CheckInOut"
+ *           example:
+ *             employee_id: 1
  *     responses:
  *       200:
  *         description: Success
@@ -55,6 +61,18 @@ router
  *         description: Bad request
  */
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CheckInOut:
+ *       type: object
+ *       properties:
+ *         employee_id:
+ *           type: integer
+ *       required:
+ *         - employee_id
+ */
 
 
 module.exports = router

@@ -151,6 +151,15 @@ module.exports = {
             )
         },
 
+        getWorkSheetByDateAndEmployee: (employee_id, date) => {
+            return (
+                `SELECT ws.*, s.start_time, s.end_time FROM Worksheet ws` +
+                ` JOIN Sheet s ON s.id = ws.sheet_id ` +
+                ` JOIN Employee E on ws.employee_id = E.id AND E.role = s.role` +
+                ` WHERE ws.date = '${date} 00:00:00' AND ws.employee_id = ${employee_id}`
+            )
+        },
+
         updateWorksheet: 'UPDATE `Worksheet` SET ? WHERE `id` = ?',
 
         deleteWorksheet: 'DELETE FROM `Worksheet` WHERE `id` = ?',
