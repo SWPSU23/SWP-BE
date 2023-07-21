@@ -41,6 +41,7 @@ const createWorksheet = async (data) => {
                         data.role
                     ],
                 );
+            value.coefficient = results_coffiecitent[0].coefficient;
             // check sheet is sheet 3
             if (value.sheet_id === 3) {
                 // check day is sunday
@@ -50,8 +51,6 @@ const createWorksheet = async (data) => {
                 // check day is holiday
                 if (results_coffiecitent[0].isSpecialDay === 'yes') {
                     value.coefficient = 3;
-                } else {
-                    value.coefficient = results_coffiecitent[0].coefficient
                 }
             }
             // update coefficient

@@ -9,7 +9,7 @@ const productSchema = Joi.object({
     unit: Joi.string().required().min(1).max(32).trim(),
     cost_price: Joi.number().required().min(5000),
     stock: Joi.number().integer().required().min(1),
-    retail_price: Joi.number().required().min(10000),
+    retail_price: Joi.number().required().min(10000).greater(Joi.ref('cost_price')),
     category: Joi.string().min(3).max(64).required().trim(),
     status: Joi.string().default('available'),
     image: Joi.string().min(32).max(32).required(),
