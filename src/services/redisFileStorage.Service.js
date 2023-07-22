@@ -21,7 +21,6 @@ const saveFile = (file, type) => {
 }
 
 const getFile = async (id, type) => {
-    global.logger.info(`File ID: ${id}`)
     return await redisClient.hGetAll(
         redis.commandOptions({
             returnBuffers: true,

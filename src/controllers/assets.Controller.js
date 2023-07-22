@@ -31,9 +31,6 @@ const getProductImage = async (req, res) => {
         .getFile(req.params.id, fileTypes.product.image)
         .then((result) => {
             // write header mimetype
-            // result = JSON.parse(result)
-            // print cluster id here to check load balancing
-            global.logger.info(`Cluster id: ${process.pid}`)
             res.setHeader('Content-Type', 'image/jpeg')
             res.status(200).send(Buffer.from(result.data))
         })

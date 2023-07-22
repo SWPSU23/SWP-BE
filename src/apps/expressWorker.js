@@ -20,7 +20,6 @@ const session = require('express-session')
 const { createServer } = require('http')
 const RedisStore = require('connect-redis').default
 const bodyParser = require('body-parser')
-// eslint-disable-next-line no-unused-vars
 const cors = require('cors')
 const swaggerUi = require('swagger-ui-express')
 const swaggerSpec = require('../utilities/swagger')
