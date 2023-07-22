@@ -1,7 +1,7 @@
 const redisHelper = require('../services/redisFileStorage.Service')
 const fileTypes = require('../configs/enumeration.Config').fileTypes
 
-const uploadProductImage = (req, res) => {
+const uploadProductImage = async (req, res) => {
     // Check if file is present
     if (!req.file) {
         res.status(400).send('No file uploaded.')
@@ -26,12 +26,14 @@ const uploadProductImage = (req, res) => {
         })
 }
 
-const getProductImage = (req, res) => {
+const getProductImage = async (req, res) => {
     redisHelper
         .getFile(req.params.id, fileTypes.product.image)
         .then((result) => {
             // write header mimetype
             // result = JSON.parse(result)
+            // print cluster id here to check load balancing
+            global.logger.info(`Cluster id: ${process.pid}`)
             res.setHeader('Content-Type', 'image/jpeg')
             res.status(200).send(Buffer.from(result.data))
         })

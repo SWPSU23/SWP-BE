@@ -10,17 +10,23 @@ const redisClient = redis.createClient({
   database: config.redis.sessionDatabase,
 })
 redisClient.connect()
-global.redis = redis
-global.redisClient = redisClient
-global.config = config
-global.logger = logger
-// init express app
-require('./src/app')
+redisClient.on('error', (err) => {
+  // reconnect redis
+  logger.error('Redis error: ', err)
+  redisClient.quit()
+  redisClient.connect()
+})
+global.redis = redis // set redis to global
+global.redisClient = redisClient // set redis client to global
+global.config = config // set config to global
+global.logger = logger // set logger to global
+// init express app cluster
+require('./src/apps/expressCluster')
 // init schedule job
-require('./src/utilities/schedule')
+require('./src/apps/schedule')
 // init socket.io
-require('./src/socket')
-// init global error handler
+require('./src/apps/socketWorker')
+// init global error handler  
 let server = global.server
 const exitHandler = () => {
   if (server) {

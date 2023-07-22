@@ -1,0 +1,31 @@
+const cluster = require('cluster')
+const os = require('os')
+cluster.schedulingPolicy = cluster.SCHED_RR // round robin scheduling
+cluster.setupPrimary({
+    exec: 'src/apps/expressWorker.js',
+})
+if (cluster.isPrimary) {
+    global.logger.info(
+        `server is running on ${
+            global.config.isDev ? 'Development' : 'Production'
+        } mode`
+    )
+    global.logger.info(`Primary ${process.pid} is running`)
+    const numWorkers = global.config.isDev ? 1 : os.availableParallelism()
+    global.logger.info(`Master cluster setting up ${numWorkers} workers...`)
+    for (let i = 0; i < numWorkers; i++) {
+        const worker = cluster.fork()
+    }
+    cluster.on('online', (worker) => {
+        // global.logger.info(`Worker ${worker.process.pid} is online`)
+    })
+    cluster.on('exit', (worker, code, signal) => {
+        global.logger.info(
+            `Worker ${worker.process.pid} died with code: ${code}, and signal: ${signal}`
+        )
+        // delay 5s to restart
+        setTimeout(() => {
+            worker = cluster.fork()
+        }, 5000)
+    })
+}
