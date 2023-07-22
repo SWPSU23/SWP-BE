@@ -20,12 +20,10 @@ global.redis = redis // set redis to global
 global.redisClient = redisClient // set redis client to global
 global.config = config // set config to global
 global.logger = logger // set logger to global
-// init express app cluster
-require('./src/apps/expressCluster')
+// init app cluster
+require('./src/apps/appCluster')
 // init schedule job
 require('./src/apps/schedule')
-// init socket.io
-require('./src/apps/socketWorker')
 // init global error handler  
 let server = global.server
 const exitHandler = () => {

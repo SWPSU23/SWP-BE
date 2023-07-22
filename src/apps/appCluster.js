@@ -2,7 +2,7 @@ const cluster = require('cluster')
 const os = require('os')
 cluster.schedulingPolicy = cluster.SCHED_RR // round robin scheduling
 cluster.setupPrimary({
-    exec: 'src/apps/expressWorker.js',
+    exec: 'src/apps/appWorker.js',
 })
 if (cluster.isPrimary) {
     global.logger.info(
