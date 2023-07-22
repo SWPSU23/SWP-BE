@@ -274,6 +274,8 @@ module.exports = {
                 ` JOIN Sheet s ON ws.sheet_id = s.id` +
                 ` JOIN CheckInOut c ON ws.id = c.worksheet_id` +
                 ` WHERE ws.date = '${date} 00:00:00' AND s.role = '${role}' AND ws.sheet_id = ${sheet_id}`
-        }
+        },
+
+        getListProduct: "SELECT * FROM `Product` WHERE status = 'available' AND stock > 0",
     }
 }
