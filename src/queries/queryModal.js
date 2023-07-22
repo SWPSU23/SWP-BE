@@ -266,5 +266,14 @@ module.exports = {
         checkEmail: 'SELECT * FROM Employee WHERE email_address = ?',
 
         checkPhone: 'SELECT * FROM Employee WHERE phone = ?',
+    },
+
+    Schedule: {
+        getWorkSheetOfDayByRole: (role, date, sheet_id) => {
+            return ` SELECT ws.*, c.check_in_at, c.check_out_at FROM Worksheet ws` +
+                ` JOIN Sheet s ON ws.sheet_id = s.id` +
+                ` JOIN CheckInOut c ON ws.id = c.worksheet_id` +
+                ` WHERE ws.date = '${date} 00:00:00' AND s.role = '${role}' AND ws.sheet_id = ${sheet_id}`
+        }
     }
 }

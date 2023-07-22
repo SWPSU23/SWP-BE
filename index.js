@@ -16,7 +16,8 @@ global.config = config
 global.logger = logger
 // init express app
 require('./src/app')
-
+// init schedule job
+require('./src/utilities/schedule')
 // init socket.io
 require('./src/socket')
 // init global error handler
