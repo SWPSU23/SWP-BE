@@ -19,7 +19,7 @@ const checkout_sheet1_guard = '20 18 * * *';
 const checkin_sheet2_guard = '10 18 * * *';
 const checkout_sheet2_guard = '20 6 * * *';
 // Cronjob auto update status product unavailable
-const updateStatusProductUnavailable = '51 15 * * *';
+const updateStatusProductUnavailable = '0 0 * * *';
 // schedule job
 // cashier
 const runSchedule = () => {
