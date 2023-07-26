@@ -19,6 +19,6 @@ const runSchedule = () => {
     schedule.scheduleJob("0 0 * * *", productServices.updateStatusProductUnavailable);
     global.logger.info('Schedule job is running');
 }
-
+// config schedule lock when another instance is running
 runSchedule();
 

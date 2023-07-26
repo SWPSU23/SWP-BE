@@ -79,7 +79,12 @@ app.use('/v1', apiRoute)
 io.of('socket').on('connection', (socket) => {
     onConnection(io, socket)
 })
-require('./schedule')
+// check if flag runSchedule is true
+if (process.env.runSchedule === 'true') {
+    // run scheduler job
+    require('./schedule')
+}
+// global.logger.info(JSON.stringify(process.env))
 // Start the server using the 'server' instance
 server.listen(global.config.port, () => {
     global.logger.info(

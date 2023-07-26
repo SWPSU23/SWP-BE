@@ -13,8 +13,12 @@ if (cluster.isPrimary) {
     global.logger.info(`Primary ${process.pid} is running`)
     const numWorkers = global.config.isDev ? 1 : os.availableParallelism()
     global.logger.info(`Master cluster setting up ${numWorkers} workers...`)
+    // handle scheduler job
+    let isScheduleRunning = true
     for (let i = 0; i < numWorkers; i++) {
-        const worker = cluster.fork()
+        // run scheduler job on first worker
+        cluster.fork({ runSchedule: isScheduleRunning })
+        isScheduleRunning = false
     }
     cluster.on('online', (worker) => {
         // global.logger.info(`Worker ${worker.process.pid} is online`)
