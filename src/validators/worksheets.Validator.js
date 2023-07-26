@@ -99,7 +99,7 @@ const validateUpdateWorksheet = async (id, employee_id) => {
             });
         // check employee has leave day
         list_worksheet_filter.map((worksheet) => {
-            if (worksheet.employee_id === worksheet_detail[0].employee_id) {
+            if (worksheet.employee_id === employee_id) {
                 global.logger.error(`Validation - Employee already worked in this sheet`);
                 throw new Error(`Validation - Employee already worked in this sheet`);
             }
