@@ -24,11 +24,11 @@ const timeStampToDate = (timeStamp) => {
 }
 
 const timeStampToHours = (timeStamp) => {
-    return moment(timeStamp).format('hh:mm:ss')
+    return moment(timeStamp).format('HH:mm:ss')
 }
 
 const timeStampToDay = (timeStamp) => {
-    return moment(timeStamp).format('YYYY-MM-DD hh:mm:ss')
+    return moment(timeStamp).format('YYYY-MM-DD HH:mm:ss')
 }
 
 const dateToTimeStamp = (date) => {
@@ -54,15 +54,53 @@ const getDayOfWeek = (date) => {
     }
 }
 
+const validCheckOut = (end_time, hours) => {
+    const earliest_time_to_check_out = moment(end_time, 'HH:mm:ss');
+    const latest_time_to_check_out = moment(end_time, 'HH:mm:ss').add(30, 'minutes');
+    hours = moment(hours, 'HH:mm:ss');
+    if (hours > earliest_time_to_check_out && hours < latest_time_to_check_out) {
+        return true;
+    }
+    return false;
+}
+
+const validInRangeHours = (start_time, end_time, hours) => {
+
+    start_time = moment(start_time, 'HH:mm:ss').subtract(20, 'minutes');
+    end_time = moment(end_time, 'HH:mm:ss').add(30, 'minutes');
+    hours = moment(hours, 'HH:mm:ss');
+    if (start_time > end_time) {
+        end_time = moment(end_time, 'HH:mm:ss').add(1, 'days');
+    }
+    if (hours > start_time && hours < end_time) {
+        return true;
+    }
+    return false;
+}
+
+const validCheckIn = (start_time, hours) => {
+    const earliest_time_to_check_in = moment(start_time, 'HH:mm:ss').subtract(20, 'minutes');
+    const latest_time_to_check_in = moment(start_time, 'HH:mm:ss').add(10, 'minutes');
+    hours = moment(hours, 'HH:mm:ss');
+    if (hours > earliest_time_to_check_in && hours < latest_time_to_check_in) {
+        return true;
+    }
+    return false;
+}
+
+
 module.exports = {
-    getNow: getNow,
-    getNowDate: getNowDate,
-    getNowTime: getNowTime,
-    getNowTimeStamp: getNowTimeStamp,
-    getNowTimeSql: getNowTimeSql,
-    timeStampToDate: timeStampToDate,
-    dateToTimeStamp: dateToTimeStamp,
-    timeStampToHours: timeStampToHours,
-    getDayOfWeek: getDayOfWeek,
-    timeStampToDay: timeStampToDay
+    getNow,
+    getNowDate,
+    getNowTime,
+    getNowTimeStamp,
+    getNowTimeSql,
+    timeStampToDate,
+    timeStampToHours,
+    timeStampToDay,
+    dateToTimeStamp,
+    getDayOfWeek,
+    validCheckOut,
+    validInRangeHours,
+    validCheckIn
 }

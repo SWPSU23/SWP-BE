@@ -1,4 +1,5 @@
 const ordersModel = require('../models/orders.Model');
+const orderValidator = require('../validators/orders.Validator');
 
 const getListOrder = async (req, res) => {
     try {
@@ -17,7 +18,12 @@ const getListOrder = async (req, res) => {
 
 const createOrder = async (req, res) => {
     try {
-        const data = await ordersModel.createOrder(req.body);
+        const data = await ordersModel.createOrder(
+            await orderValidator
+                .validateCreateOrder(
+                    req.body.products,
+                    req.body.employee_id
+                ));
         // 201 meaning resource successfully created
         res.status(201)
             .send({

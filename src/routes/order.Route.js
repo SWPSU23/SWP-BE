@@ -32,7 +32,12 @@ router.route('/:id').delete(ordersController.deleteOrder)
  *           schema:
  *             href: #/components/schemas/Order
  *           example:
- *             employee_id: 6
+ *             products:
+ *               - product_id: 1
+ *                 quantity: 2
+ *               - product_id: 2
+ *                 quantity: 1
+ *             employee_id: 1
  *     responses:
  *       200:
  *         description: Success
@@ -108,24 +113,23 @@ router.route('/:id').delete(ordersController.deleteOrder)
  *     Order:
  *       type: object
  *       properties:
+ *         products:
+ *           type: array
+ *           format: int64
+ *           items:
+ *             type: object
+ *             properties:
+ *               product_id:
+ *                 type: integer
+ *                 format: int64
+ *               quantity:
+ *                 type: integer
+ *                 format: int32
  *         employee_id:
- *           type: string
- *           required: true
- *         create_at:
- *           type: string
- *           format: date-time
- *           description: The creation timestamp of the order
- *         status:
- *           type: string
- *           description: The status of the order
- *           default: succeed
- *         total_price:
- *           type: number
- *           description: The total price of the order
- *         product_quantity:
- *           type: number
- *           description: The total quantity of the order
+ *           type: integer
  *       required:
- *         - employee_id
+ *         - order_id
+ *         - products
+ *         - order
  */
 module.exports = router

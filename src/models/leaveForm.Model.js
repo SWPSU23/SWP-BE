@@ -21,8 +21,11 @@ const getAllLeaveForm = async (page_index) => {
                 queries.LeaveManagement.getListLeaveForm(page_index),
                 []
             );
-
-        const data = results.map((item) => ({
+        const data = {
+            info: {},
+            leave_form: []
+        }
+        data.leave_form = results.map((item) => ({
             id: item.id,
             employee_id: item.employee_id,
             number_of_leave_days_used: item.number_of_leave_days_used,
@@ -32,7 +35,7 @@ const getAllLeaveForm = async (page_index) => {
             status: item.status,
             manager_replied: item.manager_replied
         }));
-
+        data.info.total_page = Math.ceil(results[0].page / 10);
         return data;
     } catch (error) {
         global.logger.error(`Model - Error occurred when get all leave form ${error.message}`)

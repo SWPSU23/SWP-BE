@@ -153,9 +153,10 @@ module.exports = {
 
         getWorkSheetByDateAndEmployee: (employee_id, date) => {
             return (
-                `SELECT ws.*, s.start_time, s.end_time FROM Worksheet ws` +
+                `SELECT ws.*, s.start_time, s.end_time, c.check_in_at, c.check_out_at FROM Worksheet ws` +
                 ` JOIN Sheet s ON s.id = ws.sheet_id ` +
                 ` JOIN Employee E on ws.employee_id = E.id AND E.role = s.role` +
+                ` JOIN CheckInOut c ON ws.id = c.worksheet_id` +
                 ` WHERE ws.date = '${date} 00:00:00' AND ws.employee_id = ${employee_id}`
             )
         },
@@ -211,10 +212,10 @@ module.exports = {
         },
     },
 
-    PayRoll: {
+    Salary: {
         createPayRoll:
-            'INSERT INTO `PayRoll`' +
-            ' (employee_id, gross_pay, insurance, tax, net_pay, start_date, end_date, create_at, status)' +
+            'INSERT INTO `Salary`' +
+            ' (worksheet_id, )' +
             ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 
         getListPayRoll: 'SELECT * FROM `PayRoll`',
@@ -270,12 +271,12 @@ module.exports = {
 
     Schedule: {
         getWorkSheetOfDayByRole: (role, date, sheet_id) => {
-            return ` SELECT ws.*, c.check_in_at, c.check_out_at FROM Worksheet ws` +
+            return ` SELECT ws.*, s.start_time, s.end_time, c.check_in_at, c.check_out_at FROM Worksheet ws` +
                 ` JOIN Sheet s ON ws.sheet_id = s.id` +
                 ` JOIN CheckInOut c ON ws.id = c.worksheet_id` +
                 ` WHERE ws.date = '${date} 00:00:00' AND s.role = '${role}' AND ws.sheet_id = ${sheet_id}`
         },
 
-        getListProduct: "SELECT * FROM `Product` WHERE status = 'available' AND stock > 0",
+        getListProduct: `SELECT * FROM Product WHERE status = 'available' AND stock > 0`,
     }
 }

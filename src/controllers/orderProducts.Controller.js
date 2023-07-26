@@ -1,39 +1,4 @@
 const orderProductModel = require('../models/orderProducts.Model');
-const orderProductValidator = require('../validators/orderProducts.Validator');
-
-const createListOrderProduct = async (req, res) => {
-    try {
-        const results = await orderProductModel
-            .createListOrderProduct(
-                req.params.order_id,
-                await orderProductValidator.
-                    validateCheckQuantityProduct(
-                        req.body.products
-                    ),
-                req.body.order);
-        res
-            .status(200)
-            .send({
-                success: true,
-                data: results
-            })
-    } catch (error) {
-        if (error.message.includes('ValidationError')) {
-            res
-                .status(400)
-                .send({
-                    success: false,
-                    message: error.message
-                })
-        }
-        res
-            .status(500)
-            .send({
-                success: false,
-                message: error.message
-            })
-    }
-}
 
 const getListDetailOrder = async (req, res) => {
     try {
@@ -56,6 +21,5 @@ const getListDetailOrder = async (req, res) => {
 }
 
 module.exports = {
-    createListOrderProduct,
     getListDetailOrder
 }

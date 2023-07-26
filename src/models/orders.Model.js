@@ -1,15 +1,15 @@
 const pool = require('../services/query.Service');
 const queries = require('../queries/queryModal');
-const Joi = require('joi');
 const time = require('../utilities/timeHelper');
+const Joi = require('joi');
 
-const orderSchema = Joi.object({
-    employee_id: Joi.number().integer().required(),
-    create_at: Joi.string().default(time.getNow),
-    product_quantity: Joi.number().integer().default(0),
-    total_price: Joi.number().min(10000).default(0),
-    status: Joi.string().default('succeed')
-});
+const orderProductSchema = Joi.object({
+    order_id: Joi.number().integer().required(),
+    product_id: Joi.number().integer().required(),
+    quantity: Joi.number().integer().required().min(1),
+    unit_price: Joi.number().required().min(5000),
+    total: Joi.number().required()
+})
 
 const getListOrder = async (page_index) => {
     try {
@@ -44,28 +44,22 @@ const getListOrder = async (page_index) => {
 
 const createOrder = async (data) => {
     try {
-        const { error, value } = orderSchema.validate(data);
-        if (error) {
-            global.logger.error(`Model - Error validate createOrder: ${error}, value: ${data}`);
-            throw error;
-        } else {
-            const result = await pool
-                .setData(
-                    queries.Order.createOrder,
-                    [
-                        value.employee_id,
-                        value.product_quantity,
-                        value.total_price,
-                        value.create_at,
-                        value.status
-                    ]
-                );
-            global.logger.info(`Model - Create order success id: ${JSON.stringify(result)}`);
-            return result;
-        }
+        // create order
+        const order = await pool
+            .setData(
+                queries.Order.createOrder,
+                [
+                    data.order.employee_id,
+                    data.order.product_quantity,
+                    data.order.total_price,
+                    time.getNow(),
+                    'success'
+                ]
+            );
+        // create order detail
+
     } catch (error) {
-        global.logger.error(`Model - Error createOrder: ${error} + query: ${queries.Order.createOrder} + data: ${data}`);
-        throw error;
+
     }
 }
 
