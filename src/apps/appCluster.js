@@ -22,6 +22,7 @@ if (cluster.isPrimary) {
     cluster.on('exit', (worker, code, signal) => {
         global.logger.info(
             `Worker ${worker.process.pid} died with code: ${code}, and signal: ${signal}`
+            // print error message
         )
         // delay 5s to restart
         setTimeout(() => {
