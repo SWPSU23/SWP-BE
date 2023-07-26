@@ -4,7 +4,6 @@ const time = require('../utilities/timeHelper');
 const Joi = require('joi');
 
 const orderProductSchema = Joi.object({
-    order_id: Joi.number().integer().required(),
     product_id: Joi.number().integer().required(),
     quantity: Joi.number().integer().required().min(1),
     unit_price: Joi.number().required().min(5000),
@@ -59,44 +58,45 @@ const createOrder = async (data) => {
                         data.order.product_quantity,
                         data.order.total_price,
                         time.getNow(),
-                        'success'
+                        'succeed'
                     ]
                 );
             // loop for create order detail and update stock product
-            value.map(async (order_detail) => {
+            for (const item of value) {
                 // create order detail
                 await pool
                     .setData(
-                        queries.OrderProduct.createOrderDetail,
+                        queries.OrderProduct.createOrderProduct,
                         [
                             order.insertId,
-                            order_detail.product_id,
-                            order_detail.quantity,
-                            order_detail.unit_price,
-                            order_detail.total
+                            item.product_id,
+                            item.quantity,
+                            item.unit_price,
+                            item.total
                         ]
                     );
+                global.logger.info(`Model - Create order detail succed`);
                 // update stock product
-                await pool.setData(
-                    queries.Product.updateProductByID,
-                    [
-                        { stock: order_detail.new_stock },
-                        order_detail.product_id
-                    ]
-                );
-                // if stock product = 0 => set status = unavailable
-                if (order_detail.new_stock === 0) {
-                    await pool.setData(
+                await pool
+                    .setData(
                         queries.Product.updateProductByID,
                         [
-                            { status: 'unavailable' },
-                            order_detail.product_id
-                        ]
+                            { stock: item.new_stock },
+                            item.product_id]
                     );
+                global.logger.info(`Model - Update stock product succed`);
+                // check if stock = 0 => set status = unavailable
+                if (item.new_stock === 0) {
+                    await pool
+                        .setData(
+                            queries.Product.updateProductByID,
+                            [
+                                { status: 'unavailable' },
+                                item.product_id]
+                        );
                 }
-            })
-
-
+            }
+            return order;
         }
 
     } catch (error) {

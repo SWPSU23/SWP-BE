@@ -93,7 +93,7 @@ module.exports = {
     },
 
     OrderProduct: {
-        createListOrderProduct:
+        createOrderProduct:
             'INSERT INTO `OrderProduct` ' +
             '(order_id, product_id, quantity, unit_price, total)' +
             ' VALUE (?, ?, ?, ?, ?)',

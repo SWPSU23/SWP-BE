@@ -14,28 +14,28 @@ const validateCreateOrder = async (products, employee_id) => {
         // set employee_id
         data.order.employee_id = employee_id;
         // validate product
-        products.map(async (product) => {
+        for (let i = 0; i < products.length; i++) {
             const product_detail = await pool
                 .getData(
                     queries.Product.getProductByID,
-                    [product.product_id]
+                    [products[i].product_id]
                 );
             // check if product is exist
-            if (product_detail[0].stock < product.quantity) {
-                throw new Error(`ValidationError: Product ${product.product_id} don't have enough quantity`);
+            if (product_detail[0].stock < products[i].quantity) {
+                throw new Error(`ValidationError: Product ${products[i].product_id} don't have enough quantity`);
             }
             // push valid data
             data.products.push({
-                product_id: product.product_id,
-                quantity: product.quantity,
+                product_id: products[i].product_id,
+                quantity: products[i].quantity,
                 unit_price: product_detail[0].retail_price,
-                total: product.quantity * product_detail[0].retail_price,
-                new_stock: product_detail[0].stock - product.quantity
+                total: products[i].quantity * product_detail[0].retail_price,
+                new_stock: product_detail[0].stock - products[i].quantity
             })
             // set quantity_product and total_price
-            data.order.product_quantity += product.quantity;
-            data.order.total_price += product.quantity * product_detail[0].retail_price;
-        })
+            data.order.product_quantity += products[i].quantity;
+            data.order.total_price += products[i].quantity * product_detail[0].retail_price;
+        }
         // return valid data
         return data;
     } catch (error) {
