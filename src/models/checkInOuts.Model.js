@@ -57,8 +57,8 @@ const updateCheckOut = async (data) => {
                 [data.worksheet_id]
             );
         const totalWorkingHours = await caculateCheckInOut(
-            worksheet_detail[0].check_in_at,
-            worksheet_detail[0].check_out_at
+            time.timeStampToHours(worksheet_detail[0].check_in_at),
+            time.timeStampToHours(worksheet_detail[0].check_out_at)
         );
         // create salary for employee
         await pool
@@ -83,9 +83,14 @@ const updateCheckOut = async (data) => {
 }
 
 const caculateCheckInOut = async (check_in_at, check_out_at) => {
+    // caculate total working hours
     const totalWorkingHours = parseInt(
-        (time.timeStampToHours(check_out_at - check_in_at).split(':')
-        )[0]);
+        ((check_out_at - check_in_at).split(':')[0])
+    )
+    if (totalWorkingHours > 8) {
+        return 8;
+    }
+
     return totalWorkingHours;
 }
 

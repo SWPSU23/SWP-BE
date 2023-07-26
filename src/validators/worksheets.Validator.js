@@ -39,8 +39,8 @@ const validateCreateWorksheet = async (data) => {
                 ]
             );
         if (worksheet_employee.length > 0) {
-            global.logger.error(`ValidationError: Employee already has worksheet`);
-            throw new Error(`ValidationError: Employee already has worksheet`);
+            global.logger.error(`ValidationError: Employee already worked in this sheet`);
+            throw new Error(`ValidationError: Employee already worked in this sheet`);
         }
         // check employee has leave day
         const list_leave_form = await pool
@@ -69,6 +69,48 @@ const validateCreateWorksheet = async (data) => {
 
 }
 
+const validateUpdateWorksheet = async (id, employee_id) => {
+    try {
+        // worksheet detail
+        const worksheet_detail = await pool
+            .getData(
+                queries.Worksheet.getWorksheetDetail,
+                [id]
+            );
+        // employee detail
+        const employee_detail = await pool
+            .getData(
+                queries.Employee.getEmployeeDetails,
+                [employee_id]
+            );
+        const list_worksheet_by_role_date_sheet = await pool
+            .getData(
+                queries.Schedule.getWorkSheetOfDayByRole(
+                    employee_detail[0].role,
+                    time.timeStampToDate(worksheet_detail[0].date),
+                    worksheet_detail[0].sheet_id
+                ),
+                []
+            );
+        // filter list worksheet not inclue employee_id
+        const list_worksheet_filter = list_worksheet_by_role_date_sheet.filter(
+            (element) => {
+                return element.employee_id !== employee_id;
+            });
+        // check employee has leave day
+        list_worksheet_filter.map((worksheet) => {
+            if (worksheet.employee_id === worksheet_detail[0].employee_id) {
+                global.logger.error(`Validation - Employee already worked in this sheet`);
+                throw new Error(`Validation - Employee already worked in this sheet`);
+            }
+        })
+        return id;
+    } catch (error) {
+        global.logger.error(`Validation - Error validate update worksheet: ${error}`);
+        throw error;
+    }
+}
+
 const validateDeleteWorksheet = async (id) => {
     try {
         const worksheet_detail = await pool
@@ -89,5 +131,6 @@ const validateDeleteWorksheet = async (id) => {
 
 module.exports = {
     validateCreateWorksheet,
-    validateDeleteWorksheet
+    validateDeleteWorksheet,
+    validateUpdateWorksheet
 }

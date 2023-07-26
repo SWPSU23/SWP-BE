@@ -11,8 +11,6 @@ const runSchedule = () => {
     schedule.scheduleJob('30 6 * * *', () => checkInOutService.scanWorksheet('cashier', 3));
     // check out time sheet 1 of guard
     schedule.scheduleJob('30 18 * * *', () => checkInOutService.scanWorksheet('guard', 1));
-    // tester 
-    checkInOutService.scanWorksheet('guard', 1);
     // check out time sheet 2 of guard
     schedule.scheduleJob("30 6 * * *", () => checkInOutService.scanWorksheet('guard', 2));
     // scan product expired

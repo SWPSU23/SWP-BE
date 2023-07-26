@@ -103,7 +103,8 @@ router
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/components/schemas/Worksheet"
+ *             example:
+ *               employee_id: 1
  *     responses:
  *      200:
  *        description: Success

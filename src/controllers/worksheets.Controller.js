@@ -15,6 +15,40 @@ const createWorksheet = async (req, res) => {
                 data: data
             })
     } catch (error) {
+        if (error.message.includes("ValidationError")) {
+            res
+                .status(400)
+                .json({
+                    success: false,
+                    message: error.message
+                })
+        } else {
+            res
+                .status(500)
+                .json({
+                    success: false,
+                    message: error.message
+                })
+        }
+
+    }
+}
+
+const getWorkSheetOfWeek = async (req, res) => {
+    try {
+        const results = await worksheetModel
+            .getWorkSheetOfWeek(
+                req.query.start_date,
+                req.query.end_date,
+                req.query.role
+            );
+        res
+            .status(200)
+            .json({
+                success: true,
+                data: results
+            })
+    } catch (error) {
         res
             .status(500)
             .json({
@@ -24,46 +58,36 @@ const createWorksheet = async (req, res) => {
     }
 }
 
-const getWorkSheetOfWeek = (req, res) => {
-    worksheetModel
-        .getWorkSheetOfWeek(req.query.start_date, req.query.end_date, req.query.role)
-        .then(results => {
+const updateWorksheet = async (req, res) => {
+    try {
+        const result = await worksheetModel
+            .updateWorksheet(
+                req.body,
+                await worksheetValidator.validateUpdateWorksheet(req.params.id, req.body.employee_id)
+            );
+        res
+            .status(200)
+            .json({
+                success: true,
+                data: result
+            })
+    } catch (error) {
+        if (error.message.includes("ValidationError")) {
             res
-                .status(200)
+                .status(400)
                 .json({
-                    success: true,
-                    data: results
+                    success: false,
+                    message: error.message
                 })
-        })
-        .catch(error => {
+        } else {
             res
                 .status(500)
                 .json({
                     success: false,
                     message: error.message
                 })
-        })
-}
-
-const updateWorksheet = (req, res) => {
-    worksheetModel
-        .updateWorksheet(req.body, req.params.id)
-        .then(results => {
-            res
-                .status(200)
-                .json({
-                    success: true,
-                    data: results
-                })
-        })
-        .catch(error => {
-            res
-                .status(500)
-                .json({
-                    success: false,
-                    message: error.message
-                })
-        })
+        }
+    }
 }
 
 const deleteWorksheet = async (req, res) => {
@@ -95,7 +119,6 @@ const deleteWorksheet = async (req, res) => {
 const getWorksheetDetail = async (req, res) => {
     try {
         const data = await worksheetModel.getWorksheetDetail(req.params.id);
-
         res
             .status(200)
             .json({
