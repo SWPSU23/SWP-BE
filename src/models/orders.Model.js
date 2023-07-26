@@ -8,7 +8,8 @@ const orderProductSchema = Joi.object({
     product_id: Joi.number().integer().required(),
     quantity: Joi.number().integer().required().min(1),
     unit_price: Joi.number().required().min(5000),
-    total: Joi.number().required()
+    total: Joi.number().required(),
+    new_stock: Joi.number().integer().required().min(0)
 })
 
 const getListOrder = async (page_index) => {
@@ -44,22 +45,63 @@ const getListOrder = async (page_index) => {
 
 const createOrder = async (data) => {
     try {
-        // create order
-        const order = await pool
-            .setData(
-                queries.Order.createOrder,
-                [
-                    data.order.employee_id,
-                    data.order.product_quantity,
-                    data.order.total_price,
-                    time.getNow(),
-                    'success'
-                ]
-            );
-        // create order detail
+        // validate data
+        const { error, value } = Joi.array().items(orderProductSchema).validate(data.products);
+        if (error) {
+            throw error;
+        } else {
+            // create order
+            const order = await pool
+                .setData(
+                    queries.Order.createOrder,
+                    [
+                        data.order.employee_id,
+                        data.order.product_quantity,
+                        data.order.total_price,
+                        time.getNow(),
+                        'success'
+                    ]
+                );
+            // loop for create order detail and update stock product
+            value.map(async (order_detail) => {
+                // create order detail
+                await pool
+                    .setData(
+                        queries.OrderProduct.createOrderDetail,
+                        [
+                            order.insertId,
+                            order_detail.product_id,
+                            order_detail.quantity,
+                            order_detail.unit_price,
+                            order_detail.total
+                        ]
+                    );
+                // update stock product
+                await pool.setData(
+                    queries.Product.updateProductByID,
+                    [
+                        { stock: order_detail.new_stock },
+                        order_detail.product_id
+                    ]
+                );
+                // if stock product = 0 => set status = unavailable
+                if (order_detail.new_stock === 0) {
+                    await pool.setData(
+                        queries.Product.updateProductByID,
+                        [
+                            { status: 'unavailable' },
+                            order_detail.product_id
+                        ]
+                    );
+                }
+            })
+
+
+        }
 
     } catch (error) {
-
+        global.logger.error(`Model - Error query createOrder: ${error}, query: ${queries.Order.createOrder}`);
+        throw error;
     }
 }
 

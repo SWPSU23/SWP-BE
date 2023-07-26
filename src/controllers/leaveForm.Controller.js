@@ -6,7 +6,10 @@ const getAllLeaveForm = async (req, res) => {
         const results = await leaveFormModel.getAllLeaveForm(req.query.page_index);
         res
             .status(200)
-            .json(results);
+            .json({
+                success: true,
+                data: results
+            });
     } catch (error) {
         res
             .status(500)
@@ -23,7 +26,10 @@ const createLeaveForm = async (req, res) => {
 
         res
             .status(201)
-            .json(data);
+            .json({
+                success: true,
+                data: data
+            });
     } catch (error) {
         res
             .status(500)
@@ -39,7 +45,10 @@ const updateLeaveForm = async (req, res) => {
                 req.params.id);
         res
             .status(200)
-            .json(data);
+            .json({
+                success: true,
+                data: data
+            });
     } catch (error) {
         res
             .status(500)
@@ -52,11 +61,17 @@ const getLeaveFormByEmployee = async (req, res) => {
         const results = await leaveFormModel.getLeaveFormByEmployee(req.query.employee_id);
         res
             .status(200)
-            .json(results);
+            .json({
+                success: true,
+                data: results
+            });
     } catch (error) {
         res
             .status(500)
-            .json({ message: error.message });
+            .json({
+                success: false,
+                message: error.message
+            });
     }
 }
 

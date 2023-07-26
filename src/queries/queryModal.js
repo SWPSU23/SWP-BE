@@ -96,7 +96,7 @@ module.exports = {
         createListOrderProduct:
             'INSERT INTO `OrderProduct` ' +
             '(order_id, product_id, quantity, unit_price, total)' +
-            ' VALUE ?',
+            ' VALUE (?, ?, ?, ?, ?)',
 
         getListDetailOrder:
             'SELECT op.id, p.id AS product_id, p.name, p.unit, op.unit_price, op.quantity, op.total' +
