@@ -1,9 +1,9 @@
 const queries = require('../queries/queryModal');
 const pool = require('../services/query.Service');
+const time = require('../utilities/timeHelper');
 
 const updateCheckIn = async (data) => {
     try {
-        console.log(data)
         // update check in
         const results = await pool
             .setData(
@@ -50,25 +50,31 @@ const updateCheckOut = async (data) => {
                     data.worksheet_id
                 ]
             );
-        // // get detail worksheet
-        // const detail_worksheet = await pool
-        //     .getData(
-        //         queries,
-        //         [data.worksheet_id]
-        //     );
-        // create salary
-        // await pool
-        //     .setData(
-        //         queries.Salary.createSalary,
-        //         [
-        //             data.worksheet_id,
-        //             detail_worksheet[0].base_salary,
-        //             0,
-        //             detail_worksheet[0].date,
-        //             'undisbursed',
-        //             detail_worksheet[0].coefficients * detail_worksheet[0].base_salary
-        //         ],
-        //     );
+        // caculate total working hours
+        const worksheet_detail = await pool
+            .getData(
+                queries.Worksheet.getWorksheetDetail,
+                [data.worksheet_id]
+            );
+        const totalWorkingHours = await caculateCheckInOut(
+            worksheet_detail[0].check_in_at,
+            worksheet_detail[0].check_out_at
+        );
+        // create salary for employee
+        await pool
+            .setData(
+                queries.Salary.createSalary,
+                [
+                    data.worksheet_id,
+                    worksheet_detail[0].base_salary,
+                    0,
+                    time.getNowDate(),
+                    totalWorkingHours,
+                    worksheet_detail[0].base_salary * totalWorkingHours,
+                    'undisbursed'
+                ]
+            );
+
         return results;
     } catch (error) {
         global.logger.error("Model - Error update check out: " + error);
@@ -76,7 +82,12 @@ const updateCheckOut = async (data) => {
     }
 }
 
-
+const caculateCheckInOut = async (check_in_at, check_out_at) => {
+    const totalWorkingHours = parseInt(
+        (time.timeStampToHours(check_out_at - check_in_at).split(':')
+        )[0]);
+    return totalWorkingHours;
+}
 
 module.exports = {
     updateCheckIn,

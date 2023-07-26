@@ -4,15 +4,19 @@ const queries = require('../queries/queryModal');
 // cashier don't check in sheet 1
 const scanWorksheet = async (role, sheet) => {
     try {
+        // get list worksheet of day by role
         const list_worksheet_by_date = await pool
             .getData(
                 queries.Schedule.getWorkSheetOfDayByRole(role, time.getNowDate(), sheet),
                 []
             );
+        // check list worksheet is empty
         if (list_worksheet_by_date.length === 0) {
             global.logger.info('ValidationError: No workshet to day');
         } else {
-            list_worksheet_by_date.map(async (worksheet) => {
+            // loop list worksheet
+            for (const worksheet of list_worksheet_by_date) {
+                // check employee has already checked out or checked in
                 if (worksheet.check_in_at === null || worksheet.check_out_at === null) {
                     // update status worksheet
                     await pool
@@ -21,6 +25,15 @@ const scanWorksheet = async (role, sheet) => {
                             [
                                 { status: 'absent' },
                                 worksheet.id
+                            ]
+                        );
+                    // handle delete leave day of employee
+                    await pool
+                        .setData(
+                            queries.Employee.updateEmployeeDetail,
+                            [
+                                { leave_day: worksheet.leave_day - 8 },
+                                worksheet.employee_id
                             ]
                         );
                 } else {
@@ -38,9 +51,17 @@ const scanWorksheet = async (role, sheet) => {
                                 ]
                             );
                         // handle delete leave day of employee
+                        await pool
+                            .setData(
+                                queries.Employee.updateEmployeeDetail,
+                                [
+                                    { leave_day: worksheet.leave_day - 8 },
+                                    worksheet.employee_id
+                                ]
+                            );
                     }
                 }
-            })
+            }
         }
     } catch (error) {
         global.logger.error(error);

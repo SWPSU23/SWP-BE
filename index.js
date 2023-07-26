@@ -22,8 +22,6 @@ global.config = config // set config to global
 global.logger = logger // set logger to global
 // init app cluster
 require('./src/apps/appCluster')
-// init schedule job
-require('./src/apps/schedule')
 // init global error handler  
 let server = global.server
 const exitHandler = () => {

@@ -1,4 +1,5 @@
 const cluster = require('cluster')
+const { optional } = require('joi')
 const os = require('os')
 cluster.schedulingPolicy = cluster.SCHED_RR // round robin scheduling
 cluster.setupPrimary({
@@ -6,8 +7,7 @@ cluster.setupPrimary({
 })
 if (cluster.isPrimary) {
     global.logger.info(
-        `server is running on ${
-            global.config.isDev ? 'Development' : 'Production'
+        `server is running on ${global.config.isDev ? 'Development' : 'Production'
         } mode`
     )
     global.logger.info(`Primary ${process.pid} is running`)

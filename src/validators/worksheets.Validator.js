@@ -18,14 +18,14 @@ const validateCreateWorksheet = async (data) => {
         if (data.role === 'cashier') {
             if (worksheet_role.length >= 3) {
                 global.logger.error(`ValidationError: Role ${data.role} has existed`);
-                throw new Error(`ValidationError: Role ${data.role} has 3 worker in this sheet  Employee_name: ${(worksheet_role).map((item) => item.name)}`);
+                throw new Error(`ValidationError: Role ${data.role} already has 3 worker `);
             }
         }
         // check guard has 2 worker in this sheet
         if (data.role === 'guard') {
             if (worksheet_role.length >= 2) {
                 global.logger.error(`ValidationError: Role ${data.role} has existed`);
-                throw new Error(`ValidationError: Role ${data.role} has 2 worker in this sheet Employee_name: ${(worksheet_role).map((item) => item.name)}`);
+                throw new Error(`ValidationError: Role ${data.role} already has 2 worker `);
             }
         }
         // check employee has a worksheet in this sheet
@@ -39,8 +39,8 @@ const validateCreateWorksheet = async (data) => {
                 ]
             );
         if (worksheet_employee.length > 0) {
-            global.logger.error(`ValidationError: Employee ${data.worksheet.employee_id} has a worksheet in this sheet`);
-            throw new Error(`ValidationError: Employee id: ${data.worksheet.employee_id} has a worksheet in this sheet`);
+            global.logger.error(`ValidationError: Employee already has worksheet`);
+            throw new Error(`ValidationError: Employee already has worksheet`);
         }
         // check employee has leave day
         const list_leave_form = await pool

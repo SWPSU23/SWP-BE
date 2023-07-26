@@ -5,7 +5,7 @@ const queries = require('../queries/queryModal');
 // auto update status product unavailable
 const updateStatusProductUnavailable = async () => {
     try {
-        pool.getPool();
+        // pool.getPool();
         // get list product where status = available
         const list_products = await pool
             .getData(

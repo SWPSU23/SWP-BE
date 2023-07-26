@@ -79,7 +79,7 @@ app.use('/v1', apiRoute)
 io.of('socket').on('connection', (socket) => {
     onConnection(io, socket)
 })
-
+require('./schedule')
 // Start the server using the 'server' instance
 server.listen(global.config.port, () => {
     global.logger.info(

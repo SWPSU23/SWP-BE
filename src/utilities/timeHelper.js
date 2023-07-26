@@ -64,7 +64,7 @@ const validCheckOut = (end_time, hours) => {
     return false;
 }
 
-const validInRangeHours = (start_time, end_time, hours) => {
+const validInRangeCheckInOut = (start_time, end_time, hours) => {
 
     start_time = moment(start_time, 'HH:mm:ss').subtract(20, 'minutes');
     end_time = moment(end_time, 'HH:mm:ss').add(30, 'minutes');
@@ -101,6 +101,6 @@ module.exports = {
     dateToTimeStamp,
     getDayOfWeek,
     validCheckOut,
-    validInRangeHours,
+    validInRangeCheckInOut,
     validCheckIn
 }

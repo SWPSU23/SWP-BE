@@ -213,16 +213,23 @@ module.exports = {
     },
 
     Salary: {
-        createPayRoll:
+        createSalary:
             'INSERT INTO `Salary`' +
-            ' (worksheet_id, )' +
-            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            ' (worksheet_id, base_salary, tax, date, hours, total, status)' +
+            ' VALUES (?, ?, ?, ?, ?, ?, ?)',
 
-        getListPayRoll: 'SELECT * FROM `PayRoll`',
+        getListPayRoll: 'SELECT * FROM `Salary`',
 
-        updatePayRoll: 'UPDATE `PayRoll` SET ? WHERE `id` = ?',
+        updatePayRoll: 'UPDATE `Salary` SET ? WHERE `id` = ?',
 
         getPaySlip: 'SELECT * FROM `PayRoll` WHERE `employee_id` = ?',
+
+        getWorksheetDetail:
+            'SELECT ws.*, e.base_salary, c.check_in_at, c.check_out_at ' +
+            ' FROM `Worksheet` ws' +
+            ' JOIN `CheckInOut` c ON ws.id = c.worksheet_id' +
+            ' JOIN `Employee` e ON ws.employee_id = e.id' +
+            ' WHERE ws.id = ?',
     },
 
     LeaveManagement: {

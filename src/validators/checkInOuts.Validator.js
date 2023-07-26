@@ -13,11 +13,12 @@ const validateUpdateCheckIn = async (employee_id) => {
         if (list_worksheet_by_employee_of_today.length === 0) {
             throw new Error('Employee has not worked today');
         } else {
+            // loop list worksheet of employee
             list_worksheet_by_employee_of_today.map((worksheet) => {
                 let start_time = time.timeStampToHours(worksheet.start_time);
                 let end_time = time.timeStampToHours(worksheet.end_time);
-                // check valid time in sheet
-                if (time.validInRangeHours(start_time, end_time, time.getNowTime()) === true) {
+                // search sheet of employee
+                if (time.validInRangeCheckInOut(start_time, end_time, time.getNowTime()) === true) {
                     // check employee has already checked in
                     if (worksheet.check_in_at !== null) {
                         throw new Error('Employee has already checked in');
@@ -50,11 +51,12 @@ const validateUpdateCheckOut = async (employee_id) => {
         if (list_worksheet_by_employee_of_today.length === 0) {
             throw new Error('ValidationError: Employee has not worked today');
         } else {
+            // loop list worksheet of employees
             list_worksheet_by_employee_of_today.map((worksheet) => {
                 const start_time = time.timeStampToHours(worksheet.start_time);
                 const end_time = time.timeStampToHours(worksheet.end_time);
-                // check valid time in sheet
-                if (time.validInRangeHours(start_time, end_time, time.getNowTime()) === true) {
+                // search sheet of employee
+                if (time.validInRangeCheckInOut(start_time, end_time, time.getNowTime()) === true) {
                     // check employee has already checked out
                     if (worksheet.check_out_at !== null) {
                         throw new Error('ValidationError: Employee has already checked out');
@@ -63,7 +65,6 @@ const validateUpdateCheckOut = async (employee_id) => {
                     if (worksheet.check_in_at === null) {
                         throw new Error('ValidationError: Employee has not checked in');
                     }
-                    console.log(end_time, time.getNowTime())
                     // check valid time to check out
                     if (time.validCheckOut(end_time, time.getNowTime()) === true) {
                         data.worksheet_id = worksheet.id;
