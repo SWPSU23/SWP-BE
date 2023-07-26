@@ -13,6 +13,7 @@ const envVarsSchema = Joi.object()
         REDIS_PASSWORD: Joi.string().required().description('Redis password'),
         REDIS_SESSION_DB: Joi.number().default(0).description('Redis session'),
         REDIS_FILE_DB: Joi.number().default(1).description('Redis file'),
+        REDIS_NOTIFICATION_DB: Joi.number().default(2).description('Redis notification'),
         // mysql config
         MYSQL_HOST: Joi.string().required().description('Database host name'),
         MYSQL_PORT: Joi.number().default(3306).description('Database port'),
@@ -61,6 +62,7 @@ module.exports = {
         password: envVars.REDIS_PASSWORD,
         sessionDB: envVars.REDIS_SESSION_DB,
         fileDB: envVars.REDIS_FILE_DB,
+        notificationDB: envVars.REDIS_NOTIFICATION_DB,
     },
     session: {
         secret: envVars.SESSION_SECRET,
