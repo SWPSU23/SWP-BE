@@ -75,12 +75,14 @@ const validateUpdateCheckOut = async (employee_id) => {
 
                 }
             })
-        }
-        // modify data
-        if (data.worksheet_id === undefined) {
-            throw new Error('ValidationError: Not start time to check out')
-        } else {
-            return data;
+
+            // modify data
+            if (data.worksheet_id === undefined) {
+                throw new Error('ValidationError: Not start time to check out')
+            } else {
+                return data;
+            }
+
         }
     } catch (error) {
         global.logger.error("Validation - Error update check out: " + error);
