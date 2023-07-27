@@ -3,8 +3,8 @@ const time = require('../utilities/timeHelper');
 const validadteCrateLeaveForm = async (values) => {
     try {
         // check day leave is not in the past
-        const start_date_of_leave = time.timeStampToDate(values.start_date);
-        const end_date_of_leave = time.timeStampToDate(values.end_date);
+        const start_date_of_leave = time.timeStampToDate(values.start_date_of_leave);
+        const end_date_of_leave = time.timeStampToDate(values.end_date_of_leave);
         if (start_date_of_leave < time.getNowDate() || end_date_of_leave < time.getNowDate()) {
             global.logger.error(`ValidationError: Leave day is in the past`);
             throw new Error(`ValidationError: Leave day is in the past`);

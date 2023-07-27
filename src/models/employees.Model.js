@@ -4,6 +4,8 @@ const Joi = require('joi');
 const bcrypt = require('bcrypt');
 const generatePassWord = require(`generate-password`);
 const notification = require('../services/notification.Service');
+const mail = require('../services/mail.Service');
+const mailTemplate = require('../templates/emails.Template');
 
 const employeeSchema = Joi.object({
     name: Joi.string().min(3).required().trim(),
@@ -50,6 +52,8 @@ const createEmployeeDetail = async (employee_detail) => {
             global.logger.info(`Model - Create employee success id: ${results.insertId}`)
             // handle send mail to employee
             global.logger.info(`Model - Employee pass: ${password}`)
+            const content = mailTemplate.createAccount(value.name, value.phone, password, value.role);
+            await mail.sendMail(value.email_address, "Account to login system", content);
             // handle send noti to employee
             const noti = {
                 title: "Welcome to our ministore",

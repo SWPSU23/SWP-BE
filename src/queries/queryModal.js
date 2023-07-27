@@ -251,6 +251,8 @@ module.exports = {
 
         getLeaveFormByEmployee:
             'SELECT * FROM `LeaveManagement` WHERE `employee_id` = ?',
+
+        getLeaveFormById: 'SELECT * FROM `LeaveManagement` WHERE `id` = ?',
     },
 
     Calendar: {
