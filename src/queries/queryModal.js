@@ -39,8 +39,8 @@ module.exports = {
     Employee: {
         createEmployeeDetail:
             'INSERT INTO Employee' +
-            '(name, age, email_address, password, phone, base_salary, role, status)' +
-            'VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            '(name, age, email_address, password, phone, base_salary, role, status, leave_day_of_year)' +
+            'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 
         getListEmployee: (page_index) => {
             return (
