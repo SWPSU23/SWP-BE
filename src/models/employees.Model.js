@@ -51,9 +51,9 @@ const createEmployeeDetail = async (employee_detail) => {
             )
             global.logger.info(`Model - Create employee success id: ${results.insertId}`)
             // handle send mail to employee
-            global.logger.info(`Model - Employee pass: ${password}`)
-            const content = mailTemplate.createAccount(value.name, value.phone, password, value.role);
-            await mail.sendMail(value.email_address, "Account to login system", content);
+            // global.logger.info(`Model - Employee pass: ${password}`)
+            // const content = mailTemplate.createAccount(value.name, value.phone, password, value.role);
+            // await mail.sendMail(value.email_address, "Account to login system", content);
             // handle send noti to employee
             const noti = {
                 title: "Welcome to our ministore",

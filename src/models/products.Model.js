@@ -10,6 +10,7 @@ const productSchema = Joi.object({
     cost_price: Joi.number().required().min(5000),
     stock: Joi.number().integer().required().min(1),
     retail_price: Joi.number().required().min(10000).greater(Joi.ref('cost_price')),
+    revenue_price: Joi.number().min(0).default(Joi.ref('retail_price') - Joi.ref('cost_price')),
     category: Joi.string().min(3).max(64).required().trim(),
     status: Joi.string().default('available'),
     image: Joi.string().min(32).max(32).required(),
@@ -24,19 +25,23 @@ const createProductDetails = async (product) => {
         throw new Error(error);
     } else {
         try {
-            const results = await pool.setData(queries.Product.createProductDetail, [
-                value.name,
-                value.description,
-                value.unit,
-                value.cost_price,
-                value.stock,
-                value.retail_price,
-                value.category,
-                value.status,
-                value.image,
-                value.create_at,
-                value.expired_at,
-            ]);
+            const results = await pool
+                .setData(
+                    queries.Product.createProductDetail,
+                    [
+                        value.name,
+                        value.description,
+                        value.unit,
+                        value.cost_price,
+                        value.stock,
+                        value.retail_price,
+                        value.revenue_price,
+                        value.category,
+                        value.status,
+                        value.image,
+                        value.create_at,
+                        value.expired_at,
+                    ]);
             global.logger.info(`Model - Create product success: ${JSON.stringify(results)}`)
             return results;
         } catch (error) {
@@ -67,6 +72,7 @@ const getListProduct = async (page_index) => {
                 cost_price: item.cost_price,
                 stock: item.stock,
                 retail_price: item.retail_price,
+                revenue_price: item.revenue_price,
                 category: item.category,
                 image: item.image,
                 create_at: time.timeStampToDay(item.create_at),
@@ -103,6 +109,7 @@ const getProductByID = async (id) => {
             unit: results[0].unit,
             cost_price: results[0].cost_price,
             retail_price: results[0].retail_price,
+            revenue_price: results[0].revenue_price,
             stock: results[0].stock,
             category: results[0].category,
             image: results[0].image,
