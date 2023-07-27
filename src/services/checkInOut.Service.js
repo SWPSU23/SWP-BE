@@ -27,12 +27,18 @@ const scanWorksheet = async (role, sheet) => {
                                 worksheet.id
                             ]
                         );
+                    // get employee detail
+                    const employee_detail = await pool
+                        .getData(
+                            queries.Employee.getEmployeeDetails,
+                            [worksheet.employee_id]
+                        );
                     // handle delete leave day of employee
                     await pool
                         .setData(
                             queries.Employee.updateEmployeeDetail,
                             [
-                                { leave_day: worksheet.leave_day - 8 },
+                                { leave_day_of_year: employee_detail[0].leave_day_of_year - 8 },
                                 worksheet.employee_id
                             ]
                         );
@@ -50,12 +56,18 @@ const scanWorksheet = async (role, sheet) => {
                                     worksheet.id
                                 ]
                             );
+                        // get employee detail
+                        const employee_detail = await pool
+                            .getData(
+                                queries.Employee.getEmployeeDetails,
+                                [worksheet.employee_id]
+                            );
                         // handle delete leave day of employee
                         await pool
                             .setData(
                                 queries.Employee.updateEmployeeDetail,
                                 [
-                                    { leave_day: worksheet.leave_day - 8 },
+                                    { leave_day_of_year: employee_detail[0].leave_day_of_year - 8 },
                                     worksheet.employee_id
                                 ]
                             );
@@ -63,6 +75,7 @@ const scanWorksheet = async (role, sheet) => {
                 }
             }
         }
+        global.logger.info(`Scan ${sheet} of ${role} is running}`);
     } catch (error) {
         global.logger.error(error);
         throw error;

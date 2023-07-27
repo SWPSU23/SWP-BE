@@ -15,6 +15,8 @@ const runSchedule = () => {
     schedule.scheduleJob("30 6 * * *", () => checkInOutService.scanWorksheet('guard', 2));
     // scan product expired
     schedule.scheduleJob("0 0 * * *", productServices.updateStatusProductUnavailable);
+    // // test
+    // checkInOutService.scanWorksheet('cashier', 2);
     global.logger.info('Schedule job is running');
 }
 // config schedule lock when another instance is running
