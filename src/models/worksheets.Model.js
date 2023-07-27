@@ -3,6 +3,7 @@ const joi = require('joi');
 const queries = require('../queries/queryModal');
 const time = require('../utilities/timeHelper');
 const moment = require('moment');
+const notification = require('../services/notification.Service');
 
 const worksheetSchema = joi.object({
     employee_id: joi.number().required(),
@@ -72,6 +73,12 @@ const createWorksheet = async (data) => {
                     ]
                 )
 
+            // handle sent notification
+            const noti = {
+                title: 'Notification',
+                body: `You have a new worksheet on ${value.date}`,
+            }
+            await notification.addNotification(value.employee_id, noti);
             return results;
 
         }

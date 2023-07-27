@@ -5,10 +5,8 @@ const updateCheckIn = async (req, res) => {
     try {
         const results = await checkInOutModel
             .updateCheckIn(
-                await checkInOutValidator
-                    .validateUpdateCheckIn(
-                        req.body.employee_id
-                    )
+                await checkInOutValidator.validateUpdateCheckIn(req.body.employee_id),
+                req.body.employee_id
             );
         res
             .status(200)
@@ -40,10 +38,8 @@ const updateCheckOut = async (req, res) => {
     try {
         const results = await checkInOutModel
             .updateCheckOut(
-                await checkInOutValidator
-                    .validateUpdateCheckOut(
-                        req.body.employee_id
-                    )
+                await checkInOutValidator.validateUpdateCheckOut(req.body.employee_i),
+                req.body.employee_id
             );
         res
             .status(200)

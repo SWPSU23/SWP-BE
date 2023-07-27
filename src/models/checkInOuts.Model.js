@@ -1,8 +1,9 @@
 const queries = require('../queries/queryModal');
 const pool = require('../services/query.Service');
 const time = require('../utilities/timeHelper');
+const notification = require('../services/notification.Service');
 
-const updateCheckIn = async (data) => {
+const updateCheckIn = async (data, employee_id) => {
     try {
         // update check in
         const results = await pool
@@ -22,6 +23,12 @@ const updateCheckIn = async (data) => {
                     data.worksheet_id
                 ]
             );
+        // handle send notification
+        const noti = {
+            title: "Check in successfully at " + time.getNowTime(),
+            content: "Remember check out",
+        }
+        await notification.addNotification(employee_id, noti);
         return results;
     } catch (error) {
         global.logger.error("Model - Error update check in: " + error);
@@ -30,7 +37,7 @@ const updateCheckIn = async (data) => {
 
 }
 
-const updateCheckOut = async (data) => {
+const updateCheckOut = async (data, employee_id) => {
     try {
         // update check out
         const results = await pool
@@ -74,6 +81,12 @@ const updateCheckOut = async (data) => {
                     'undisbursed'
                 ]
             );
+        // handle send notification
+        const noti = {
+            title: "Check out successfully at " + time.getNowTime(),
+            content: `You have worked ${totalWorkingHours} hours`,
+        }
+        await notification.addNotification(employee_id, noti);
 
         return results;
     } catch (error) {

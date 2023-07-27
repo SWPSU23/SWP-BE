@@ -3,6 +3,7 @@ const queries = require('../queries/queryModal');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
 const generatePassWord = require(`generate-password`);
+const notification = require('../services/notification.Service');
 
 const employeeSchema = Joi.object({
     name: Joi.string().min(3).required().trim(),
@@ -12,6 +13,7 @@ const employeeSchema = Joi.object({
     base_salary: Joi.number().min(20000).required(),
     role: Joi.string().required().trim(),
     status: Joi.string().default('working'),
+    leave_day_of_year: Joi.number().default(96),
 });
 
 const createEmployeeDetail = async (employee_detail) => {
@@ -41,12 +43,19 @@ const createEmployeeDetail = async (employee_detail) => {
                     value.phone,
                     value.base_salary,
                     value.role,
-                    value.status
+                    value.status,
+                    value.leave_day_of_year
                 ]
             )
-            global.logger.info(`Model - Create employee success: ${results}`)
+            global.logger.info(`Model - Create employee success id: ${results.insertId}`)
             // handle send mail to employee
-            global.logger.info(`Model - Pass: ${password}`)
+            global.logger.info(`Model - Employee pass: ${password}`)
+            // handle send noti to employee
+            const noti = {
+                title: "Welcome to our ministore",
+                content: "Remember check in everyday",
+            }
+            await notification.addNotification(results.insertId, noti);
             return results;
         }
     } catch (error) {
@@ -119,6 +128,14 @@ const updateEmployeeDetail = async (employee_data, employee_id) => {
                     ]
                 );
             global.logger.info(`Model - Update employee success: ${results}`);
+            // handle send noti to employee
+            const noti = {
+                title: "Your information has been updated",
+                content: "Remember check your information",
+            }
+            await notification.addNotification(employee_id, noti);
+            // handle send mail to employee
+
             return results;
         }
     } catch (error) {
