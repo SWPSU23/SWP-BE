@@ -9,7 +9,6 @@ const action = {
 module.exports = (io, socket) => {
     socket.on(action.fetch, async (data) => {
         global.logger.info(`${action.fetch} ${typeof (data)}`)
-        // return hello to client
         const notifications = await notification.fetchNotifications(
             data.employee_id
         )
@@ -20,6 +19,7 @@ module.exports = (io, socket) => {
         })
 
     })
+    // send notification to client 
     socket.on(action.add, async (data) => {
         global.logger.info(`${action.add} ${typeof (data)}`)
         // return hello to client
