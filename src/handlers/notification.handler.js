@@ -37,7 +37,8 @@ module.exports = (io, socket) => {
         // update notification to client
         socket.to(data.employee_id).emit(action.fetch, notifications)
         socket.emit(action.add, {
-            notification_id,
+            message: 'hello from server',
+            data: notifications,
         })
     })
 }
