@@ -44,7 +44,7 @@ const io = new socket.Server(server, {
     },
 })
 // import socket io handler
-const onConnection = require('../handlers/onConnection.handler')
+const onConnection = require('../handlers/onConnection.Handler')
 // session middleware
 const sessionMiddleware = session({
     secret: global.config.session.secret,

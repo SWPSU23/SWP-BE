@@ -1,7 +1,9 @@
-const registerNotificationHandler = require('./notification.handler')
-const registerDashboardHandler = require('./dashboard.handler')
+const registerJoinRoomHandler = require('./joinRoom.Handler')
+const registerNotificationHandler = require('./notification.Handler')
+const registerDashboardHandler = require('./dashboard.Handler')
 
 const onConnection = (io, socket) => {
+    registerJoinRoomHandler(io, socket)
     registerNotificationHandler(io, socket)
     registerDashboardHandler(io, socket)
 }
