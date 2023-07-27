@@ -1,5 +1,4 @@
 const cluster = require('cluster')
-const { optional } = require('joi')
 const os = require('os')
 cluster.schedulingPolicy = cluster.SCHED_RR // round robin scheduling
 cluster.setupPrimary({

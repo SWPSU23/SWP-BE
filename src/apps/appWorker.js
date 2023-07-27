@@ -83,6 +83,8 @@ io.of('socket').on('connection', (socket) => {
 if (process.env.runSchedule === 'true') {
     // run scheduler job
     require('./schedule')
+    // tester
+    require('../utilities/tester')
 }
 // global.logger.info(JSON.stringify(process.env))
 // Start the server using the 'server' instance

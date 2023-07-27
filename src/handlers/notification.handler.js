@@ -28,8 +28,7 @@ module.exports = (io, socket) => {
             data.notification
         )
         socket.emit(action.add, {
-            message: 'hello from server',
-            data: notification_id,
+            notification_id,
         })
     })
 }

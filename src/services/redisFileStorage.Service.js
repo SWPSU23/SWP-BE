@@ -7,7 +7,7 @@ const redisClient = redis.createClient({
     database: global.config.redis.fileDB,
 })
 redisClient.connect()
-const saveFile = (file, type) => {
+const saveFile = async (file, type) => {
     // Hash file
     return hashFile(file, type).then(async (id) => {
         // check if file exists
@@ -28,7 +28,7 @@ const getFile = async (id, type) => {
         `${type}:${id}`
     )
 }
-const hashFile = (file, type) => {
+const hashFile = async (file, type) => {
     return new Promise((resolve, reject) => {
         const hash = crypto.createHash('md5')
         const stream = createReadStreamFromBuffer(file)
