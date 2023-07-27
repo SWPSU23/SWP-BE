@@ -52,7 +52,6 @@ router
  *             href: #/components/schemas/LeaveForm
  *           example:
  *             employee_id: 7
- *             number_of_leave_days_used: 2
  *             start_date_of_leave: 2023-07-16
  *             end_date_of_leave: 2021-07-18
  *             reason_leave: "I'm sick"

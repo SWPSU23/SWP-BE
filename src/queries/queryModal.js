@@ -39,8 +39,8 @@ module.exports = {
     Employee: {
         createEmployeeDetail:
             'INSERT INTO Employee' +
-            '(name, age, email_address, password, phone, base_salary, role, status)' +
-            'VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            '(name, age, email_address, password, phone, base_salary, role, status, leave_day_of_year)' +
+            'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 
         getListEmployee: (page_index) => {
             return (
@@ -166,7 +166,7 @@ module.exports = {
         deleteWorksheet: 'DELETE FROM `Worksheet` WHERE `id` = ?',
 
         getWorksheetDetail:
-            'SELECT ws.*, e.name AS employee_name, c.check_in_at, c.check_out_at ' +
+            'SELECT ws.*, e.name AS employee_name, e.base_salary, c.check_in_at, c.check_out_at ' +
             ' FROM `Worksheet` ws' +
             ' JOIN `CheckInOut` c ON ws.id = c.worksheet_id' +
             ' JOIN `Employee` e ON ws.employee_id = e.id' +
@@ -251,6 +251,8 @@ module.exports = {
 
         getLeaveFormByEmployee:
             'SELECT * FROM `LeaveManagement` WHERE `employee_id` = ?',
+
+        getLeaveFormById: 'SELECT * FROM `LeaveManagement` WHERE `id` = ?',
     },
 
     Calendar: {

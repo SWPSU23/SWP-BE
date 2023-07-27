@@ -63,7 +63,7 @@ const updateCheckOut = async (data, employee_id) => {
                 queries.Worksheet.getWorksheetDetail,
                 [data.worksheet_id]
             );
-        const totalWorkingHours = await caculateCheckInOut(
+        const totalWorkingHours = caculateCheckInOut(
             time.timeStampToHours(worksheet_detail[0].check_in_at),
             time.timeStampToHours(worksheet_detail[0].check_out_at)
         );
@@ -87,7 +87,7 @@ const updateCheckOut = async (data, employee_id) => {
             content: `You have worked ${totalWorkingHours} hours`,
         }
         await notification.addNotification(employee_id, noti);
-
+        global.logger.info("Model - Update check out successfully");
         return results;
     } catch (error) {
         global.logger.error("Model - Error update check out: " + error);
@@ -95,11 +95,13 @@ const updateCheckOut = async (data, employee_id) => {
     }
 }
 
-const caculateCheckInOut = async (check_in_at, check_out_at) => {
+const caculateCheckInOut = (check_in_at, check_out_at) => {
     // caculate total working hours
-    const totalWorkingHours = parseInt(
-        ((check_out_at - check_in_at).split(':')[0])
-    )
+    let totalWorkingHours = parseInt(check_out_at.split(':')[0]) - parseInt(check_in_at.split(':')[0]);
+    // floor total working hours
+    if (parseInt(check_out_at.split(':')[1]) < parseInt(check_in_at.split(':')[1])) {
+        totalWorkingHours = totalWorkingHours - 1;
+    }
     if (totalWorkingHours > 8) {
         return 8;
     }

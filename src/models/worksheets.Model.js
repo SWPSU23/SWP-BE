@@ -245,6 +245,7 @@ const getWorksheetDetail = async (id) => {
                 [id]
             );
         const data = [];
+        console.log(results[0]);
         // convert time stamp to date
         results.forEach(element => {
             data.push({
@@ -256,8 +257,6 @@ const getWorksheetDetail = async (id) => {
                 coefficient: element.coefficient,
                 check_in_at: time.timeStampToHours(element.check_in_at),
                 check_out_at: time.timeStampToHours(element.check_out_at),
-                start_time: time.timeStampToHours(element.start_time),
-                end_time: time.timeStampToHours(element.end_time),
                 status: element.status
             })
         });

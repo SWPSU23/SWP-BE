@@ -38,7 +38,7 @@ const updateCheckOut = async (req, res) => {
     try {
         const results = await checkInOutModel
             .updateCheckOut(
-                await checkInOutValidator.validateUpdateCheckOut(req.body.employee_i),
+                await checkInOutValidator.validateUpdateCheckOut(req.body.employee_id),
                 req.body.employee_id
             );
         res
