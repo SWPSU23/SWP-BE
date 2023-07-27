@@ -27,12 +27,18 @@ const scanWorksheet = async (role, sheet) => {
                                 worksheet.id
                             ]
                         );
+                    // get employee detail
+                    const employee_detail = await pool
+                        .getData(
+                            queries.Employee.getEmployeeDetails,
+                            [worksheet.employee_id]
+                        );
                     // handle delete leave day of employee
                     await pool
                         .setData(
                             queries.Employee.updateEmployeeDetail,
                             [
-                                { leave_day: worksheet.leave_day - 8 },
+                                { leave_day_of_year: employee_detail[0].leave_day_of_year - 8 },
                                 worksheet.employee_id
                             ]
                         );
@@ -41,21 +47,18 @@ const scanWorksheet = async (role, sheet) => {
                     const start_time = time.timeStampToHours(worksheet.start_time);
                     const check_in_at = time.timeStampToHours(worksheet.check_in_at);
                     if (time.validCheckIn(start_time, check_in_at) === false) {
-                        // update status worksheet
-                        await pool
-                            .setData(
-                                queries.Worksheet.updateWorksheet,
-                                [
-                                    { status: 'absent' },
-                                    worksheet.id
-                                ]
+                        // get employee detail
+                        const employee_detail = await pool
+                            .getData(
+                                queries.Employee.getEmployeeDetails,
+                                [worksheet.employee_id]
                             );
                         // handle delete leave day of employee
                         await pool
                             .setData(
                                 queries.Employee.updateEmployeeDetail,
                                 [
-                                    { leave_day: worksheet.leave_day - 8 },
+                                    { leave_day_of_year: employee_detail[0].leave_day_of_year - 8 },
                                     worksheet.employee_id
                                 ]
                             );
@@ -63,6 +66,7 @@ const scanWorksheet = async (role, sheet) => {
                 }
             }
         }
+        global.logger.info(`Scan ${sheet} of ${role} is running}`);
     } catch (error) {
         global.logger.error(error);
         throw error;
