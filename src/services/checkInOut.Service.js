@@ -47,15 +47,6 @@ const scanWorksheet = async (role, sheet) => {
                     const start_time = time.timeStampToHours(worksheet.start_time);
                     const check_in_at = time.timeStampToHours(worksheet.check_in_at);
                     if (time.validCheckIn(start_time, check_in_at) === false) {
-                        // update status worksheet
-                        await pool
-                            .setData(
-                                queries.Worksheet.updateWorksheet,
-                                [
-                                    { status: 'absent' },
-                                    worksheet.id
-                                ]
-                            );
                         // get employee detail
                         const employee_detail = await pool
                             .getData(
