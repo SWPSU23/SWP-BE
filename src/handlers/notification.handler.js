@@ -35,7 +35,7 @@ module.exports = (io, socket) => {
             data.employee_id
         )
         // update notification to client
-        socket.broadcast.to(data.employee_id).emit(action.fetch, notifications)
+        socket.to(data.employee_id).emit(action.fetch, notifications)
         socket.emit(action.add, {
             notification_id,
         })
