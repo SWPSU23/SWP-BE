@@ -1,26 +1,32 @@
 const express = require('express')
 const router = express.Router()
 const productsController = require('../controllers/products.Controller')
+const authMiddleware = require('../middlewares/auth.Middleware')
+
+const readProduct = authMiddleware.authentification('read', 'product');
+const createProduct = authMiddleware.authentification('create', 'product');
+const updateProduct = authMiddleware.authentification('update', 'product');
+const deleteProduct = authMiddleware.authentification('delete', 'product');
 
 router
     .route('/')
     // get list of products
-    .get(productsController.getListProduct)
+    .get(readProduct, productsController.getListProduct)
     // create a new product
-    .post(productsController.createProductDetail)
+    .post(createProduct, productsController.createProductDetail)
 
 router
     .route('/search')
-    .get(productsController.searchProductBy);
+    .get(readProduct, productsController.searchProductBy);
 
 router
     .route('/:id')
     // get product details
-    .get(productsController.getProductByID)
+    .get(readProduct, productsController.getProductByID)
     // update product by ID
-    .put(productsController.updateProductByID)
+    .put(updateProduct, productsController.updateProductByID)
     // delete product by ID
-    .delete(productsController.deleteProductByID)
+    .delete(deleteProduct, productsController.deleteProductByID)
 
 /**
  * @swagger

@@ -9,11 +9,10 @@ const options = {
         },
         servers: [
             {
-                url: `${
-                    global.config.isDev
-                        ? `http://localhost:${global.config.port}`
+                url: `${global.config.isDev
+                        ? `http://localhost:${global.config.port}/v1`
                         : `https://${global.config.url}/v1`
-                }`,
+                    }`,
                 description: 'Ministore API server',
             },
         ],

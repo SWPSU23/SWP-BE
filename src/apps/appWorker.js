@@ -57,8 +57,8 @@ const sessionMiddleware = session({
     }),
     // session cookie add domain to cookie
     cookie: {
-        domain: global.config.url,
-        sameSite: 'none',
+        domain: `${global.config.url}`,
+        sameSite: 'lax',
     },
 })
 app.use(sessionMiddleware)

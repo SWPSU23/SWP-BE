@@ -4,14 +4,18 @@ const assetsController = require('../controllers/assets.Controller')
 const multer = require('multer')
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
+const authMiddleware = require('../middlewares/auth.Middleware')
+
+const readAsset = authMiddleware.authentification('read', 'asset');
+const createAsset = authMiddleware.authentification('create', 'asset');
 
 router
     .route('/product/images/')
-    .post(upload.single('file'), assetsController.uploadProductImage)
+    .post(createAsset, upload.single('file'), assetsController.uploadProductImage)
 
 router
     .route('/product/images/:id')
-    .get(assetsController.getProductImage)
+    .get(readAsset, assetsController.getProductImage)
 
 /**
  * @swagger

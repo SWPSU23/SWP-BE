@@ -2,16 +2,24 @@ const express = require('express')
 const router = express.Router()
 const employeesController = require('../controllers/employees.Controller')
 
+const authMiddleware = require('../middlewares/auth.Middleware')
+
+const readEmployee = authMiddleware.authentification('read', 'employee')
+const createEmployee = authMiddleware.authentification('create', 'employee')
+const updateEmployee = authMiddleware.authentification('update', 'employee')
+const deleteEmployee = authMiddleware.authentification('delete', 'employee')
+const readDetailEmployee = authMiddleware.authentification('readDetail', 'employee')
+
 router
     .route('/')
     // get list of employees
-    .get(employeesController.getListEmployee)
+    .get(readEmployee, employeesController.getListEmployee)
     // create a new employee
-    .post(employeesController.createEmployeeDetail)
+    .post(createEmployee, employeesController.createEmployeeDetail)
 
 router
     .route('/search')
-    .get(employeesController.searchEmployeeBy)
+    .get(readEmployee, employeesController.searchEmployeeBy)
 
 router
     .route('/forgot-password')
@@ -20,11 +28,11 @@ router
 router
     .route('/:id')
     // get employee details
-    .get(employeesController.getEmployeeDetail)
+    .get(readDetailEmployee, employeesController.getEmployeeDetail)
     // update employee details
-    .put(employeesController.updateEmployeeDetail)
+    .put(updateEmployee, employeesController.updateEmployeeDetail)
     // delete employee details
-    .delete(employeesController.deleteEmployeeDetail)
+    .delete(deleteEmployee, employeesController.deleteEmployeeDetail)
 
 /**
  * @swagger

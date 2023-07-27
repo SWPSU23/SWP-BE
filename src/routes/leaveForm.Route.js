@@ -1,19 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const leaveFormController = require('../controllers/leaveForm.Controller');
+const authMiddleware = require('../middlewares/auth.Middleware');
+
+const readLeaveForm = authMiddleware.authentification('readAll', 'leaveForm');
+const createLeaveForm = authMiddleware.authentification('create', 'leaveForm');
+const updateLeaveForm = authMiddleware.authentification('update', 'leaveForm');
+const readDetailLeaveForm = authMiddleware.authentification('readDetail', 'leaveForm');
 
 router
     .route('/')
-    .get(leaveFormController.getAllLeaveForm)
-    .post(leaveFormController.createLeaveForm)
+    .get(readLeaveForm, leaveFormController.getAllLeaveForm)
+    .post(createLeaveForm, leaveFormController.createLeaveForm)
 
 router
     .route('/employee/:employee_id')
-    .get(leaveFormController.getLeaveFormByEmployee)
+    .get(readDetailLeaveForm, leaveFormController.getLeaveFormByEmployee)
 
 router
     .route('/:id')
-    .put(leaveFormController.updateLeaveForm)
+    .put(updateLeaveForm, leaveFormController.updateLeaveForm)
 
 /**
  * @swagger

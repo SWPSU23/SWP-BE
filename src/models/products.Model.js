@@ -80,12 +80,10 @@ const getListProduct = async (page_index) => {
                 status: item.status
             })
         })
-        global.logger.info(`Model - Get list product success: ${JSON.stringify(data.product)}`);
         data.info = {
             total_page: Math.ceil(results[0].page / 10),
         }
-        global.logger.info(`Model - Get info product success: ${JSON.stringify(data.info)}`);
-
+        global.logger.info(`Model - Get list product success: ${data.product.length}`)
         return data;
 
     } catch (error) {

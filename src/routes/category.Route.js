@@ -1,16 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const categoryController = require('../controllers/categories.Controller');
+const authMiddleware = require('../middlewares/auth.Middleware');
+
+const readCategory = authMiddleware.authentification('read', 'category');
+const createCategory = authMiddleware.authentification('create', 'category');
+const updateCategory = authMiddleware.authentification('update', 'category');
+const deleteCategory = authMiddleware.authentification('delete', 'category');
 
 router
     .route('/')
-    .get(categoryController.getListCategory)
-    .post(categoryController.createCategory);
+    .get(readCategory, categoryController.getListCategory)
+    .post(createCategory, categoryController.createCategory);
 
 router
     .route('/:name')
-    .put(categoryController.updateCategory)
-    .delete(categoryController.deleteCategory);
+    .put(updateCategory, categoryController.updateCategory)
+    .delete(deleteCategory, categoryController.deleteCategory);
 
 /**
  * @swagger

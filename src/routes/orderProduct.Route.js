@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const orderProductController = require('../controllers/orderProducts.Controller');
+const authMiddleware = require('../middlewares/auth.Middleware');
+
+const readOrderProduct = authMiddleware.authentification('read', 'orderProduct');
 
 router
     .route('/:order_id')
-    .get(orderProductController.getListDetailOrder)
+    .get(readOrderProduct, orderProductController.getListDetailOrder)
 
 /**
  * @swagger

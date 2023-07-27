@@ -1,51 +1,47 @@
-const accessControlList = {
-    manager: {
-        canCreate: ['employee', 'intern'],
-        canRead: ['manager', 'employee', 'intern'],
-        canUpdate: ['employee', 'intern'],
-        canDelete: ['employee', 'intern'],
+module.exports = {
+    product: {
+        'create': ['manager'],
+        'update': ['manager'],
+        'delete': ['manager'],
+        'read': ['manager', 'cashier']
     },
-    cashier: {
-        canCreate: ['order', 'orderProduct'],
-        canRead: ['order', 'orderProduct'],
-        canUpdate: ['order', 'orderProduct'],
-        canDelete: ['order', 'orderProduct'],
+    employee: {
+        'create': ['manager'],
+        'update': ['manager'],
+        'delete': ['manager'],
+        'read': ['manager', 'cashier'],
+        'readDetail': ['manager', 'cashier', 'guard'],
     },
-    guard: {
-        canCreate: ['checkInOut'],
-        canRead: ['checkInOut'],
-        canUpdate: ['checkInOut'],
-        canDelete: ['checkInOut'],
+    order: {
+        'create': ['cashier', 'manager'],
+        'update': ['cashier', 'manager'],
+        'delete': ['cashier', 'manager'],
+        'read': ['cashier', 'manager']
     },
-    authorizedUser: {
-        canCreate: [
-            'employee',
-            'intern',
-            'order',
-            'orderProduct',
-            'checkInOut',
-        ],
-        canRead: ['employee', 'intern', 'order', 'orderProduct', 'checkInOut'],
-        canUpdate: [
-            'employee',
-            'intern',
-            'order',
-            'orderProduct',
-            'checkInOut',
-        ],
-        canDelete: [
-            'employee',
-            'intern',
-            'order',
-            'orderProduct',
-            'checkInOut',
-        ],
+    orderProduct: {
+        'read': ['cashier', 'manager'],
     },
-    unauthorizedUser: {
-        canCreate: [],
-        canRead: [],
-        canUpdate: [],
-        canDelete: [],
+    checkInOut: {
+        'update': ['manager', 'cashier', 'guard'],
     },
+    worksheet: {
+        'create': ['manager'],
+        'update': ['manager'],
+        'delete': ['manager'],
+        'read': ['manager'],
+        'readDetail': ['manager', 'cashier', 'guard']
+    },
+    leaveForm: {
+        'create': ['manager', 'cashier', 'guard'],
+        'update': ['manager'],
+        'delete': ['manager', 'cashier', 'guard'],
+        'readAll': ['manager'],
+        'readDetail': ['manager', 'cashier', 'guard']
+    },
+    asset: {
+        'create': ['manager'],
+        'read': ['manager']
+    }
+
 }
-module.exports = { accessControlList }
+

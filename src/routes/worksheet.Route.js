@@ -1,21 +1,29 @@
 const express = require('express');
 const router = express.Router();
 const worksheetController = require('../controllers/worksheets.Controller');
+const authMiddleware = require('../middlewares/auth.Middleware');
+
+const createWorksheet = authMiddleware.authentification('create', 'worksheet');
+const readWorksheet = authMiddleware.authentification('read', 'worksheet');
+const updateWorksheet = authMiddleware.authentification('update', 'worksheet');
+const deleteWorksheet = authMiddleware.authentification('delete', 'worksheet');
+const readDetailWorksheet = authMiddleware.authentification('readDetail', 'worksheet');
+
 
 router
     .route('/')
-    .post(worksheetController.createWorksheet)
-    .get(worksheetController.getWorkSheetOfWeek)
+    .post(createWorksheet, worksheetController.createWorksheet)
+    .get(readWorksheet, worksheetController.getWorkSheetOfWeek)
 
 router
     .route('/employee')
-    .get(worksheetController.getWorksheetEmployeeDetail)
+    .get(readDetailWorksheet, worksheetController.getWorksheetEmployeeDetail)
 
 router
     .route('/:id')
-    .get(worksheetController.getWorksheetDetail)
-    .put(worksheetController.updateWorksheet)
-    .delete(worksheetController.deleteWorksheet)
+    .get(readDetailWorksheet, worksheetController.getWorksheetDetail)
+    .put(updateWorksheet, worksheetController.updateWorksheet)
+    .delete(deleteWorksheet, worksheetController.deleteWorksheet)
 
 /**
  * @swagger

@@ -1,15 +1,24 @@
 const express = require('express')
 const router = express.Router()
 const ordersController = require('../controllers/orders.Controller')
+const authMiddleware = require('../middlewares/auth.Middleware')
+
+const createOrder = authMiddleware.authentification('create', 'order')
+const readOrder = authMiddleware.authentification('read', 'order')
+const deleteOrder = authMiddleware.authentification('delete', 'order')
 
 router
     .route('/')
-    .post(ordersController.createOrder)
-    .get(ordersController.getListOrder)
+    .post(createOrder, ordersController.createOrder)
+    .get(readOrder, ordersController.getListOrder)
 
-router.route('/search').get(ordersController.searchOrder)
+router
+    .route('/search')
+    .get(readOrder, ordersController.searchOrder)
 
-router.route('/:id').delete(ordersController.deleteOrder)
+router
+    .route('/:id')
+    .delete(deleteOrder, ordersController.deleteOrder)
 
 /**
  * @swagger
