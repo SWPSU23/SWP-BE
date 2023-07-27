@@ -55,6 +55,11 @@ const sessionMiddleware = session({
         // ttl 1 month
         ttl: 2592000,
     }),
+    // session cookie add domain to cookie
+    cookie: {
+        domain: global.config.url,
+        sameSite: 'none',
+    },
 })
 app.use(sessionMiddleware)
 io.engine.use(sessionMiddleware)

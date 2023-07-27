@@ -1,11 +1,4 @@
 const swaggerJSDoc = require('swagger-jsdoc')
-const url = function () {
-    if (global.config.isDev) {
-        return `http://localhost:${global.config.port}/v1`
-    } else {
-        return `https://${global.config.domain}/v1`
-    }
-}
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -16,7 +9,11 @@ const options = {
         },
         servers: [
             {
-                url: url(),
+                url: `${
+                    global.config.isDev
+                        ? `http://localhost:${global.config.port}`
+                        : `https://${global.config.url}/v1`
+                }`,
                 description: 'Ministore API server',
             },
         ],
