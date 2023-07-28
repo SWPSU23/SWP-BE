@@ -32,6 +32,7 @@ const createEmployeeDetail = async (employee_detail) => {
                 numbers: true
             });
             // password
+            const password = value.password;
             value.password = await bcrypt.hash(value.password, 10);
             const results = await pool.setData(
                 queries.Employee.createEmployeeDetail,
