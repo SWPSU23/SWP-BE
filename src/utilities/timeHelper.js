@@ -120,5 +120,7 @@ module.exports = {
     validCheckOut,
     validInRangeCheckInOut,
     validCheckIn,
-    getNowMonth
+    getNowMonth,
+    getNowYear,
+    unixToDate
 }
