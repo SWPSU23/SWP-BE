@@ -52,7 +52,7 @@ const unixToDate = (unix) => {
 }
 
 const getDayOfWeek = (date) => {
-    const dayOfWeek = moment(date).isoWeekday();
+    const dayOfWeek = moment(date).isoWeekday()
     if (dayOfWeek === 1) {
         return 'Monday'
     } else if (dayOfWeek === 2) {
@@ -69,41 +69,55 @@ const getDayOfWeek = (date) => {
         return 'Sunday'
     }
 }
+const getBeforeDate = (start_date, amount) => {
+    // get date before start_date with amount
+    return moment(start_date).subtract(amount, 'days').format('YYYY-MM-DD')
+}
 
 const validCheckOut = (end_time, hours) => {
-    const earliest_time_to_check_out = moment(end_time, 'HH:mm:ss');
-    const latest_time_to_check_out = moment(end_time, 'HH:mm:ss').add(30, 'minutes');
-    hours = moment(hours, 'HH:mm:ss');
-    if (hours > earliest_time_to_check_out && hours < latest_time_to_check_out) {
-        return true;
+    const earliest_time_to_check_out = moment(end_time, 'HH:mm:ss')
+    const latest_time_to_check_out = moment(end_time, 'HH:mm:ss').add(
+        30,
+        'minutes'
+    )
+    hours = moment(hours, 'HH:mm:ss')
+    if (
+        hours > earliest_time_to_check_out &&
+        hours < latest_time_to_check_out
+    ) {
+        return true
     }
-    return false;
+    return false
 }
 
 const validInRangeCheckInOut = (start_time, end_time, hours) => {
-
-    start_time = moment(start_time, 'HH:mm:ss').subtract(20, 'minutes');
-    end_time = moment(end_time, 'HH:mm:ss').add(30, 'minutes');
-    hours = moment(hours, 'HH:mm:ss');
+    start_time = moment(start_time, 'HH:mm:ss').subtract(20, 'minutes')
+    end_time = moment(end_time, 'HH:mm:ss').add(30, 'minutes')
+    hours = moment(hours, 'HH:mm:ss')
     if (start_time > end_time) {
-        end_time = moment(end_time, 'HH:mm:ss').add(1, 'days');
+        end_time = moment(end_time, 'HH:mm:ss').add(1, 'days')
     }
     if (hours > start_time && hours < end_time) {
-        return true;
+        return true
     }
-    return false;
+    return false
 }
 
 const validCheckIn = (start_time, hours) => {
-    const earliest_time_to_check_in = moment(start_time, 'HH:mm:ss').subtract(20, 'minutes');
-    const latest_time_to_check_in = moment(start_time, 'HH:mm:ss').add(10, 'minutes');
-    hours = moment(hours, 'HH:mm:ss');
+    const earliest_time_to_check_in = moment(start_time, 'HH:mm:ss').subtract(
+        20,
+        'minutes'
+    )
+    const latest_time_to_check_in = moment(start_time, 'HH:mm:ss').add(
+        10,
+        'minutes'
+    )
+    hours = moment(hours, 'HH:mm:ss')
     if (hours > earliest_time_to_check_in && hours < latest_time_to_check_in) {
-        return true;
+        return true
     }
-    return false;
+    return false
 }
-
 
 module.exports = {
     getNow,
@@ -122,5 +136,6 @@ module.exports = {
     validCheckIn,
     getNowMonth,
     getNowYear,
-    unixToDate
+    unixToDate,
+    getBeforeDate,
 }
