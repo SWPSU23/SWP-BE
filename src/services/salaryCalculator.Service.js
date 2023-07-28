@@ -3,6 +3,9 @@ const fontkit = require('@pdf-lib/fontkit')
 const fs = require('fs')
 const time = require('../utilities/timeHelper')
 const salaryModel = require('../models/salaries.Model')
+const mail = require('../services/mail.Service')
+const employeeModel = require('../models/employees.Model')
+const e = require('express')
 
 const calculateSalaryByWorksheet = async () => {
     // get pay slip of all employee
@@ -61,6 +64,7 @@ const calculateSalaryByWorksheet = async () => {
         const pdfBytes = await exportToPDF(pay_slip)
         const key = `PaySlip_${pay_slip.employee_id}_${time.getNowMonth()}`
         await uploadToRedis(key, pdfBytes)
+        await sendToEmail(pay_slip)
     }
 }
 const exportToPDF = async (pay_slip) => {
@@ -168,6 +172,26 @@ const uploadToRedis = async (key, pdfBytes) => {
     client.connect()
     client.hSet(key, 'data', Buffer.from(pdfBytes))
     client.quit()
+}
+const sendToEmail = async (pay_slip) => {
+    // get employee email from employee id
+    const employee = await employeeModel.getEmployeeDetail(pay_slip.employee_id)
+    const employee_email = employee.email_address
+
+    const pdfurl = `http://${global.config.url}:${global.config.port}/v1/asset/salary/pdf/${
+        pay_slip.employee_id
+    }/${time.getNowMonth()}`
+    const mail_body = `
+    <p>Dear ${pay_slip.name},</p>
+    <p>Here is your pay slip for month ${time.getNowMonth()}.</p>
+    
+    <p>${pdfurl}</p>
+
+
+    <p>Best regards,</p>
+    <p>HR Department</p>
+    `
+    await mail.sendMail(employee_email, 'Pay slip', mail_body)
 }
 module.exports = {
     calculateSalaryByWorksheet,
