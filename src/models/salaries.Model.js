@@ -58,23 +58,19 @@ const getPaySlip = async (employee_id, month_year) => {
             employee_name: '',
             employee_role: '',
             base_salary: 0,
-            tax: 0,
-            total_coefficient: 0,
             total_hours: 0,
             total_salary: 0,
             month_year: '',
         }
         // format data
         list_salary_of_employee.map((salary_of_employee) => {
-            data.employee_id = salary_of_employee.employee_id
-            data.employee_name = salary_of_employee.employee_name
-            data.employee_role = salary_of_employee.employee_role
-            data.base_salary = salary_of_employee.base_salary
-            data.tax = salary_of_employee.tax
-            data.total_coefficient += salary_of_employee.coefficient
-            data.total_hours += salary_of_employee.total_hours
-            data.total_salary += salary_of_employee.total_salary_of_sheet
-            data.month_year = time.timeStampToMonthYear(salary_of_employee.date)
+            data.employee_id = salary_of_employee.employee_id;
+            data.employee_name = salary_of_employee.employee_name;
+            data.employee_role = salary_of_employee.employee_role;
+            data.base_salary = salary_of_employee.base_salary;
+            data.total_hours += salary_of_employee.total_hours;
+            data.total_salary += salary_of_employee.total_salary_of_sheet;
+            data.month_year = time.timeStampToMonthYear(salary_of_employee.date);
         })
         return data
     } catch (error) {

@@ -214,7 +214,7 @@ module.exports = {
 
     Salary: {
         createSalary:
-            'INSERT INTO `Salary`' +
+            ' INSERT INTO `Salary`' +
             ' (worksheet_id, base_salary, tax, date, hours, total, status)' +
             ' VALUES (?, ?, ?, ?, ?, ?, ?)',
 

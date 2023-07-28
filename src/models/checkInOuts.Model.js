@@ -68,19 +68,21 @@ const updateCheckOut = async (data, employee_id) => {
             time.timeStampToHours(worksheet_detail[0].check_out_at)
         );
         // create salary for employee
-        await pool
-            .setData(
-                queries.Salary.createSalary,
-                [
-                    data.worksheet_id,
-                    worksheet_detail[0].base_salary,
-                    0,
-                    time.getNowDate(),
-                    totalWorkingHours,
-                    worksheet_detail[0].base_salary * totalWorkingHours * worksheet_detail[0].coefficient,
-                    'undisbursed'
-                ]
-            );
+        if (totalWorkingHours > 0) {
+            await pool
+                .setData(
+                    queries.Salary.createSalary,
+                    [
+                        data.worksheet_id,
+                        worksheet_detail[0].base_salary,
+                        0,
+                        time.getNowDate(),
+                        totalWorkingHours,
+                        worksheet_detail[0].base_salary * totalWorkingHours * worksheet_detail[0].coefficient,
+                        'undisbursed'
+                    ]
+                );
+        }
         // handle send notification
         const noti = {
             title: "Check out successfully at " + time.getNowTime(),

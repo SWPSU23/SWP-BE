@@ -112,6 +112,10 @@ const updateLeaveForm = async (data, id) => {
                     id
                 ]
             );
+        // handle status has been changed
+        if (leaveForm_detail[0].status !== 'waiting') {
+            throw new Error('ValidationError: Leave form has been updated');
+        }
         // detail employee
         const employee_detail = await pool
             .getData(
@@ -123,6 +127,7 @@ const updateLeaveForm = async (data, id) => {
         // delete leave day of employee
         const new_leave_day = employee_detail[0].leave_day_of_year - (leaveForm_detail[0].number_of_leave_days_used * 8);
         if (data.status === 'approved') {
+            // delete leave day of employee
             await pool
                 .setData(
                     queries.Employee.updateEmployeeDetail,
@@ -131,6 +136,46 @@ const updateLeaveForm = async (data, id) => {
                         leaveForm_detail[0].employee_id
                     ]
                 );
+            // defined hours of employee
+            let hours = 0;
+            if (employee_detail[0].role === 'cashier') {
+                hours = 8;
+            }
+            if (employee_detail[0].role === 'guard') {
+                hours = 12;
+            }
+            // create worksheet for employee
+            // a loop from start_date_of_leave to end_date_of_leave
+            const start_time = time.dateToTimeStamp(leaveForm_detail[0].start_date_of_leave);
+            const end_time = time.dateToTimeStamp(leaveForm_detail[0].end_date_of_leave);
+            for (let day = start_time; day < end_time; day + 86400) {
+                // set worksheet
+                day = time.unixToDate(day);
+                const worksheet = await pool
+                    .setData(
+                        queries.Worksheet.createWorksheet,
+                        [
+                            leaveForm_detail[0].employee_id,
+                            1,
+                            day,
+                            'leaved'
+                        ]
+                    );
+                // create salary
+                await pool
+                    .setData(
+                        queries.Salary.createSalary,
+                        [
+                            worksheet.insertId,
+                            employee_detail[0].base_salary,
+                            0,
+                            day,
+                            hours,
+                            employee_detail[0].base_salary * hours,
+                            'undisbursed'
+                        ]
+                    );
+            }
         }
         // handle send noti to employee
         const noti = {
