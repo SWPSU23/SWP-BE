@@ -24,6 +24,10 @@ const validateCreateOrder = async (products, employee_id) => {
             if (product_detail[0].stock < products[i].quantity) {
                 throw new Error(`ValidationError: Product ${products[i].product_id} don't have enough quantity`);
             }
+            // check if product is unavailable
+            if (product_detail[0].status === "unavailable") {
+                throw new Error(`ValidationError: Product ${products[i].product_id} is unavailable`);
+            }
             // push valid data
             data.products.push({
                 product_id: products[i].product_id,
