@@ -25,6 +25,7 @@ const getPaySlipDetails = async (employee_id, month_year) => {
             employee_role: item.role,
             base_salary: item.base_salary,
             tax: item.tax,
+            coefficient: item.coefficient,
             total_hours: item.hours,
             total_salary_of_sheet: item.total,
             date: time.timeStampToDate(item.date),
@@ -47,6 +48,7 @@ const getPaySlip = async (employee_id, month_year) => {
             employee_role: '',
             base_salary: 0,
             tax: 0,
+            total_coefficient: 0,
             total_hours: 0,
             total_salary: 0,
             month_year: ''
@@ -58,6 +60,7 @@ const getPaySlip = async (employee_id, month_year) => {
             data.employee_role = salary_of_employee.employee_role;
             data.base_salary = salary_of_employee.base_salary;
             data.tax = salary_of_employee.tax;
+            data.total_coefficient += salary_of_employee.coefficient;
             data.total_hours += salary_of_employee.total_hours;
             data.total_salary += salary_of_employee.total_salary_of_sheet;
             data.month_year = time.timeStampToMonthYear(salary_of_employee.date);

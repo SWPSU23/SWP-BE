@@ -77,7 +77,7 @@ const updateCheckOut = async (data, employee_id) => {
                     0,
                     time.getNowDate(),
                     totalWorkingHours,
-                    worksheet_detail[0].base_salary * totalWorkingHours,
+                    worksheet_detail[0].base_salary * totalWorkingHours * worksheet_detail[0].coefficient,
                     'undisbursed'
                 ]
             );

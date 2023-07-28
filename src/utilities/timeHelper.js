@@ -9,6 +9,11 @@ const getNowDate = () => {
 const getNowTime = () => {
     return moment().format('HH:mm:ss')
 }
+
+const getNowMonth = () => {
+    return moment().format('YYYY-MM')
+}
+
 const getNowTimeStamp = () => {
     return moment().unix()
 }
@@ -108,5 +113,6 @@ module.exports = {
     getDayOfWeek,
     validCheckOut,
     validInRangeCheckInOut,
-    validCheckIn
+    validCheckIn,
+    getNowMonth
 }

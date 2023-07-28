@@ -227,13 +227,8 @@ module.exports = {
                 ` ORDER BY s.date ASC`
         },
 
-        getPaySlip: 'SELECT * FROM `Salary` '
-            + 'WHERE `employee_id` = ? '
-            + 'AND `date` BETWEEN ? AND ? '
-            + 'ORDER BY `date` ASC ',
-
         getPaySlipDetails: (employee_id, start_day, end_day) => {
-            return `Select e.id as employee_id, e.name, e.role, s.base_salary, s.tax, s.hours, s.total, s.date, s.status` +
+            return `Select e.id as employee_id, ws.coefficient, e.name, e.role, s.base_salary, s.tax, s.hours, s.total, s.date, s.status` +
                 ` FROM Salary s ` +
                 ` JOIN Worksheet ws ON s.worksheet_id = ws.id` +
                 ` JOIN Employee e ON ws.employee_id = e.id` +
