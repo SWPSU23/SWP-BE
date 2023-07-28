@@ -46,6 +46,12 @@ module.exports = {
         'readPaySlip': ['manager', 'cashier', 'guard'],
         'readPayRoll': ['manager'],
     },
+    category: {
+        'read': ['manager', 'cashier', 'guard'],
+        'create': ['manager'],
+        'update': ['manager'],
+        'delete': ['manager']
+    }
 
 }
 

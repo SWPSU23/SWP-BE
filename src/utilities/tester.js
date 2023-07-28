@@ -13,9 +13,8 @@ const testAddNotification = async () => {
     const notificationData = {
         title: 'Test notification',
         content: 'Test notification content',
-        is_read: false,
-        created_at: new Date(),
+        is_read: false
     }
-    await notification.addNotification('1', notificationData);  
+    await notification.addNotification('1', notificationData);
 }
 testAddNotification();

@@ -27,6 +27,7 @@ const updateCheckIn = async (data, employee_id) => {
         const noti = {
             title: "Check in successfully at " + time.getNowTime(),
             content: "Remember check out",
+            is_read: false
         }
         await notification.addNotification(employee_id, noti);
         return results;
@@ -87,6 +88,7 @@ const updateCheckOut = async (data, employee_id) => {
         const noti = {
             title: "Check out successfully at " + time.getNowTime(),
             content: `You have worked ${totalWorkingHours} hours`,
+            is_read: false
         }
         await notification.addNotification(employee_id, noti);
         global.logger.info("Model - Update check out successfully");

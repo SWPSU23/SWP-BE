@@ -10,7 +10,6 @@ const productSchema = Joi.object({
     cost_price: Joi.number().required().min(5000),
     stock: Joi.number().integer().required().min(1),
     retail_price: Joi.number().required().min(10000).greater(Joi.ref('cost_price')),
-    revenue_price: Joi.number().min(0).default(Joi.ref('retail_price') - Joi.ref('cost_price')),
     category: Joi.string().min(3).max(64).required().trim(),
     status: Joi.string().default('available'),
     image: Joi.string().min(32).max(32).required(),
@@ -25,6 +24,7 @@ const createProductDetails = async (product) => {
         throw new Error(error);
     } else {
         try {
+            console.log(value)
             const results = await pool
                 .setData(
                     queries.Product.createProductDetail,
@@ -35,7 +35,7 @@ const createProductDetails = async (product) => {
                         value.cost_price,
                         value.stock,
                         value.retail_price,
-                        value.revenue_price,
+                        value.retail_price - value.cost_price,
                         value.category,
                         value.status,
                         value.image,
