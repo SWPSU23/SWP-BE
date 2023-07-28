@@ -61,15 +61,15 @@ const markAllAsRead = async (employee_id) => {
     // update is_read to true
     // return success
     const key = `${prefix}:${employee_id}`
+    // loop to update is_read to true
+    for (let index = 0; index < (await redisClient.lLen(key)); index++) {
+        const notification = JSON.parse(await redisClient.lIndex(key, index))
+        notification.is_read = true
+        await redisClient.lSet(key, index, JSON.stringify(notification))
+    }
+    // return list of notification
     const notifications = await redisClient.lRange(key, 0, -1)
-    const newNotifications = notifications.map((notification) => {
-        const noti = JSON.parse(notification)
-        noti.is_read = true
-        return JSON.stringify(noti)
-    })
-    await redisClient.del(key)
-    await redisClient.lPush(key, ...newNotifications)
-    return newNotifications
+    return notifications.map((notification) => JSON.parse(notification))
 }
 
 module.exports = {

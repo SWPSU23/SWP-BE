@@ -52,11 +52,17 @@ module.exports = (io, socket) => {
         )
         // update notification to client
         socket.to(data.employee_id).emit(action.fetch, {
-            message: 'hello from server',
+            message: 'success',
             data: notifications,
         })
+        // update unread notification to client
+        const count = await notification.countUnread(data.employee_id)
+        socket.to(data.employee_id).emit(action.countUnread, {
+            message: 'success',
+            data: count,
+        })
         socket.emit(action.add, {
-            message: 'hello from server',
+            message: 'success',
             data: notifications,
         })
     })
