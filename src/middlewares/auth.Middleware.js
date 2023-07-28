@@ -8,6 +8,8 @@ const authentification = (action, items) => {
             if (accessControlList[items][action].includes(role)) {
                 console.log('Access granted');
                 next();
+            } else {
+                res.status(403).send({ message: 'Forbidden' })
             }
         } else {
             res.status(401).send({ message: 'Unauthorized' })
