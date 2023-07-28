@@ -5,4 +5,17 @@ const testSalaryCalculator = async () => {
     await salaryCalculator.calculateSalaryByWorksheet(time.getNowMonth());
 }
 
-testSalaryCalculator();
+// testSalaryCalculator();
+
+// test add notification
+const notification = require('../services/notification.Service');
+const testAddNotification = async () => {
+    const notificationData = {
+        title: 'Test notification',
+        content: 'Test notification content',
+        is_read: false,
+        created_at: new Date(),
+    }
+    await notification.addNotification('1', notificationData);  
+}
+testAddNotification();

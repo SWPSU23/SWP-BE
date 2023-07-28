@@ -3,9 +3,8 @@ const action = {
     fetch: 'notification:fetch',
     add: 'notification:add',
     update: 'notification:update',
-    markAsRead: 'notification:markAsRead',
     markAllAsRead: 'notification:markAllAsRead',
-    delete: 'notification:delete',
+    countUnread: 'notification:countUnread',
 }
 module.exports = (io, socket) => {
     socket.on(action.fetch, async (data) => {
@@ -15,7 +14,25 @@ module.exports = (io, socket) => {
         )
 
         socket.emit(action.fetch, {
-            message: 'hello from server',
+            message: 'success',
+            data: notifications,
+        })
+    })
+    // count unread notification
+    socket.on(action.countUnread, async (data) => {
+        global.logger.info(`${action.countUnread} ${typeof data}`)
+        const count = await notification.countUnread(data.employee_id)
+        socket.emit(action.countUnread, {
+            message: 'success',
+            data: count,
+        })
+    })
+    // mark all as read
+    socket.on(action.markAllAsRead, async (data) => {
+        global.logger.info(`${action.markAllAsRead} ${typeof data}`)
+        const notifications = await notification.markAllAsRead(data.employee_id)
+        socket.emit(action.markAllAsRead, {
+            message: 'success',
             data: notifications,
         })
     })
