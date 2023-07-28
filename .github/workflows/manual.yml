@@ -21,7 +21,3 @@ jobs:
 
       - name: Copy directory
         run: cp -r . /www/wwwroot/api.ministore.tech
-
-      - name: Restart server
-        run: |
-          sudo reboot
