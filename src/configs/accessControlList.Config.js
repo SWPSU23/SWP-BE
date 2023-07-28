@@ -41,7 +41,11 @@ module.exports = {
     asset: {
         'create': ['manager'],
         'read': ['manager']
-    }
+    },
+    salary: {
+        'readPaySlip': ['manager', 'cashier', 'guard'],
+        'readPayRoll': ['manager'],
+    },
 
 }
 
