@@ -6,7 +6,6 @@ const authentification = (action, items) => {
             const user = req.session.user;
             const role = user.role;
             if (accessControlList[items][action].includes(role)) {
-                console.log('Access granted');
                 next();
             } else {
                 res.status(403).send({ message: 'Forbidden' })

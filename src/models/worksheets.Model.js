@@ -245,7 +245,6 @@ const getWorksheetDetail = async (id) => {
                 [id]
             );
         const data = [];
-        console.log(results[0]);
         // convert time stamp to date
         results.forEach(element => {
             data.push({

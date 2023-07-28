@@ -2,7 +2,6 @@ const orderProductModel = require('../models/orderProducts.Model');
 
 const getListDetailOrder = async (req, res) => {
     try {
-        console.log(req.params.order_id)
         const data = await orderProductModel.getListDetailOrder(req.params.order_id);
         res
             .status(200)

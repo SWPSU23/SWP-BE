@@ -15,7 +15,7 @@ const login = async (req, res) => {
                 if (err) {
                     console.error('Error hashing password', err)
                 }
-                console.log('Hashed password', hash)
+                global.logger.info('Hashed password', hash)
             })
             // compare password
             bcrypt.compare(password, user[0].password, (err, result) => {
