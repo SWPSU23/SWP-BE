@@ -77,6 +77,7 @@ const createWorksheet = async (data) => {
             const noti = {
                 title: 'Notification',
                 content: `You have a new worksheet on ${value.date}`,
+                is_read: false
             }
             await notification.addNotification(value.employee_id, noti);
             return results;

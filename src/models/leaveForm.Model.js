@@ -88,6 +88,7 @@ const createLeaveForm = async (data) => {
             const noti = {
                 title: "New leave form has been created",
                 content: "Remember check your leave form",
+                is_read: false
             }
             // content mail
             const content = mailTemplate.createLeaveForm(
@@ -198,6 +199,7 @@ const updateLeaveForm = async (data, id) => {
         const noti = {
             title: "Your leave form has been updated",
             content: "Remember check your leave form",
+            is_read: false
         }
         await notification.addNotification(leaveForm_detail[0].employee_id, noti);
         // handle send mail to employee

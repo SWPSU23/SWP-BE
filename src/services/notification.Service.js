@@ -1,5 +1,7 @@
 const Joi = require('joi')
+const time = require('../utilities/timeHelper')
 const redis = require('redis')
+
 const redisClient = redis.createClient({
     url: `redis://${global.config.redis.host}:${global.config.redis.port}`,
     password: global.config.redis.password,
@@ -12,7 +14,7 @@ const notiSchema = Joi.object({
     title: Joi.string().required().trim().min(3).max(128),
     content: Joi.string().required().trim().min(5).max(256),
     is_read: Joi.boolean().required(),
-    created_at: Joi.date().required(),
+    created_at: Joi.string().default(time.getNow()),
 })
 const countUnread = async (employee_id) => {
     // fetch notification from redis

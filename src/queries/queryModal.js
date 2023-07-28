@@ -3,7 +3,7 @@ module.exports = {
         createProductDetail:
             'INSERT INTO Product' +
             '(name, description, unit, cost_price, stock, retail_price, revenue_price, category, status, image, create_at, expired_at)' +
-            'VALUES (?,?,?,?,?,?,?,?,?,?,?)',
+            'VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
 
         getListProduct: (page_index) => {
             return (
