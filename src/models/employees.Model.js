@@ -57,7 +57,7 @@ const createEmployeeDetail = async (employee_detail) => {
             const noti = {
                 title: "Welcome to our ministore",
                 content: "Remember check in everyday",
-                id_read: false
+                is_read: false
             }
             await notification.addNotification(results.insertId, noti);
             return results;
