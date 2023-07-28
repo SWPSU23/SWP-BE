@@ -5,8 +5,6 @@ const time = require('../utilities/timeHelper')
 const salaryModel = require('../models/salaries.Model')
 const mail = require('../services/mail.Service')
 const employeeModel = require('../models/employees.Model')
-const e = require('express')
-
 const calculateSalaryByWorksheet = async () => {
     // get pay slip of all employee
     const pay_roll = await salaryModel.getPayRoll(time.getNowMonth())
