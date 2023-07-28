@@ -31,6 +31,12 @@ module.exports = (io, socket) => {
     socket.on(action.markAllAsRead, async (data) => {
         global.logger.info(`${action.markAllAsRead} ${typeof data}`)
         const notifications = await notification.markAllAsRead(data.employee_id)
+        // update notification count to client
+        const count = await notification.countUnread(data.employee_id)
+        socket.to(data.employee_id).emit(action.countUnread, {
+            message: 'success',
+            data: count,
+        })
         socket.emit(action.markAllAsRead, {
             message: 'success',
             data: notifications,
