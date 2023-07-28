@@ -100,6 +100,10 @@ const getProductByID = async (id) => {
                 queries.Product.getProductByID,
                 [id]
             );
+        if (results.length === 0) {
+            global.logger.info(`Model - Product not found: ${id}`)
+            throw new Error(`ValidationError: Product not found id_${id}`);
+        }
         const data = {
             id: results[0].id,
             name: results[0].name,
