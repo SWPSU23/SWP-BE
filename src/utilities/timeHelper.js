@@ -47,6 +47,10 @@ const dateToTimeStamp = (date) => {
     return moment(date).unix()
 }
 
+const unixToDate = (unix) => {
+    return moment.unix(unix).format('YYYY-MM-DD')
+}
+
 const getDayOfWeek = (date) => {
     const dayOfWeek = moment(date).isoWeekday();
     if (dayOfWeek === 1) {
@@ -116,6 +120,5 @@ module.exports = {
     validCheckOut,
     validInRangeCheckInOut,
     validCheckIn,
-    getNowMonth,
-    getNowYear,
+    getNowMonth
 }
