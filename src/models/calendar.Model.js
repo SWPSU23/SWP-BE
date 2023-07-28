@@ -90,9 +90,25 @@ const getPossitionCurrentDay = (start_date, end_date) => {
     return false;
 }
 
+const getListMonthOfYear = async () => {
+    try {
+        const results = await pool
+            .getData(
+                queries.Calendar.getListMonthOfYear,
+                []
+            );
+        const data = results.map((item) => item.month_year)
+        return data;
+    } catch (error) {
+        global.logger.error(`Model - Get list month of year failed: ${error}`)
+        throw error;
+    }
+}
+
 
 module.exports = {
     getDayCalendar,
     updateCalendar,
-    getListDayOfWeek
+    getListDayOfWeek,
+    getListMonthOfYear
 }

@@ -13,5 +13,6 @@ router.use('/category', require('./category.Route'));
 router.use('/checkInOut', require('./checkInOut.Route'));
 router.use('/auth', require('./auth.Route'));
 router.use('/leaveForm', require('./leaveForm.Route'));
+router.use('/salary', require('./salary.Route'));
 
 module.exports = router

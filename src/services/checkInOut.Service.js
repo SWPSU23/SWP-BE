@@ -12,7 +12,7 @@ const scanWorksheet = async (role, sheet) => {
             );
         // check list worksheet is empty
         if (list_worksheet_by_date.length === 0) {
-            global.logger.info('ValidationError: No workshet to day');
+            global.logger.info('Today is not working day');
         } else {
             // loop list worksheet
             for (const worksheet of list_worksheet_by_date) {
@@ -66,7 +66,7 @@ const scanWorksheet = async (role, sheet) => {
                 }
             }
         }
-        global.logger.info(`Scan ${sheet} of ${role} is running}`);
+        global.logger.info(`Scan ${sheet} of ${role} is running success at ${time.getNow()}`);
     } catch (error) {
         global.logger.error(error);
         throw error;

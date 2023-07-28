@@ -57,8 +57,28 @@ const getListDayOfWeek = async (req, res) => {
     }
 }
 
+const getListMonthOfYear = async (req, res) => {
+    try {
+        const data = await calendarModel.getListMonthOfYear();
+        res
+            .status(200)
+            .send({
+                success: true,
+                data: data
+            })
+    } catch (error) {
+        res
+            .status(500)
+            .send({
+                success: false,
+                message: error.message
+            })
+    }
+}
+
 module.exports = {
     getDayCalendar,
     updateCalendar,
-    getListDayOfWeek
+    getListDayOfWeek,
+    getListMonthOfYear
 }

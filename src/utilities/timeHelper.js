@@ -19,6 +19,11 @@ const getNowTimeSql = () => {
         .replace('T', ' ')
     return now
 }
+
+const timeStampToMonthYear = (timeStamp) => {
+    return moment(timeStamp).format('YYYY-MM')
+}
+
 const timeStampToDate = (timeStamp) => {
     return moment(timeStamp).format('YYYY-MM-DD')
 }
@@ -98,6 +103,7 @@ module.exports = {
     timeStampToDate,
     timeStampToHours,
     timeStampToDay,
+    timeStampToMonthYear,
     dateToTimeStamp,
     getDayOfWeek,
     validCheckOut,

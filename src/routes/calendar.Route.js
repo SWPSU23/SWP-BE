@@ -12,6 +12,9 @@ router
     .route('/day-of-week')
     .get(calendarController.getListDayOfWeek)
 
+router
+    .route('/month-of-year')
+    .get(calendarController.getListMonthOfYear)
 
 
 /**
@@ -80,6 +83,19 @@ router
  *     responses:
  *       200:
  *         description: The list day of week was get successfully
+ *       400:
+ *         description: Bad request
+ */
+
+/**
+ * @swagger
+ * /calendar/month-of-year:
+ *   get:
+ *     summary: Get list month of year
+ *     tags: [Calendar]
+ *     responses:
+ *       200:
+ *         description: The list month of year was get successfully
  *       400:
  *         description: Bad request
  */

@@ -218,18 +218,29 @@ module.exports = {
             ' (worksheet_id, base_salary, tax, date, hours, total, status)' +
             ' VALUES (?, ?, ?, ?, ?, ?, ?)',
 
-        getListPayRoll: 'SELECT * FROM `Salary`',
+        getPayRoll: (start_day, end_day) => {
+            return `Select e.id as employee_id, e.name, e.role, s.base_salary, s.tax, s.hours, s.total, s.date, s.status` +
+                ` FROM Salary s ` +
+                ` JOIN Worksheet ws ON s.worksheet_id = ws.id` +
+                ` JOIN Employee e ON ws.employee_id = e.id` +
+                ` WHERE s.date BETWEEN '${start_day}' AND '${end_day}' ` +
+                ` ORDER BY s.date ASC`
+        },
 
-        updatePayRoll: 'UPDATE `Salary` SET ? WHERE `id` = ?',
+        getPaySlip: 'SELECT * FROM `Salary` '
+            + 'WHERE `employee_id` = ? '
+            + 'AND `date` BETWEEN ? AND ? '
+            + 'ORDER BY `date` ASC ',
 
-        getPaySlip: 'SELECT * FROM `PayRoll` WHERE `employee_id` = ?',
-
-        getWorksheetDetail:
-            'SELECT ws.*, e.base_salary, c.check_in_at, c.check_out_at ' +
-            ' FROM `Worksheet` ws' +
-            ' JOIN `CheckInOut` c ON ws.id = c.worksheet_id' +
-            ' JOIN `Employee` e ON ws.employee_id = e.id' +
-            ' WHERE ws.id = ?',
+        getPaySlipDetails: (employee_id, start_day, end_day) => {
+            return `Select e.id as employee_id, e.name, e.role, s.base_salary, s.tax, s.hours, s.total, s.date, s.status` +
+                ` FROM Salary s ` +
+                ` JOIN Worksheet ws ON s.worksheet_id = ws.id` +
+                ` JOIN Employee e ON ws.employee_id = e.id` +
+                ` WHERE ws.employee_id = ${employee_id} ` +
+                ` AND s.date BETWEEN '${start_day}' AND '${end_day}' ` +
+                ` ORDER BY s.date ASC`
+        }
     },
 
     LeaveManagement: {
@@ -242,8 +253,8 @@ module.exports = {
             return (
                 `SELECT *, (SELECT COUNT(*) FROM LeaveManagement) AS page` +
                 ` FROM LeaveManagement` +
-                ` ORDER BY status ASC,start_date_of_leave ASC` +
-                ` LIMIT 10 OFFSET ${(page_index - 1) * 10}`
+                ` ORDER BY status ASC, start_date_of_leave ASC` +
+                ` LIMIT 10 OFFSET ${(page_index - 1) * 10} `
             )
         },
 
@@ -266,6 +277,19 @@ module.exports = {
         updateCalendar: 'UPDATE `Calendar` SET ? WHERE `date` = ?',
 
         getCalendar: 'SELECT * FROM `Calendar`',
+
+        getListMonthOfYear: "SELECT DATE_FORMAT(date, '%Y-%m') AS month_year" +
+            " FROM Calendar" +
+            " GROUP BY DATE_FORMAT(date, '%Y-%m')" +
+            " ORDER BY DATE_FORMAT(date, '%Y-%m') ASC",
+
+        getListDayOfMonthYear: (month_year) => {
+            return (
+                `SELECT * FROM Calendar` +
+                ` WHERE DATE_FORMAT(date, '%Y-%m') = '${month_year}'` +
+                ` ORDER BY date ASC`
+            )
+        }
     },
 
     Auth: {
@@ -283,7 +307,7 @@ module.exports = {
             return ` SELECT ws.*, s.start_time, s.end_time, c.check_in_at, c.check_out_at FROM Worksheet ws` +
                 ` JOIN Sheet s ON ws.sheet_id = s.id` +
                 ` JOIN CheckInOut c ON ws.id = c.worksheet_id` +
-                ` WHERE ws.date = '${date} 00:00:00' AND s.role = '${role}' AND ws.sheet_id = ${sheet_id}`
+                ` WHERE ws.date = '${date} 00:00:00' AND s.role = '${role}' AND ws.sheet_id = ${sheet_id} `
         },
 
         getListProduct: `SELECT * FROM Product WHERE status = 'available' AND stock > 0`,
