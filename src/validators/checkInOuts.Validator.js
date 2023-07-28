@@ -11,7 +11,7 @@ const validateUpdateCheckIn = async (employee_id) => {
                 []
             );
         if (list_worksheet_by_employee_of_today.length === 0) {
-            throw new Error('Employee has not worked today');
+            throw new Error('ValidationError: Employee has not worked today');
         } else {
             // loop list worksheet of employee
             list_worksheet_by_employee_of_today.map((worksheet) => {
@@ -21,7 +21,7 @@ const validateUpdateCheckIn = async (employee_id) => {
                 if (time.validInRangeCheckInOut(start_time, end_time, time.getNowTime()) === true) {
                     // check employee has already checked in
                     if (worksheet.check_in_at !== null) {
-                        throw new Error('Employee has already checked in');
+                        throw new Error('ValidationError: Employee has already checked in');
                     }
                     data.worksheet_id = worksheet.id;
                     data.check_in = time.getNow();
