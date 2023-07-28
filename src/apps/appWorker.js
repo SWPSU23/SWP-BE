@@ -59,14 +59,19 @@ const sessionMiddleware = session({
     cookie: {
         // allow cookie for both http and https and subdomain and port
         domain: 'localhost',
-        sameSite: 'none',
+        sameSite: 'lax',
         httpOnly: true,
     },
 })
 app.use(sessionMiddleware)
 io.engine.use(sessionMiddleware)
 // cors middleware
-const whitelist = ['http://localhost:3000', 'http://localhost:3001','http://localhost:3002', 'http://localhost:8080']
+const whitelist = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:8080',
+]
 const corsOptions = {
     origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -78,7 +83,13 @@ const corsOptions = {
         }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+    allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'X-Requested-With',
+        'Accept',
+        'Origin',
+    ],
     credentials: true,
 }
 
