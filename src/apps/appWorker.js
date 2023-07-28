@@ -57,20 +57,32 @@ const sessionMiddleware = session({
     }),
     // session cookie add domain to cookie
     cookie: {
-        domain: `${global.config.url}`,
-        sameSite: 'lax',
+        // allow cookie for both http and https and subdomain and port
+        domain: 'localhost',
+        sameSite: 'none',
+        httpOnly: true,
     },
 })
 app.use(sessionMiddleware)
 io.engine.use(sessionMiddleware)
-app.use(
-    cors({
-        origin: 'http://localhost:3000',
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-        credentials: true,
-    })
-)
+// cors middleware
+const whitelist = ['http://localhost:3000', 'http://localhost:3001','http://localhost:3002', 'http://localhost:8080']
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
+            // allow cors
+            callback(null, true)
+        } else {
+            // not allow cors
+            callback(new Error('Not allowed by CORS'))
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+    credentials: true,
+}
+
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(
