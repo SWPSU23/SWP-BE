@@ -3,8 +3,8 @@ const time = require('../utilities/timeHelper');
 const queries = require('../queries/queryModal');
 const pool = require('../services/query.Service');
 const notification = require('../services/notification.Service');
-// const mail = require('../services/mail.Service');
-// const mailTemplate = require('../templates/emails.Template');
+const mail = require('../services/mail.Service');
+const mailTemplate = require('../templates/emails.Template');
 
 const leaveFormSchema = Joi.object({
     employee_id: Joi.number().integer().required(),
@@ -76,16 +76,32 @@ const createLeaveForm = async (data) => {
                     queries.Employee.searchEmployeeBy('role', 'manager'),
                     []
                 );
-            // handle send noti to manager
+            // get employee detail
+            const employee_detail = await pool
+                .getData(
+                    queries.Employee.getEmployeeDetails,
+                    [
+                        value.employee_id
+                    ]
+                );
+            // notification
             const noti = {
                 title: "New leave form has been created",
                 content: "Remember check your leave form",
             }
+            // content mail
+            const content = mailTemplate.createLeaveForm(
+                `New leave form has been created by employee ${employee_detail[0].name}` +
+                ` from ${time.timeStampToDate(value.start_date_of_leave)}` +
+                ` to ${time.timeStampToDate(value.end_date_of_leave)}`,
+                value.reason_leave
+            )
             list_manager.forEach(async (item) => {
+                // handle send noti to manager
                 await notification.addNotification(item.id, noti);
+                // handle send mail to manager
+                await mail.sendMail(item.email_address, 'New leave form has been created', content)
             })
-            // handle send mail to manager
-
             return results;
         }
     } catch (error) {
@@ -96,14 +112,6 @@ const createLeaveForm = async (data) => {
 
 const updateLeaveForm = async (data, id) => {
     try {
-        const results = await pool
-            .setData(
-                queries.LeaveManagement.updateLeaveForm,
-                [
-                    data,
-                    id
-                ]
-            );
         // detail leave form
         const leaveForm_detail = await pool
             .getData(
@@ -113,9 +121,18 @@ const updateLeaveForm = async (data, id) => {
                 ]
             );
         // handle status has been changed
-        if (leaveForm_detail[0].status !== 'waiting') {
+        if (leaveForm_detail[0].status !== "waiting") {
             throw new Error('ValidationError: Leave form has been updated');
         }
+
+        const results = await pool
+            .setData(
+                queries.LeaveManagement.updateLeaveForm,
+                [
+                    data,
+                    id
+                ]
+            );
         // detail employee
         const employee_detail = await pool
             .getData(
@@ -184,14 +201,14 @@ const updateLeaveForm = async (data, id) => {
         }
         await notification.addNotification(leaveForm_detail[0].employee_id, noti);
         // handle send mail to employee
-        // const content = mailTemplate.managerReplyLeaveDay(
-        //     `Manager ${data.status} start` +
-        //     ` ${time.timeStampToDate(leaveForm_detail[0].start_date_of_leave)}` +
-        //     ` to ${time.timeStampToDate(leaveForm_detail[0].end_date_of_leave)}`,
-        //     leaveForm_detail[0].manager_replied,
-        //     leaveForm_detail[0].status
-        // )
-        // await mail.sendMail(employee_detail[0].email_address, 'Your leave form has been updated', content)
+        const content = mailTemplate.managerReplyLeaveDay(
+            `Manager ${data.status} leave_form start` +
+            ` ${time.timeStampToDate(leaveForm_detail[0].start_date_of_leave)}` +
+            ` to ${time.timeStampToDate(leaveForm_detail[0].end_date_of_leave)}`,
+            leaveForm_detail[0].manager_replied,
+            data.status
+        );
+        await mail.sendMail(employee_detail[0].email_address, 'Your leave form has been updated', content)
         return results;
     } catch (error) {
         global.logger.error(`Model - Error occurred when update leave form ${error.message}`)

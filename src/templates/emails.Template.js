@@ -132,7 +132,74 @@ module.exports = {
         </body>
 
         </html>`
-    }
+    },
+
+    createLeaveForm: (title, message) => {
+        return `
+        <!DOCTYPE html>
+        <html>
+        
+        <head>
+            <title>Manager Reply</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    line-height: 1.5;
+                }
+        
+                .container {
+                    margin: 0 auto;
+                    max-width: 600px;
+                    padding: 20px;
+                }
+        
+                .title {
+                    font-size: 24px;
+                    font-weight: bold;
+                    margin-bottom: 20px;
+                }
+        
+                .form-group {
+                    margin-bottom: 20px;
+                }
+        
+                .form-group label {
+                    display: inline-block;
+                    width: 120px;
+                    font-weight: bold;
+                }
+        
+                .form-group select,
+                .form-group textarea {
+                    display: block;
+                    width: 100%;
+                    padding: 5px;
+                    border: 1px solid #ccc;
+                }
+        
+                .submit-btn {
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        
+        <body>
+            <div class="container">
+                <h2 class="title">Employee required leaved day</h2>
+                <form action="process_reply.php" method="post">
+                    <div class="form-group">
+                        <label for="name">Title : ${title}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">Reason: ${message}</label>
+                    </div>
+                </form>
+            </div>
+        </body>
+        
+        </html>
+            `
+    },
 
 
 
