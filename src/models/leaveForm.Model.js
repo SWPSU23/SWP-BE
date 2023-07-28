@@ -97,7 +97,7 @@ const createLeaveForm = async (data) => {
                 ` to ${time.timeStampToDate(value.end_date_of_leave)}`,
                 value.reason_leave
             )
-            list_manager.forEach(async (item) => {
+            list_manager.map(async (item) => {
                 // handle send noti to manager
                 await notification.addNotification(item.id, noti);
                 // handle send mail to manager
@@ -113,24 +113,20 @@ const createLeaveForm = async (data) => {
 
 const updateLeaveForm = async (data, id) => {
     try {
-        // detail leave form
-        const leaveForm_detail = await pool
-            .getData(
-                queries.LeaveManagement.getLeaveFormById,
-                [
-                    id
-                ]
-            );
-        // handle status has been changed
-        if (leaveForm_detail[0].status !== "waiting") {
-            throw new Error('ValidationError: Leave form has been updated');
-        }
-
+        // check status valid
         const results = await pool
             .setData(
                 queries.LeaveManagement.updateLeaveForm,
                 [
                     data,
+                    id
+                ]
+            );
+        // detail leave form
+        const leaveForm_detail = await pool
+            .getData(
+                queries.LeaveManagement.getLeaveFormById,
+                [
                     id
                 ]
             );

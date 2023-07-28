@@ -47,7 +47,7 @@ const updateLeaveForm = async (req, res) => {
     try {
         const data = await leaveFormModel
             .updateLeaveForm(
-                await leaveFormValidator.valiateUpdateLeaveForm(req.body),
+                await leaveFormValidator.valiateUpdateLeaveForm(req.body, req.params.id),
                 req.params.id
             );
         res

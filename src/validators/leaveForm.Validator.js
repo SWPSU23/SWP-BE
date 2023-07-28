@@ -35,12 +35,24 @@ const validadteCrateLeaveForm = async (values) => {
     }
 };
 
-const valiateUpdateLeaveForm = async (values) => {
+const valiateUpdateLeaveForm = async (values, id) => {
     try {
         // check status valid
         if (values.status !== 'approved' && values.status !== 'rejected') {
             global.logger.error(`ValidationError: Status is not valid`);
             throw new Error(`ValidationError: Status is not valid`);
+        }
+        // check status has been changed
+        const leaveForm_detail = await pool
+            .getData(
+                queries.LeaveManagement.getLeaveFormById,
+                [
+                    id
+                ]
+            );
+        if (leaveForm_detail[0].status !== "waiting") {
+            global.logger.error(`ValidationError: Leave form has been updated`);
+            throw new Error(`ValidationError: Leave form has been updated`);
         }
         return values;
     } catch (error) {
