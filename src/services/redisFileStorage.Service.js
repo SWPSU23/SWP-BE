@@ -20,12 +20,20 @@ const saveFile = async (file, type) => {
     })
 }
 
-const getFile = async (id, type) => {
+const getImage = async (id, type) => {
     return await redisClient.hGetAll(
         redis.commandOptions({
             returnBuffers: true,
         }),
         `${type}:${id}`
+    )
+}
+const getPaySlip = async (employee_id, month_year) => {
+    return await redisClient.hGetAll(
+        redis.commandOptions({
+            returnBuffers: true,
+        }),
+        `PaySlip_${employee_id}_${month_year}`
     )
 }
 const hashFile = async (file, type) => {
@@ -50,5 +58,6 @@ const createReadStreamFromBuffer = (buffer) => {
 }
 module.exports = {
     saveFile,
-    getFile,
+    getPaySlip,
+    getImage,
 }

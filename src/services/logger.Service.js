@@ -5,9 +5,9 @@ const logger = winston.createLogger({
     format: winston.format.combine(winston.format.json()),
     transports: [
         new winston.transports.Console({
-            format: winston.format.combine(
-                winston.format.colorize(),
-                winston.format.simple()
+            format: winston.format.printf(
+                // format log : [time] [level] [message]
+                (info) => `[${time.getNow()}] [${info.level}] ${info.message}`,
             ),
         }),
         new winston.transports.File({

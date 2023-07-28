@@ -28,7 +28,7 @@ const uploadProductImage = async (req, res) => {
 
 const getProductImage = async (req, res) => {
     redisHelper
-        .getFile(req.params.id, fileTypes.product.image)
+        .getImage(req.params.id, fileTypes.product.image)
         .then((result) => {
             // write header mimetype
             res.setHeader('Content-Type', 'image/jpeg')
@@ -41,7 +41,26 @@ const getProductImage = async (req, res) => {
             })
         })
 }
+const getSalaryPdf = async (req, res) => {
+    const employee_id = req.params.employee_id
+    const month_year = req.params.month_year
+    // get pay slip based on employee id and month yea
+    redisHelper
+        .getPaySlip(employee_id, month_year)
+        .then((result) => {
+            // write header mimetype
+            res.setHeader('Content-Type', 'application/pdf')
+            res.status(200).send(Buffer.from(result.data))
+        })
+        .catch((err) => {
+            global.logger.error("err:", err)
+            res.status(404).json({
+                message: `Pay slip of employee ${employee_id} in month ${month_year} not found.`,
+            })
+        })
+}
 module.exports = {
     uploadProductImage,
     getProductImage,
+    getSalaryPdf,
 }

@@ -6,16 +6,23 @@ const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 const authMiddleware = require('../middlewares/auth.Middleware')
 
-const readAsset = authMiddleware.authentification('read', 'asset');
-const createAsset = authMiddleware.authentification('create', 'asset');
+const readAsset = authMiddleware.authentification('read', 'asset')
+const createAsset = authMiddleware.authentification('create', 'asset')
 
 router
     .route('/product/images/')
-    .post(createAsset, upload.single('file'), assetsController.uploadProductImage)
+    .post(
+        createAsset,
+        upload.single('file'),
+        assetsController.uploadProductImage
+    )
 
 router
     .route('/product/images/:id')
     .get(readAsset, assetsController.getProductImage)
+router
+    .route('/salary/pdf/:employee_id/:month_year')
+    .get(assetsController.getSalaryPdf)
 
 /**
  * @swagger
@@ -42,7 +49,7 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
- * 
+ *
  */
 
 /**
@@ -54,7 +61,7 @@ router
  *     tags: [Asset Management]
  *     requestBody:
  *        required: true
- *        content: 
+ *        content:
  *          multipart/form-data:
  *           schema:
  *            type: object
@@ -67,6 +74,31 @@ router
  *         description: Success
  *       400:
  *         description: Bad request
- * 
+ *
+ */
+
+/**
+ * @swagger
+ * /asset/salary/pdf/{employee_id}/{month_year}:
+ *   get:
+ *     summary: Get product image
+ *     description: Retrieve product image
+ *     tags: [Asset Management]
+ *     parameters:
+ *     - name: employee_id
+ *       in: path
+ *       description: Id of the employee
+ *       required: true
+ *       type: string
+ *     - name: month_year
+ *       in: path
+ *       description: Month and year of the pay slip
+ *       required: true
+ *       type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *        description: Not found
  */
 module.exports = router

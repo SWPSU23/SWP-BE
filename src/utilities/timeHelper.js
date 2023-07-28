@@ -13,7 +13,9 @@ const getNowTime = () => {
 const getNowMonth = () => {
     return moment().format('YYYY-MM')
 }
-
+const getNowYear = () => {
+    return moment().format('YYYY')
+}
 const getNowTimeStamp = () => {
     return moment().unix()
 }
@@ -114,5 +116,6 @@ module.exports = {
     validCheckOut,
     validInRangeCheckInOut,
     validCheckIn,
-    getNowMonth
+    getNowMonth,
+    getNowYear,
 }
