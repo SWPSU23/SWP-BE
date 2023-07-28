@@ -8,7 +8,6 @@ const action = {
 }
 module.exports = (io, socket) => {
     socket.on(action.fetch, async (data) => {
-        global.logger.info(`${action.fetch} ${typeof data}`)
         const notifications = await notification.fetchNotifications(
             data.employee_id
         )
@@ -20,7 +19,6 @@ module.exports = (io, socket) => {
     })
     // count unread notification
     socket.on(action.countUnread, async (data) => {
-        global.logger.info(`${action.countUnread} ${typeof data}`)
         const count = await notification.countUnread(data.employee_id)
         socket.emit(action.countUnread, {
             message: 'success',
@@ -29,13 +27,12 @@ module.exports = (io, socket) => {
     })
     // mark all as read
     socket.on(action.markAllAsRead, async (data) => {
-        global.logger.info(`${action.markAllAsRead} ${typeof data}`)
         const notifications = await notification.markAllAsRead(data.employee_id)
         // update notification count to client
         const count = await notification.countUnread(data.employee_id)
-        socket.to(data.employee_id).emit(action.countUnread, {
+        socket.emit(action.countUnread, {
             message: 'success',
-            data: count,
+            data: `${count}`,
         })
         socket.emit(action.markAllAsRead, {
             message: 'success',
@@ -44,7 +41,6 @@ module.exports = (io, socket) => {
     })
     // send notification to client
     socket.on(action.add, async (data) => {
-        global.logger.info(`${action.add} ${typeof data}`)
         const notification_id = await notification.addNotification(
             data.employee_id,
             data.notification
