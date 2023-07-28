@@ -22,7 +22,7 @@ const testAddNotification = async () => {
 // test dashboard
 const dashboard = require('../services/dashboard.Service')
 const testDashboard = async () => {
-    const data = await dashboard.readDashboard()
+    const data = await dashboard.getDashboardData()
     console.log(data)
 }
 testDashboard()

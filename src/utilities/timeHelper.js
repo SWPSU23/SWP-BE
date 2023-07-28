@@ -73,6 +73,17 @@ const getBeforeDate = (start_date, amount) => {
     // get date before start_date with amount
     return moment(start_date).subtract(amount, 'days').format('YYYY-MM-DD')
 }
+const getBeforeMonth = (start_date, amount) => {
+    // get date before start_date with amount
+    return moment(start_date).subtract(amount, 'months').format('YYYY-MM-DD')
+}
+const getAfterMonth = (start_date, amount) => {
+    // get date before start_date with amount
+    return moment(start_date).add(amount, 'months').format('YYYY-MM-DD')
+}
+const replaceDay = (date, day) => {
+    return moment(date).day(day).format('YYYY-MM-DD')
+}
 
 const validCheckOut = (end_time, hours) => {
     const earliest_time_to_check_out = moment(end_time, 'HH:mm:ss')
@@ -138,4 +149,7 @@ module.exports = {
     getNowYear,
     unixToDate,
     getBeforeDate,
+    getBeforeMonth,
+    replaceDay,
+    getAfterMonth,
 }
